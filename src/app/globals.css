@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+:root {
+	/* Light Mode */
+	--background: #fafafa;
+	--foreground: #27272a;
+
+	/* Brand Theme Colors */
+	--primary: #f97316;
+	--primary-hover: #ea580c;
+	--primary-light: #ffedd5;
+
+	/* Surface colors */
+	--surface: #f4f4f5;
+	--surface-border: #e4e4e7;
+
+	/* Base color for shadows */
+	--shadow-base: 0, 0, 0;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		/* Dark Mode */
+		--background: #18181b;
+		--foreground: #e4e4e7;
+
+		/* Adjusted brand colors */
+		--primary: #fb923c;
+		--surface: #27272a;
+		--surface-border: #3f3f46;
+
+		/* Base color for dark mode shadows */
+		--shadow-base: 255, 255, 255;
+	}
+}
+
+@theme inline {
+	/* Standard colors */
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+
+	/* Custom brand colors into Tailwind */
+	--color-primary: var(--primary);
+	--color-primary-hover: var(--primary-hover);
+	--color-primary-light: var(--primary-light);
+	--color-surface: var(--surface);
+	--color-surface-border: var(--surface-border);
+
+	/* Fonts */
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
+
+	/* Overriding default Tailwind shadows */
+	--shadow-sm: 0 1px 2px 0 rgba(var(--shadow-base), 0.05);
+	--shadow-md:
+		0 4px 6px -1px rgba(var(--shadow-base), 0.1),
+		0 2px 4px -2px rgba(var(--shadow-base), 0.05);
+	--shadow-lg:
+		0 10px 15px -3px rgba(var(--shadow-base), 0.1),
+		0 4px 6px -4px rgba(var(--shadow-base), 0.05);
+	--shadow-xl:
+		0 20px 25px -5px rgba(var(--shadow-base), 0.1),
+		0 8px 10px -6px rgba(var(--shadow-base), 0.05);
+	--shadow-2xl: 0 25px 50px -12px rgba(var(--shadow-base), 0.15);
+
+	/* Overriding Drop Shadows */
+	--drop-shadow-sm: 0 1px 1px rgba(var(--shadow-base), 0.05);
+	--drop-shadow-md: 0 4px 3px rgba(var(--shadow-base), 0.07);
+	--drop-shadow-lg: 0 10px 8px rgba(var(--shadow-base), 0.04);
+}
+
+body {
+	background: var(--background);
+	color: var(--foreground);
+	font-family: Arial, Helvetica, sans-serif;
+}
