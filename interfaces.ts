@@ -6,7 +6,7 @@ export interface UserItem {
     name: string;
     email: string;
     tel: string;
-    role: "user" | "admin";
+    role: "user" | "admin" | "company";
     createdAt: string;
 }
 
