@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
 import UserProfile from "@/components/UserProfile";
 import AdminProfile from "@/components/AdminProfile";
+import CompanyProfile from "@/components/CompanyProfile";
 
 async function ProfileContent({ token }: { token: string }) {
   const response = await getUserProfile(token);
@@ -14,7 +15,7 @@ async function ProfileContent({ token }: { token: string }) {
   if (user.role === "admin") {
     return <AdminProfile user={user} />;
   }
-
+  else if (user.role === "company"){return <CompanyProfile user={user}/>}
   return <UserProfile user={user} />;
 }
 
