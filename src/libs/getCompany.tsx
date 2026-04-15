@@ -1,11 +1,13 @@
 import { CompanyItem } from "../../interfaces";
-import { getCompanyById } from "@/mocks/mockStore";
+
+type CompanyDetailApiResponse =
+    | CompanyItem
+    | {
+          success: boolean;
+          data: CompanyItem;
+      };
 
 export default async function getCompany(id: string): Promise<CompanyItem>{
-    if (process.env.USE_MOCK_API === "true") {
-        return getCompanyById(id);
-    }
-
     const response = await fetch(`${process.env.BACKEND_URL}/api/v1/companies/${id}`, {
         cache: "no-store",
     });

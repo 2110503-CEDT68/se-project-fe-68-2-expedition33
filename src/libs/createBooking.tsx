@@ -1,17 +1,7 @@
-import { BookingItem } from "../../interfaces";
-import { createBookingInStore } from "@/mocks/mockStore";
 import getUserProfile from "./getUserProfile";
 
-type CreateBookingResponse = {
-    success: boolean;
-    data: BookingItem;
-};
-
-export default async function createBooking(companyId: string, token: string, bookingDate: string): Promise<CreateBookingResponse> {
-    if (process.env.USE_MOCK_API === "true") {
-        return createBookingInStore(companyId, token, bookingDate);
-    }
-
+export default async function createBooking(companyId: string, token: string, bookingDate: string) {
+    
     const userId = (await getUserProfile(token)).data.id;
     
     const response = await fetch(`${process.env.BACKEND_URL}/api/v1/companies/${companyId}/bookings`,
