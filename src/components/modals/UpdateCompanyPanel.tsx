@@ -203,7 +203,7 @@ export default function UpdateCompanyPanel({
                 />
               ) : (
                 <img
-                  src={`/images/${company.id}.png`}
+                  src={company.logo?.url ?? "/images/default.png"}
                   alt="Current logo"
                   className="rounded-md border border-surface-border max-h-24 max-w-full object-contain bg-surface"
                   style={{ background: 'var(--surface)' }}
