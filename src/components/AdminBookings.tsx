@@ -9,7 +9,7 @@ import { AppDispatch, useAppSelector } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { setBookings, removeBooking } from "@/redux/features/bookingSlice";
 
-export default function AdminBookings({bookingsResponse, adminToken}: {bookingsResponse: BookingResponse, adminToken: string}) {
+export default function AdminBookings({bookingsResponse, adminToken}: Readonly<{bookingsResponse: BookingResponse, adminToken: string}>) {
   
     const bookings = useAppSelector(state => state.bookings.bookingItems);
     const dispatch = useDispatch<AppDispatch>();

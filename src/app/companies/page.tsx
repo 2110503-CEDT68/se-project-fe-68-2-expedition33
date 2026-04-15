@@ -1,7 +1,5 @@
 import { Suspense } from "react";
 import { LinearProgress } from "@mui/material";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import getCompanies from "@/libs/getCompanies";
 import { CompanyItem } from "../../../interfaces";
 import CompanyList from "@/components/CompanyList";

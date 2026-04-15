@@ -1,7 +1,13 @@
 "use client";
+import type { MouseEvent } from "react";
 import { BookingItem } from "../../../interfaces";
 
-export default function DeleteBookingPanel({ booking, onClose, onDelete }: { booking: BookingItem, onClose: () => void, onDelete: (e: React.MouseEvent) => void }) {
+export default function DeleteBookingPanel({ booking, onClose, onDelete }: Readonly<{ booking: BookingItem, onClose: () => void, onDelete: (e: MouseEvent<HTMLButtonElement>) => void }>) {
+    const bookingDate = new Date(booking.bookingDate);
+    const formattedDate = Number.isNaN(bookingDate.getTime())
+        ? "Unknown date"
+        : bookingDate.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
         
@@ -9,6 +15,7 @@ export default function DeleteBookingPanel({ booking, onClose, onDelete }: { boo
                 
                 <button 
                 onClick={onClose} 
+                title="Close delete panel"
                 className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer"
                 >
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
@@ -22,13 +29,14 @@ export default function DeleteBookingPanel({ booking, onClose, onDelete }: { boo
                 </h2>
 
                 <p className="text-foreground font-bold text-lg md:text-xl tracking-wide mb-10 leading-relaxed">
-                    Do you want to Cancel a Booking of {" "}
+                    Do you want to Cancel a Booking of{" "}
                     <span className="text-primary">{booking.user.name || "Unknown User"}</span>
-                    {" with"} <br className="hidden md:block"/>
+                    {" with "}
+                    <br className="hidden md:block" />
                     <span className="text-primary">{booking.company.name || "Unknown Company"}</span>
                     {" on "}
-                    <span className="text-primary">{booking.bookingDate.split("-")[2].split("T")[0]} May, 2022</span>
-                    ?
+                    <span className="text-primary">{formattedDate}</span>
+                    {"?"}
                 </p>
 
                 <button 

@@ -11,13 +11,13 @@ export default function UserCompanyDetail({
   isAdmin, 
   showBooking = true,
   footerActions
-}: {
+}: Readonly<{
   company: CompanyItem;
   token?: string;
   isAdmin: boolean;
   showBooking?: boolean;
   footerActions?: ReactNode;
-}) {
+}>) {
   const iconClassName: string = "w-5 h-5 text-primary shrink-0";
   const iconProps = {
     fill: "none",

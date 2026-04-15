@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-export default function UpdateBookingPanel({ companyName, oldDate, onClose, onUpdate: onSubmit }: { companyName: string, oldDate: string, onClose: () => void, onUpdate: (e: React.MouseEvent, date: string) => void }) {
+export default function UpdateBookingPanel({ companyName, oldDate, onClose, onUpdate: onSubmit }: Readonly<{ companyName: string, oldDate: string, onClose: () => void, onUpdate: (e: React.MouseEvent, date: string) => void }>) {
   // State to keep track of which date the user clicked.
   const [selectedDate, setSelectedDate] = useState(oldDate.split("-")[2].split("T")[0]);
   
@@ -20,6 +20,7 @@ export default function UpdateBookingPanel({ companyName, oldDate, onClose, onUp
         {/* Top Right "Back/Undo" Icon */}
         <button 
           onClick={onClose} 
+          title="Close update panel"
           className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer"
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">

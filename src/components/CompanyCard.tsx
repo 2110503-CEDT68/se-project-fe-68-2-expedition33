@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { CompanyItem } from "../../interfaces";
 
-export default function CompanyCard({ company }: { company: CompanyItem }) {
+export default function CompanyCard({ company }: Readonly<{ company: CompanyItem }>) {
   return (
     <Link
       href={`/companies/${company.id}`}

@@ -6,11 +6,6 @@ import { useSession } from "next-auth/react";
 import { UserItem , CompanyCreatePayload } from "../../interfaces";
 import createCompany from "@/libs/createCompany";
 
-
-interface Props {
-  user: UserItem;
-}
-
 type CompanyTextFieldName =
   | "name"
   | "description"
@@ -42,7 +37,7 @@ const initialForm: AdminCreateCompanyForm = {
   confirmPassword: "",
 };
 
-export default function AdminProfile({ user }: Readonly<Props>) {
+export default function AdminProfile({ user }: Readonly<{ user: UserItem }>) {
   const { data: session } = useSession();
   const [form, setForm] = useState<AdminCreateCompanyForm>(initialForm);
   const [loading, setLoading] = useState(false);
@@ -84,6 +79,98 @@ export default function AdminProfile({ user }: Readonly<Props>) {
     confirmPassword: confirmPasswordRef,
   };
 
+  const validateForm = (): boolean => {
+    const telRegex = /^0\d{8,9}$/;
+    const websiteRegex = /^(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/;
+    const postalcodeRegex = /^\d{5}$/;
+
+    const validations = [
+      {
+        condition: form.name.trim().length === 0,
+        message: "Please add a company name.",
+        field: "name",
+        ref: nameRef,
+      },
+      {
+        condition: form.name.trim().length > 50,
+        message: "Company name cannot be more than 50 characters.",
+        field: "name",
+        ref: nameRef,
+      },
+      {
+        condition: form.description.trim().length === 0,
+        message: "Please add a description.",
+        field: "description",
+        ref: descriptionRef,
+      },
+      {
+        condition: !websiteRegex.test(form.website),
+        message: "Please add a valid website URL.",
+        field: "website",
+        ref: websiteRef,
+      },
+      {
+        condition: !telRegex.test(form.tel.replaceAll(/[-\s]/g, "")),
+        message: "Please add a valid telephone number.",
+        field: "tel",
+        ref: telRef,
+      },
+      {
+        condition: form.address.trim().length === 0,
+        message: "Please add an address.",
+        field: "address",
+        ref: addressRef,
+      },
+      {
+        condition: form.district.trim().length === 0,
+        message: "Please add a district.",
+        field: "district",
+        ref: districtRef,
+      },
+      {
+        condition: form.province.trim().length === 0,
+        message: "Please add a province.",
+        field: "province",
+        ref: provinceRef,
+      },
+      {
+        condition: !postalcodeRegex.test(form.postalcode),
+        message: "Postal code must be exactly 5 digits.",
+        field: "postalcode",
+        ref: postalcodeRef,
+      },
+      {
+        condition: !form.managerTel || !telRegex.test(form.managerTel.replaceAll(/[-\s]/g, "")),
+        message: "Please add a valid manager telephone number.",
+        field: "managerTel",
+        ref: managerTelRef,
+      },
+      {
+        condition: !form.password || form.password.trim().length === 0,
+        message: "Please add a manager password.",
+        field: "password",
+        ref: passwordRef,
+      },
+      {
+        condition: form.password !== form.confirmPassword,
+        message: "Passwords do not match.",
+        field: "confirmPassword",
+        ref: confirmPasswordRef,
+      },
+    ];
+
+    for (const validation of validations) {
+      if (validation.condition) {
+        setError(validation.message);
+        setErrorField(validation.field);
+        validation.ref.current?.focus();
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     if (error) {
@@ -96,104 +183,7 @@ export default function AdminProfile({ user }: Readonly<Props>) {
     e.preventDefault();
     if (!session?.user?.token) return;
 
-    // 1. Name Validation
-    if (form.name.trim().length === 0) {
-      setError("Please add a company name.");
-      setErrorField("name");
-      nameRef.current?.focus();
-      setCreatedName(form.name);
-      setShowModal(true);
-      return;
-    }
-    if (form.name.trim().length > 50) {
-      setError("Company name cannot be more than 50 characters.");
-      setErrorField("name");
-      nameRef.current?.focus();
-      return;
-    }
-
-    // 2. Description Validation
-    if (form.description.trim().length === 0) {
-      setError("Please add a description.");
-      setErrorField("description");
-      descriptionRef.current?.focus();
-      return;
-    }
-
-    // 3. Website Validation
-    const websiteRegex = /^(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
-    if (!websiteRegex.test(form.website)) {
-      setError("Please add a valid website URL.");
-      setErrorField("website");
-      websiteRef.current?.focus();
-      return;
-    }
-
-    // 4. Telephone Validation
-    const telRegex = /^0\d{8,9}$/;
-    if (!telRegex.test(form.tel.replaceAll(/[-\s]/g, ""))) {
-      setError("Please add a valid telephone number.");
-      setErrorField("tel");
-      telRef.current?.focus();
-      return;
-    }
-
-    // 5. Address Validation
-    if (form.address.trim().length === 0) {
-      setError("Please add an address.");
-      setErrorField("address");
-      addressRef.current?.focus();
-      return;
-    }
-
-    // 6. District Validation
-    if (form.district.trim().length === 0) {
-      setError("Please add a district.");
-      setErrorField("district");
-      districtRef.current?.focus();
-      return;
-    }
-
-    // 7. Province Validation
-    if (form.province.trim().length === 0) {
-      setError("Please add a province.");
-      setErrorField("province");
-      provinceRef.current?.focus();
-      return;
-    }
-
-    // 8. Postal Code Validation
-    const postalcodeRegex = /^\d{5}$/;
-    if (!postalcodeRegex.test(form.postalcode)) {
-      setError("Postal code must be exactly 5 digits.");
-      setErrorField("postalcode");
-      postalcodeRef.current?.focus();
-      return;
-    }
-
-    // 9. Manager telephone validation
-    if (!form.managerTel || !telRegex.test(form.managerTel.replaceAll(/[-\s]/g, ""))) {
-      setError("Please add a valid manager telephone number.");
-      setErrorField("managerTel");
-      managerTelRef.current?.focus();
-      return;
-    }
-
-    // 10. Password validation
-    if (!form.password || form.password.trim().length === 0) {
-      setError("Please add a manager password.");
-      setErrorField("password");
-      passwordRef.current?.focus();
-      return;
-    }
-
-    // 11. Confirm Password Validation
-    if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match.");
-      setErrorField("confirmPassword");
-      confirmPasswordRef.current?.focus();
-      return;
-    }
+    if (!validateForm()) return;
 
     setLoading(true);
     setError("");

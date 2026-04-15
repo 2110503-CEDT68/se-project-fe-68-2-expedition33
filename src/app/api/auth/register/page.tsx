@@ -148,7 +148,7 @@ export default function RegisterPage() {
         </div>
       </div>
 
-       {/* ── Right panel: Login Form ── */}
+       {/* ── Right panel: Register Form ── */}
       <div className="flex-1 flex flex-col items-center bg-background px-8 pt-20 relative overflow-hidden">
         
         <div className="w-full max-w-sm relative z-10 flex flex-col h-full">
