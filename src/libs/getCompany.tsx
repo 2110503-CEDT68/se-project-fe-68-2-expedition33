@@ -1,11 +1,4 @@
-import { CompanyItem } from "../../interfaces";
-
-type CompanyDetailApiResponse =
-    | CompanyItem
-    | {
-          success: boolean;
-          data: CompanyItem;
-      };
+import { CompanyDetailApiResponse, CompanyItem } from "../../interfaces";
 
 export default async function getCompany(id: string): Promise<CompanyItem>{
     const response = await fetch(`${process.env.BACKEND_URL}/api/v1/companies/${id}`, {
@@ -16,5 +9,11 @@ export default async function getCompany(id: string): Promise<CompanyItem>{
         throw new Error("Failed to fetch company");
     }
 
-    return (await response.json()).data;
+    const payload = (await response.json()) as CompanyDetailApiResponse;
+
+    if ("data" in payload) {
+        return payload.data;
+    }
+
+    return payload;
 }
