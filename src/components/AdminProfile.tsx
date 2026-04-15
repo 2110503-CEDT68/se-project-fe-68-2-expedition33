@@ -179,6 +179,9 @@ export default function AdminProfile({ user }: Props) {
       return;
     }
 
+    // 11. Confirm Password Validation
+
+
    
 
     setLoading(true);
@@ -236,8 +239,15 @@ export default function AdminProfile({ user }: Props) {
     { label: "District",         name: "district",    type: "text", placeholder: "e.g. Khlong Toei" },
     { label: "Province",         name: "province",    type: "text", placeholder: "e.g. Bangkok" },
     { label: "Postal Code",      name: "postalcode",  type: "text", placeholder: "e.g. 10110" },
+    
+  ];
+
+  const fieldsAccount: { label: string; name: CompanyTextFieldName; type: string; placeholder: string }[] = [
     { label: "Manager Tel",      name: "managerTel",  type: "tel",  placeholder: "e.g. 0812345678" },
     { label: "Manager Password", name: "password",    type: "password", placeholder: "Enter manager password" },
+    { label: "Comfirm Password", name: "confirm password", type: "password", placeholder: "Enter Confirm password" },
+
+
   ];
 
   return (
@@ -275,13 +285,17 @@ export default function AdminProfile({ user }: Props) {
       {/* ── Right: Create Company ── */}
       <div className="flex flex-col items-center">
         <h1 className="text-3xl md:text-4xl font-extrabold text-primary tracking-widest uppercase mb-10 drop-shadow-sm">
-          Create Company
+          Company Details        
         </h1>
-
+      
         <form
           onSubmit={handleSubmit}
           className="w-full bg-surface/50 border border-surface-border rounded-3xl p-8 md:p-14 shadow-xl backdrop-blur-sm flex flex-col gap-5"
         >
+          <p className="text-primary font-bold text-center tracking-widest text-base md:text-lg mt-2">
+            Company Account
+          </p>
+
           {fields.map((field) => (
             <div key={field.name} className="flex flex-col gap-1">
               <label className="text-foreground font-bold text-sm md:text-base tracking-widest">
@@ -303,6 +317,33 @@ export default function AdminProfile({ user }: Props) {
               />
             </div>
           ))}
+
+          <p className="text-primary font-bold text-center tracking-widest text-base md:text-lg mt-2">
+            Company Account
+          </p>
+
+          {fieldsAccount.map((field) => (
+            <div key={field.name} className="flex flex-col gap-1">
+              <label className="text-foreground font-bold text-sm md:text-base tracking-widest">
+                {field.label}
+              </label>
+              <input
+                ref={refMap[field.name] as React.RefObject<HTMLInputElement>}
+                type={field.type}
+                name={field.name}
+                required
+                value={form[field.name] ?? ""}
+                onChange={handleChange}
+                placeholder={field.placeholder}
+                className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${
+                  errorField === field.name
+                    ? "border-red-500 focus:ring-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]"
+                    : "border-primary focus:ring-primary"
+                }`}
+              />
+            </div>
+          ))}
+
 
           {/* Upload Logo */}
           <div className="flex flex-col items-center gap-2 pt-1">
