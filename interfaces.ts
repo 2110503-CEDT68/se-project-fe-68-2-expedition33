@@ -8,6 +8,8 @@ export interface UserItem {
     tel: string;
     role: "user" | "admin" | "company";
     createdAt: string;
+
+    companyData?: CompanyItem | null;
 }
 
 export interface UserResponse {
