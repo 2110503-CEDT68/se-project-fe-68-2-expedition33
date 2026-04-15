@@ -24,58 +24,82 @@ const companies: CompanyItem[] = [
     managerAccount: "manager-1",
     createdAt: "2026-01-05T09:00:00.000Z",
     logo: {
-      url: null,
-      public_id: null,
+      url: "/images/69c2565b8b200cbee11d2aac.png",
+      public_id: "null",
     },
     photoList: [
       {
-        url: null,
+        url: "/images/69c2565b8b200cbee11d2aac_pic0.png",
+        public_id: null,
+      },
+      {
+        url: "/images/69c2565b8b200cbee11d2aac_pic1.png",
+        public_id: null,
+      },
+      {
+        url: "/images/69c2565b8b200cbee11d2aac_pic2.png",
         public_id: null,
       },
     ],
   },
   {
     id: "company-2",
-    name: "Expedition Digital",
+    name: "NextGen",
     address: "18 Sukhumvit 21",
     district: "Watthana",
     province: "Bangkok",
     postalcode: "10110",
     tel: "02-234-5678",
-    website: "https://expedition.example.com",
+    website: "https://NextGen.example.com",
     description: "Consulting team building scalable digital products for enterprise clients.",
     managerAccount: "manager-2",
     createdAt: "2026-01-12T10:30:00.000Z",
     logo: {
-      url: null,
+      url: "/images/69c17fa4e917a6764a11fb03.png",
       public_id: null,
     },
     photoList: [
       {
-        url: null,
+        url: "/images/69c17fa4e917a6764a11fb03_pic0.png",
         public_id: null,
       },
-    ],
+      {
+        url: "/images/69c17fa4e917a6764a11fb03_pic1.png",
+        public_id: null,
+      },
+      {
+        url: "/images/69c17fa4e917a6764a11fb03_pic2.png",
+        public_id: null,
+      },
+    ]
   },
   {
     id: "company-3",
-    name: "Frontend Forge",
+    name: "Skyline",
     address: "55 Huai Khwang Center",
     district: "Huai Khwang",
     province: "Bangkok",
     postalcode: "10310",
     tel: "02-345-6789",
-    website: "https://forge.example.com",
+    website: "https://Skyline.example.com",
     description: "Specialized frontend platform company delivering component systems and design tooling.",
     managerAccount: "manager-3",
     createdAt: "2026-02-01T08:15:00.000Z",
     logo: {
-      url: null,
+      url: "/images/69c17f98e917a6764a11fafd.png",
       public_id: null,
     },
     photoList: [
       {
-        url: null,
+        url: "/images/69c17f98e917a6764a11fafd_pic0.png",
+        public_id: null,
+      },
+      {
+        url: "/images/69c17f98e917a6764a11fafd_pic1.png",
+        public_id: null,
+      },
+      {
+        url: "/images/69c17f98e917a6764a11fafd_pic2.png",
         public_id: null,
       },
     ],
