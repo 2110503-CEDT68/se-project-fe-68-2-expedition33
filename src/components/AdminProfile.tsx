@@ -3,9 +3,8 @@
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { useSession } from "next-auth/react";
-import { UserItem } from "../../interfaces";
+import { UserItem, CompanyCreatePayload } from "../../interfaces";
 import createCompany from "@/libs/createCompany";
-import { CompanyCreatePayload } from "../../interfaces";
 
 interface Props {
   user: UserItem;
@@ -21,9 +20,14 @@ type CompanyTextFieldName =
   | "province"
   | "postalcode"
   | "managerTel"
-  | "password";
+  | "password"
+  | "confirmPassword";
 
-const initialForm: CompanyCreatePayload = {
+interface AdminCreateCompanyForm extends CompanyCreatePayload {
+  confirmPassword: string;
+}
+
+const initialForm: AdminCreateCompanyForm = {
   name: "",
   address: "",
   district: "",
@@ -34,17 +38,19 @@ const initialForm: CompanyCreatePayload = {
   description: "",
   managerTel: "",
   password: "",
+  confirmPassword: "",
 };
 
-export default function AdminProfile({ user }: Props) {
+export default function AdminProfile({ user }: Readonly<Props>) {
   const { data: session } = useSession();
-  const [form, setForm] = useState<CompanyCreatePayload>(initialForm);
+  const [form, setForm] = useState<AdminCreateCompanyForm>(initialForm);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [errorField, setErrorField] = useState<string>("");
   const [success, setSuccess] = useState("");
   const [showModal, setShowModal] = useState(false);  
   const [createdName, setCreatedName] = useState("");
+  const [createdManagerEmail, setCreatedManagerEmail] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [photoFiles, setPhotoFiles] = useState<File[]>([]);
   const logoInputRef = useRef<HTMLInputElement>(null);
@@ -61,7 +67,7 @@ export default function AdminProfile({ user }: Props) {
   const postalcodeRef = useRef<HTMLInputElement>(null);
   const managerTelRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-
+  const confirmPasswordRef = useRef<HTMLInputElement>(null);
 
   const refMap: Record<CompanyTextFieldName, React.RefObject<HTMLInputElement | null>> = {
     name: nameRef,
@@ -74,6 +80,7 @@ export default function AdminProfile({ user }: Props) {
     postalcode: postalcodeRef,
     managerTel: managerTelRef,
     password: passwordRef,
+    confirmPassword: confirmPasswordRef,
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -84,7 +91,7 @@ export default function AdminProfile({ user }: Props) {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!session?.user?.token) return;
 
@@ -123,7 +130,7 @@ export default function AdminProfile({ user }: Props) {
 
     // 4. Telephone Validation
     const telRegex = /^0\d{8,9}$/;
-    if (!telRegex.test(form.tel.replace(/[-\s]/g, ""))) {
+    if (!telRegex.test(form.tel.replaceAll(/[-\s]/g, ""))) {
       setError("Please add a valid telephone number.");
       setErrorField("tel");
       telRef.current?.focus();
@@ -164,7 +171,7 @@ export default function AdminProfile({ user }: Props) {
     }
 
     // 9. Manager telephone validation
-    if (!form.managerTel || !telRegex.test(form.managerTel.replace(/[-\s]/g, ""))) {
+    if (!form.managerTel || !telRegex.test(form.managerTel.replaceAll(/[-\s]/g, ""))) {
       setError("Please add a valid manager telephone number.");
       setErrorField("managerTel");
       managerTelRef.current?.focus();
@@ -180,9 +187,12 @@ export default function AdminProfile({ user }: Props) {
     }
 
     // 11. Confirm Password Validation
-
-
-   
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match.");
+      setErrorField("confirmPassword");
+      confirmPasswordRef.current?.focus();
+      return;
+    }
 
     setLoading(true);
     setError("");
@@ -211,12 +221,16 @@ export default function AdminProfile({ user }: Props) {
         formData.append("photoList", photo);
       }
 
-      await createCompany(session.user.token, formData);
+      const createdCompany = await createCompany(session.user.token, formData);
       setForm(initialForm);
       setLogoFile(null);
       setPhotoFiles([]);
       if (logoInputRef.current) logoInputRef.current.value = "";
       if (photoListInputRef.current) photoListInputRef.current.value = "";
+
+      setCreatedName(createdCompany.data.name);
+      setCreatedManagerEmail(createdCompany.managerEmail ?? "");
+      setSuccess(`Company ${createdCompany.data.name} created successfully.`);
       setShowModal(true);
     } catch (err: any) {
       const errorMessage = err?.message ?? "Failed to create company";
@@ -245,9 +259,7 @@ export default function AdminProfile({ user }: Props) {
   const fieldsAccount: { label: string; name: CompanyTextFieldName; type: string; placeholder: string }[] = [
     { label: "Manager Tel",      name: "managerTel",  type: "tel",  placeholder: "e.g. 0812345678" },
     { label: "Manager Password", name: "password",    type: "password", placeholder: "Enter manager password" },
-    { label: "Comfirm Password", name: "confirm password", type: "password", placeholder: "Enter Confirm password" },
-
-
+    { label: "Confirm Password", name: "confirmPassword", type: "password", placeholder: "Enter Confirm password" },
   ];
 
   return (
@@ -348,19 +360,22 @@ export default function AdminProfile({ user }: Props) {
           {/* Upload Logo */}
           <div className="flex flex-col items-center gap-2 pt-1">
             <span className="text-foreground font-bold text-sm md:text-base tracking-widest">Upload Logo</span>
-            <div
+            <button
+              type="button"
               className="w-10 h-10 border border-primary rounded-lg flex items-center justify-center text-primary cursor-pointer hover:bg-primary-light transition-colors"
               onClick={() => logoInputRef.current?.click()}
+              title="Click to upload company logo"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
               </svg>
-            </div>
+            </button>
             <input
               ref={logoInputRef}
               type="file"
               accept="image/*"
               className="hidden"
+              title="Logo upload input"
               onChange={(e) => setLogoFile(e.target.files?.[0] ?? null)}
             />
             <p className="text-xs text-foreground/70 text-center">
@@ -376,6 +391,7 @@ export default function AdminProfile({ user }: Props) {
               type="file"
               accept="image/*"
               multiple
+              title="Photos upload input"
               onChange={(e) => setPhotoFiles(Array.from(e.target.files ?? []))}
               className="block w-full text-xs text-foreground file:mr-2 file:rounded file:border file:border-primary file:px-2 file:py-1 file:text-primary"
             />
@@ -409,6 +425,11 @@ export default function AdminProfile({ user }: Props) {
               <span className="text-primary font-bold">Company : </span>
               <span className="text-gray-700">{createdName}</span>
             </p>
+            {createdManagerEmail && (
+              <p className="text-sm text-foreground/80">
+                Manager email: <span className="font-semibold">{createdManagerEmail}</span>
+              </p>
+            )}
             <button
               onClick={() => setShowModal(false)}
               className="mt-2 bg-primary hover:opacity-90 text-white font-bold tracking-widest uppercase px-10 py-3 rounded-full transition-opacity"
