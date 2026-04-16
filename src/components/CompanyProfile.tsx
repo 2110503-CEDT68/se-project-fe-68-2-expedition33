@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { CompanyItem, UserItem } from "../../interfaces";
 import createCompany from "@/libs/createCompany";
 import UpdateCompanyPanel from "./modals/UpdateCompanyPanel";
@@ -61,7 +61,6 @@ export default function CompanyProfile({ user }: Props) {
     province: provinceRef,
     postalcode: postalcodeRef,
   };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -129,43 +128,60 @@ export default function CompanyProfile({ user }: Props) {
     },
   ];
   
-  useEffect(() => {
   const fetchCompany = async () => {
-    if (!session?.user?.token) return;
+  if (!session?.user?.token) return;
 
-    try {
-      const res = await getMe(session.user.token);
+  try {
+    const res = await getMe(session.user.token);
 
-      if (!res?.data?.companyData) {
-        setCompany(null);
-        return;
-      }
-
-      const companyData = res.data.companyData;
-
-      const mappedCompany: CompanyItem = {
-        id: companyData.id,
-        name: companyData.name,
-        address: companyData.address,
-        district: companyData.district,
-        province: companyData.province,
-        postalcode: companyData.postalcode,
-        tel: companyData.tel,
-        website: companyData.website,
-        description: companyData.description,
-        logo: companyData.logo,
-        photoList: companyData.photoList,
-      };
-
-      setCompany(mappedCompany);
-    } catch (err) {
-      console.error("Fetch company error:", err);
+    if (!res?.data?.companyData) {
+      setCompany(null);
+      return;
     }
+
+    const companyData = res.data.companyData;
+
+    setCompany({
+      id: companyData.id,
+      name: companyData.name,
+      address: companyData.address,
+      district: companyData.district,
+      province: companyData.province,
+      postalcode: companyData.postalcode,
+      tel: companyData.tel,
+      website: companyData.website,
+      description: companyData.description,
+      logo: companyData.logo,
+      photoList: companyData.photoList,
+    });
+
+    console.log(companyData);
+
+  } catch (err) {
+    console.error("Fetch company error:", err);
+  }
+};
+
+    useEffect(() => {
+    fetchCompany();
+  }, [session]);
+
+    const handleUpdate = async () => {
+    await fetchCompany();
+    setUpdating(null);
   };
 
-  fetchCompany();
-}, [session]);
+    const handleDelete = async () => {
+    try {
 
+      setCompany(null);
+      setDeleting(null);
+
+      await signOut({ callbackUrl: "/signin" });
+    } catch (err) {
+      console.error(err);
+    }
+  };
   /*if (loading) {
 
   return (
@@ -328,35 +344,30 @@ export default function CompanyProfile({ user }: Props) {
                     token={session.user.token}
                     onClose={() => {
                       setUpdating(null);
-                      setShowModal(false); 
+                      setShowModal(false);
                     }}
-                    onUpdated={() => {
-                      setShowModal(false); 
-                      window.location.reload();
-                    }}
+                    onUpdated={handleUpdate} 
                   />
                 </div>
               </div>
             )}
 
-              {deleting && session?.user.token && (
-              <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
+                {deleting && session?.user.token && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                  <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
 
-                  <button
-                    onClick={() => setDeleting(null)}
-                    className="absolute top-3 right-3 text-gray-500 hover:text-black"
-                  >
-                    ✕
+                    <button
+                      onClick={() => setDeleting(null)}
+                      className="absolute top-3 right-3 text-gray-500 hover:text-black"
+                    >
+                      ✕
                   </button>
 
                   <DeleteCompanyPanel
                     company={deleting}
                     token={session.user.token}
                     onClose={() => setDeleting(null)}
-                    onDeleted={() => {
-                      window.location.href = "/companies";
-                    }}
+                    onDeleted={handleDelete}
                   />
                 </div>
               </div>
