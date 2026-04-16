@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { CompanyItem, UserItem } from "../../interfaces";
 import UpdateCompanyPanel from "./modals/UpdateCompanyPanel";
 import DeleteCompanyPanel from "./modals/DeleteCompanyPanel";
@@ -60,6 +60,18 @@ export default function CompanyProfile({ user }: Props) {
 
   fetchCompany();
 }, [session]);
+
+const handleDelete = async () => {
+  try {
+
+    setCompany(null);
+    setDeleting(null);
+
+    await signOut({ callbackUrl: "/login" });
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   /*if (loading) {
 
@@ -222,7 +234,7 @@ export default function CompanyProfile({ user }: Props) {
                     token={session.user.token}
                     onClose={() => setDeleting(null)}
                     onDeleted={() => {
-                      window.location.href = "/companies";
+                      signOut({ callbackUrl: "/api/auth/login" });
                     }}
                   />
                 </div>
