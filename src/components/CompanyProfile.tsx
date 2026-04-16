@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { CompanyItem, UserItem } from "../../interfaces";
 import UpdateCompanyPanel from "./modals/UpdateCompanyPanel";
 import DeleteCompanyPanel from "./modals/DeleteCompanyPanel";
-import getMe from "@/libs/getMe";
+import getUserProfile from "@/libs/getUserProfile";
 
 interface Props {
   user: UserItem;
@@ -28,7 +28,7 @@ export default function CompanyProfile({ user }: Props) {
     if (!session?.user?.token) return;
 
     try {
-      const res = await getMe(session.user.token);
+      const res = await getUserProfile(session.user.token);
 
       if (!res?.data?.companyData) {
         setCompany(null);
