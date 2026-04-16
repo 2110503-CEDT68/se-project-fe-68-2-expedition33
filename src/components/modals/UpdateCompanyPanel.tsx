@@ -8,12 +8,12 @@ export default function UpdateCompanyPanel({
   token,
   onClose,
   onUpdated
-}: {
+}: Readonly<{
   company: CompanyItem;
   token: string;
   onClose: () => void;
   onUpdated: () => void;
-}) {
+}>) {
   const [name, setName] = useState(company.name);
   const [description, setDescription] = useState(company.description);
   const [website, setWebsite] = useState(company.website);
@@ -27,14 +27,10 @@ export default function UpdateCompanyPanel({
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
-  const [hoveredInput, setHoveredInput] = useState<string | null>(null);
-  const [logoHovered, setLogoHovered] = useState(false);
-  const [submitHovered, setSubmitHovered] = useState(false);
-  const [closeHovered, setCloseHovered] = useState(false);
-
+  
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -61,6 +57,7 @@ export default function UpdateCompanyPanel({
       onClose();
     } catch (err) {
       setLoading(false);
+      console.error("Failed to update company:", err);
     }
   };
 
@@ -82,51 +79,23 @@ export default function UpdateCompanyPanel({
     setPhotoFiles(Array.from(e.target.files ?? []));
   };
 
-  const inputStyle = (key: string): React.CSSProperties => ({
-    border: `2px solid var(--primary)`,
-    background: hoveredInput === key ? 'var(--surface-hover, rgba(0,0,0,0.04))' : 'var(--surface)',
-    color: 'var(--foreground)',
-    outline: 'none',
-    transition: 'background 0.18s, box-shadow 0.18s',
-    boxShadow: hoveredInput === key ? '0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent)' : 'none',
-  });
-
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50" style={{ background: 'rgba(0,0,0,0.4)' }}>
-      <div
-        className="rounded-2xl w-[90%] max-w-sm px-8 py-7 relative shadow-lg"
-        style={{
-          background: 'var(--surface)',
-          color: 'var(--foreground)',
-          border: '1px solid var(--surface-border)'
-        }}
-      >
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm p-4">
+      <div className="bg-surface border border-surface-border rounded-2xl w-full max-w-sm px-8 py-7 relative shadow-2xl text-foreground">
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-surface/80 z-50 rounded-2xl">
             <span className="text-primary font-bold text-lg animate-pulse">Updating...</span>
           </div>
         )}
 
-        {/* Close */}
         <button
           onClick={onClose}
-          onMouseEnter={() => setCloseHovered(true)}
-          onMouseLeave={() => setCloseHovered(false)}
-          className="absolute top-4 right-5 text-2xl"
-          style={{
-            color: 'var(--primary)',
-            transform: closeHovered ? 'scale(1.2) rotate(-10deg)' : 'scale(1)',
-            transition: 'transform 0.15s',
-          }}
+          className="absolute top-4 right-5 text-2xl text-primary hover:scale-125 hover:-rotate-12 transition-transform duration-150 cursor-pointer"
         >
           ↩
         </button>
 
-        {/* Title */}
-        <h2
-          className="text-2xl font-bold text-center tracking-[0.15em] mb-5"
-          style={{ color: 'var(--primary)' }}
-        >
+        <h2 className="text-2xl font-bold text-center tracking-[0.15em] mb-5 text-primary">
           Update Company
         </h2>
 
@@ -149,68 +118,53 @@ export default function UpdateCompanyPanel({
               value={value}
               onChange={e => setter(e.target.value)}
               placeholder={placeholder}
-              className="rounded-md px-3 py-2 text-sm"
-              style={inputStyle(key)}
-              onMouseEnter={() => setHoveredInput(key)}
-              onMouseLeave={() => setHoveredInput(null)}
-              onFocus={() => setHoveredInput(key)}
-              onBlur={() => setHoveredInput(null)}
+              className="w-full border-2 border-primary rounded-md px-3 py-2 text-sm bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 hover:bg-black/5 transition-all"
             />
           ))}
 
-          {/* Upload */}
           <div className="flex flex-col items-center gap-2 mt-3">
-            <span className="text-xs tracking-widest" style={{ color: 'var(--primary)' }}>
+            <span className="text-xs tracking-widest text-primary font-bold">
               Upload logo
             </span>
-            <div
-              className="rounded-md p-2 flex flex-col items-center cursor-pointer"
-              style={{
-                border: `2px solid var(--primary)`,
-                background: logoHovered ? 'color-mix(in srgb, var(--primary) 8%, transparent)' : 'transparent',
-                boxShadow: logoHovered ? '0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent)' : 'none',
-                transform: logoHovered ? 'scale(1.03)' : 'scale(1)',
-                transition: 'background 0.18s, box-shadow 0.18s, transform 0.18s',
-              }}
+            <button
+              type="button"
+              className="w-full border-2 border-primary rounded-md p-2 flex flex-col items-center cursor-pointer hover:bg-primary/5 hover:scale-[1.02] transition-all group focus:outline-none focus:ring-2 focus:ring-primary/50"
               onClick={() => fileInputRef.current?.click()}
-              onMouseEnter={() => setLogoHovered(true)}
-              onMouseLeave={() => setLogoHovered(false)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  fileInputRef.current?.click();
+                }
+              }}
               title="Select logo file"
             >
-              <span
-                className="text-2xl"
-                style={{
-                  transform: logoHovered ? 'translateY(-2px)' : 'translateY(0)',
-                  display: 'inline-block',
-                  transition: 'transform 0.18s',
-                }}
-              >
+              <span className="text-2xl text-primary group-hover:-translate-y-1 transition-transform">
                 ⬆
               </span>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleLogoChange}
-              />
               {logoPreview ? (
                 <img
                   src={logoPreview}
                   alt="Logo preview"
-                  className="rounded-md border border-surface-border max-h-24 max-w-full object-contain bg-surface"
-                  style={{ background: 'var(--surface)' }}
+                  className="rounded-md border border-surface-border max-h-24 max-w-full object-contain bg-surface mt-2"
                 />
               ) : (
                 <img
-                  src={company.logo?.url ?? "/images/default.png"}
+                  src={`/images/${company.id}.png`}
                   alt="Current logo"
-                  className="rounded-md border border-surface-border max-h-24 max-w-full object-contain bg-surface"
-                  style={{ background: 'var(--surface)' }}
+                  className="rounded-md border border-surface-border max-h-24 max-w-full object-contain bg-surface mt-2"
                   onError={e => (e.currentTarget.style.display = 'none')}
                 />
               )}
-            </div>
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              title="Upload logo"
+              aria-label="Upload logo"
+              onChange={handleLogoChange}
+            />
 
             <input
               ref={photoInputRef}
@@ -218,38 +172,27 @@ export default function UpdateCompanyPanel({
               accept="image/*"
               multiple
               className="hidden"
+              title="Upload gallery photos"
+              aria-label="Upload gallery photos"
               onChange={handlePhotoListChange}
             />
             <button
               type="button"
-              className="text-xs rounded-md px-3 py-1 border"
-              style={{ borderColor: "var(--primary)", color: "var(--primary)" }}
+              className="text-xs rounded-md px-3 py-1 border border-primary text-primary hover:bg-primary/10 transition-colors cursor-pointer"
               onClick={() => photoInputRef.current?.click()}
             >
               Upload gallery photos
             </button>
-            <p className="text-xs" style={{ color: "var(--primary)" }}>
+            <p className="text-xs text-primary/70">
               {photoFiles.length > 0
                 ? `${photoFiles.length} photo(s) selected`
                 : "No gallery photos selected"}
             </p>
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
-            className="py-2 rounded-lg mt-4 font-bold tracking-[0.2em]"
-            onMouseEnter={() => setSubmitHovered(true)}
-            onMouseLeave={() => setSubmitHovered(false)}
-            style={{
-              background: submitHovered
-                ? 'color-mix(in srgb, var(--primary) 80%, black)'
-                : 'var(--primary)',
-              color: 'white',
-              transform: submitHovered ? 'translateY(-1px)' : 'translateY(0)',
-              boxShadow: submitHovered ? '0 4px 16px color-mix(in srgb, var(--primary) 35%, transparent)' : 'none',
-              transition: 'background 0.18s, transform 0.15s, box-shadow 0.18s',
-            }}
+            className="w-full py-2 rounded-lg mt-4 font-bold tracking-[0.2em] bg-primary text-white hover:bg-primary-hover hover:-translate-y-0.5 hover:shadow-lg transition-all cursor-pointer"
           >
             Update
           </button>

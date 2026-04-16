@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function TopMenuItem({ title, pageRef, icon }: { title: string, pageRef: string, icon: React.ReactElement }) {
+export default function TopMenuItem({ title, pageRef, icon }: Readonly<{ title: string, pageRef: string, icon: React.ReactElement }>) {
     const pathname = usePathname();
     const isActive = pathname === pageRef;
 

@@ -1,4 +1,19 @@
 // ==========================================
+//                  GLOBALS
+// ==========================================
+export interface PaginationMeta {
+    next?: {
+        page: number;
+        limit: number;
+    };
+    prev?: {
+        page: number;
+        limit: number;
+    };
+}
+
+
+// ==========================================
 //           USER & AUTHENTICATION
 // ==========================================
 export interface UserItem {
@@ -17,6 +32,12 @@ export interface UserResponse {
     data: UserItem;
 }
 
+export interface UserResponseWithCompanyData extends UserResponse {
+    companyData: CompanyItem | null;
+}
+
+export type GetMeResponse = UserResponse | UserResponseWithCompanyData;
+
 export interface RegisterPayload {
     name: string;
     email: string;
@@ -28,17 +49,6 @@ export interface RegisterPayload {
 export interface AuthResponse {
     success: boolean;
     token: string;
-}
-
-export interface PaginationMeta {
-    next?: {
-        page: number;
-        limit: number;
-    };
-    prev?: {
-        page: number;
-        limit: number;
-    };
 }
 
 export interface CloudinaryAsset {
@@ -71,6 +81,13 @@ export interface CompanyResponse {
     pagination: PaginationMeta;
     data: CompanyItem[];
 }
+
+export interface CompanyDetailResponse {
+    success: boolean;
+    data: CompanyItem;
+}
+
+export type CompanyDetailApiResponse = CompanyItem | CompanyDetailResponse;
 
 export interface CompanyBasePayload {
     name: string;

@@ -21,7 +21,7 @@ export const authOptions: AuthOptions = {
                 if (!credentials) return null;
                 const authRes = await userLogIn(credentials.email, credentials.password);
 
-                if (authRes && authRes.success) {
+                if (authRes?.success) {
                     const profile = await getUserProfile(authRes.token);
                     const user = {
                         id: profile.data.id,

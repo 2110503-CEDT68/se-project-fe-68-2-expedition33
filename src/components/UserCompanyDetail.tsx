@@ -11,13 +11,13 @@ export default function UserCompanyDetail({
   isAdmin, 
   showBooking = true,
   footerActions
-}: {
+}: Readonly<{
   company: CompanyItem;
   token?: string;
   isAdmin: boolean;
   showBooking?: boolean;
   footerActions?: ReactNode;
-}) {
+}>) {
   const iconClassName: string = "w-5 h-5 text-primary shrink-0";
   const iconProps = {
     fill: "none",
@@ -46,7 +46,7 @@ export default function UserCompanyDetail({
         {/* Logo section */}
         <div className="w-32 h-32 sm:w-40 sm:h-40 bg-background border border-surface-border rounded-2xl flex items-center justify-center shrink-0 overflow-hidden shadow-sm mx-auto md:mx-0">
           <Image
-            src={company.logo?.url ?? "/images/default.png"}
+            src={`/images/${company.id}.png`}
             alt={company.name + " logo"}
             className="object-cover w-full h-full"
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -121,36 +121,29 @@ export default function UserCompanyDetail({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 mb-6">
-        {company.photoList && company.photoList.length > 0 ? (
-          company.photoList.map((photo, i) => (
-            <div
-              key={i}
-              className="bg-background border border-surface-border rounded-2xl aspect-square flex items-center justify-center overflow-hidden shadow-sm"
-            >
-              <Image
-                src={photo.url ?? "/images/default.png"}
-                alt={`${company.name} picture ${i}`}
-                className="object-cover w-full h-full rounded-xl"
-                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                  e.currentTarget.style.display = "none";
-                  const fallback: HTMLSpanElement = document.createElement("span");
-                  fallback.className =
-                    "text-foreground/50 font-bold text-center text-sm";
-                  fallback.innerHTML = `${company.name}<br />Picture`;
-                  e.currentTarget.parentNode?.appendChild(fallback);
-                }}
-                width={0}
-                height={0}
-                sizes="100vw"
-                priority
-              />
-            </div>
-          ))
-        ) : (
-          <div className="col-span-3 text-center text-foreground/50 font-medium">
-            No images available
+        {[0, 1, 2].map((i: number) => (
+          <div
+            key={i}
+            className="bg-background border border-surface-border rounded-2xl aspect-square flex items-center justify-center overflow-hidden shadow-sm"
+          >
+            <Image
+              src={`/images/${company.id}_pic${i}.png`}
+              alt={`${company.name} picture ${i}`}
+              className="object-cover w-full h-full rounded-xl"
+              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                e.currentTarget.style.display = 'none';
+                const fallback: HTMLSpanElement = document.createElement('span');
+                fallback.className = 'text-foreground/50 font-bold text-center text-sm';
+                fallback.innerHTML = `${company.name}<br />Picture`;
+                e.currentTarget.parentNode?.appendChild(fallback);
+              }}
+              width={0}
+              height={0}
+              sizes="100vw"
+              priority
+            />
           </div>
-        )}
+        ))}
       </div>
 
       <hr className="border-surface-border my-4" />

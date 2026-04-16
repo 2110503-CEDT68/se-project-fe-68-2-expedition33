@@ -1,6 +1,5 @@
 "use client"
 import { useState } from "react";
-import Link from "next/link";
 import { CompanyItem } from "../../interfaces";
 import UserCompanyDetail from "./UserCompanyDetail";
 import UpdateCompanyPanel from "./modals/UpdateCompanyPanel";
@@ -9,10 +8,10 @@ import DeleteCompanyPanel from "./modals/DeleteCompanyPanel";
 export default function AdminCompanyDetail({
   company,
   adminToken
-}: {
+}: Readonly<{
   company: CompanyItem;
   adminToken?: string;
-}) {
+}>) {
   const [updating, setUpdating] = useState<CompanyItem | null>(null);
   const [deleting, setDeleting] = useState<CompanyItem | null>(null);
 
@@ -47,7 +46,7 @@ export default function AdminCompanyDetail({
           company={updating}
           token={adminToken}
           onClose={() => setUpdating(null)}
-          onUpdated={() => window.location.reload()}
+          onUpdated={() => globalThis.location.reload()}
         />
       )}
 
@@ -57,7 +56,7 @@ export default function AdminCompanyDetail({
           token={adminToken}
           onClose={() => setDeleting(null)}
           onDeleted={() => {
-            window.location.href = "/companies";
+            globalThis.location.href = "/companies";
           }}
         />
       )}

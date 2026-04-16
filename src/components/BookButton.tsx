@@ -7,11 +7,11 @@ export default function BookButton({
     company,
     token,
     isAdmin,
-}: {
+}: Readonly<{
     company: CompanyItem, 
     token: string, 
     isAdmin: boolean
-}) {
+}>) {
     const [isBooking, setIsBooking] = useState(false);
         
     return (

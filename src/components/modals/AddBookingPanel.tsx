@@ -6,12 +6,12 @@ import createBooking from "@/libs/createBooking";
 import { CompanyItem } from "../../../interfaces";
 import { useAppSelector } from "@/redux/store";
 
-export default function AddBookingPanel({ company, token, onClose, isAdmin }: {
+export default function AddBookingPanel({ company, token, onClose, isAdmin }: Readonly<{
     company: CompanyItem,
     token: string,
     onClose: () => void, 
     isAdmin: boolean
-}) {
+}>) {
 
   const router = useRouter();
 
@@ -50,6 +50,7 @@ export default function AddBookingPanel({ company, token, onClose, isAdmin }: {
         
         <button 
           onClick={onClose} 
+          title="Close booking panel"
           className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer"
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">

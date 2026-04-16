@@ -1,11 +1,7 @@
 import Image from "next/image";
 import { UserItem } from "../../interfaces";
 
-interface Props {
-  user: UserItem;
-}
-
-export default function UserProfile({ user }: Props) {
+export default function UserProfile({ user }: Readonly<{ user: UserItem }>) {
   return (
     <>
       <div className="w-full max-w-3xl flex flex-col items-center z-10 animate-in fade-in slide-in-from-bottom-4 duration-500">

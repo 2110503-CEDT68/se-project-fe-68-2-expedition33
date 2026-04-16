@@ -4,7 +4,7 @@ import getCompany from "@/libs/getCompany";
 import AdminCompanyDetail from "@/components/AdminCompanyDetail";
 import UserCompanyDetail from "@/components/UserCompanyDetail";
 
-export default async function CompanyDetailPage({ params }: { params: Promise<{ cid: string }> }) {
+export default async function CompanyDetailPage({ params }: Readonly<{ params: Promise<{ cid: string }> }>) {
   
     const { cid } = await params;
     const session = await getServerSession(authOptions);

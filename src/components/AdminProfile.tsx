@@ -3,12 +3,8 @@
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { useSession } from "next-auth/react";
-import { UserItem, CompanyCreatePayload } from "../../interfaces";
+import { UserItem , CompanyCreatePayload } from "../../interfaces";
 import createCompany from "@/libs/createCompany";
-
-interface Props {
-  user: UserItem;
-}
 
 type CompanyTextFieldName =
   | "name"
@@ -41,7 +37,7 @@ const initialForm: AdminCreateCompanyForm = {
   confirmPassword: "",
 };
 
-export default function AdminProfile({ user }: Readonly<Props>) {
+export default function AdminProfile({ user }: Readonly<{ user: UserItem }>) {
   const { data: session } = useSession();
   const [form, setForm] = useState<AdminCreateCompanyForm>(initialForm);
   const [loading, setLoading] = useState(false);
@@ -83,6 +79,98 @@ export default function AdminProfile({ user }: Readonly<Props>) {
     confirmPassword: confirmPasswordRef,
   };
 
+  const validateForm = (): boolean => {
+    const telRegex = /^0\d{8,9}$/;
+    const websiteRegex = /^(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/;
+    const postalcodeRegex = /^\d{5}$/;
+
+    const validations = [
+      {
+        condition: form.name.trim().length === 0,
+        message: "Please add a company name.",
+        field: "name",
+        ref: nameRef,
+      },
+      {
+        condition: form.name.trim().length > 50,
+        message: "Company name cannot be more than 50 characters.",
+        field: "name",
+        ref: nameRef,
+      },
+      {
+        condition: form.description.trim().length === 0,
+        message: "Please add a description.",
+        field: "description",
+        ref: descriptionRef,
+      },
+      {
+        condition: !websiteRegex.test(form.website),
+        message: "Please add a valid website URL.",
+        field: "website",
+        ref: websiteRef,
+      },
+      {
+        condition: !telRegex.test(form.tel.replaceAll(/[-\s]/g, "")),
+        message: "Please add a valid telephone number.",
+        field: "tel",
+        ref: telRef,
+      },
+      {
+        condition: form.address.trim().length === 0,
+        message: "Please add an address.",
+        field: "address",
+        ref: addressRef,
+      },
+      {
+        condition: form.district.trim().length === 0,
+        message: "Please add a district.",
+        field: "district",
+        ref: districtRef,
+      },
+      {
+        condition: form.province.trim().length === 0,
+        message: "Please add a province.",
+        field: "province",
+        ref: provinceRef,
+      },
+      {
+        condition: !postalcodeRegex.test(form.postalcode),
+        message: "Postal code must be exactly 5 digits.",
+        field: "postalcode",
+        ref: postalcodeRef,
+      },
+      {
+        condition: !form.managerTel || !telRegex.test(form.managerTel.replaceAll(/[-\s]/g, "")),
+        message: "Please add a valid manager telephone number.",
+        field: "managerTel",
+        ref: managerTelRef,
+      },
+      {
+        condition: !form.password || form.password.trim().length === 0,
+        message: "Please add a manager password.",
+        field: "password",
+        ref: passwordRef,
+      },
+      {
+        condition: form.password !== form.confirmPassword,
+        message: "Passwords do not match.",
+        field: "confirmPassword",
+        ref: confirmPasswordRef,
+      },
+    ];
+
+    for (const validation of validations) {
+      if (validation.condition) {
+        setError(validation.message);
+        setErrorField(validation.field);
+        validation.ref.current?.focus();
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     if (error) {
@@ -91,108 +179,11 @@ export default function AdminProfile({ user }: Readonly<Props>) {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!session?.user?.token) return;
 
-    // 1. Name Validation
-    if (form.name.trim().length === 0) {
-      setError("Please add a company name.");
-      setErrorField("name");
-      nameRef.current?.focus();
-      setCreatedName(form.name);
-      setShowModal(true);
-      return;
-    }
-    if (form.name.trim().length > 50) {
-      setError("Company name cannot be more than 50 characters.");
-      setErrorField("name");
-      nameRef.current?.focus();
-      return;
-    }
-
-    // 2. Description Validation
-    if (form.description.trim().length === 0) {
-      setError("Please add a description.");
-      setErrorField("description");
-      descriptionRef.current?.focus();
-      return;
-    }
-
-    // 3. Website Validation
-    const websiteRegex = /^(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
-    if (!websiteRegex.test(form.website)) {
-      setError("Please add a valid website URL.");
-      setErrorField("website");
-      websiteRef.current?.focus();
-      return;
-    }
-
-    // 4. Telephone Validation
-    const telRegex = /^0\d{8,9}$/;
-    if (!telRegex.test(form.tel.replaceAll(/[-\s]/g, ""))) {
-      setError("Please add a valid telephone number.");
-      setErrorField("tel");
-      telRef.current?.focus();
-      return;
-    }
-
-    // 5. Address Validation
-    if (form.address.trim().length === 0) {
-      setError("Please add an address.");
-      setErrorField("address");
-      addressRef.current?.focus();
-      return;
-    }
-
-    // 6. District Validation
-    if (form.district.trim().length === 0) {
-      setError("Please add a district.");
-      setErrorField("district");
-      districtRef.current?.focus();
-      return;
-    }
-
-    // 7. Province Validation
-    if (form.province.trim().length === 0) {
-      setError("Please add a province.");
-      setErrorField("province");
-      provinceRef.current?.focus();
-      return;
-    }
-
-    // 8. Postal Code Validation
-    const postalcodeRegex = /^\d{5}$/;
-    if (!postalcodeRegex.test(form.postalcode)) {
-      setError("Postal code must be exactly 5 digits.");
-      setErrorField("postalcode");
-      postalcodeRef.current?.focus();
-      return;
-    }
-
-    // 9. Manager telephone validation
-    if (!form.managerTel || !telRegex.test(form.managerTel.replaceAll(/[-\s]/g, ""))) {
-      setError("Please add a valid manager telephone number.");
-      setErrorField("managerTel");
-      managerTelRef.current?.focus();
-      return;
-    }
-
-    // 10. Password validation
-    if (!form.password || form.password.trim().length === 0) {
-      setError("Please add a manager password.");
-      setErrorField("password");
-      passwordRef.current?.focus();
-      return;
-    }
-
-    // 11. Confirm Password Validation
-    if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match.");
-      setErrorField("confirmPassword");
-      confirmPasswordRef.current?.focus();
-      return;
-    }
+    if (!validateForm()) return;
 
     setLoading(true);
     setError("");
@@ -364,6 +355,7 @@ export default function AdminProfile({ user }: Readonly<Props>) {
               type="button"
               className="w-10 h-10 border border-primary rounded-lg flex items-center justify-center text-primary cursor-pointer hover:bg-primary-light transition-colors"
               onClick={() => logoInputRef.current?.click()}
+              aria-label="Upload logo"
               title="Click to upload company logo"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -375,8 +367,9 @@ export default function AdminProfile({ user }: Readonly<Props>) {
               type="file"
               accept="image/*"
               className="hidden"
-              title="Logo upload input"
               onChange={(e) => setLogoFile(e.target.files?.[0] ?? null)}
+              title="Upload company logo"
+              aria-label="Upload company logo"
             />
             <p className="text-xs text-foreground/70 text-center">
               {logoFile ? `Selected logo: ${logoFile.name}` : "No logo selected"}
@@ -391,9 +384,10 @@ export default function AdminProfile({ user }: Readonly<Props>) {
               type="file"
               accept="image/*"
               multiple
-              title="Photos upload input"
               onChange={(e) => setPhotoFiles(Array.from(e.target.files ?? []))}
               className="block w-full text-xs text-foreground file:mr-2 file:rounded file:border file:border-primary file:px-2 file:py-1 file:text-primary"
+              title="Upload company photos"
+              aria-label="Upload company photos"
             />
             <p className="text-xs text-foreground/70 text-center">
               {photoFiles.length > 0

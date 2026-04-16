@@ -5,7 +5,7 @@ import { CompanyItem } from "../../interfaces";
 import CompanyCard from "./CompanyCard";
 
 
-export default function CompanyList({ companies }: { companies: CompanyItem[] }) {
+export default function CompanyList({ companies }: Readonly<{ companies: CompanyItem[] }>) {
   const [query, setQuery] = useState("");
 
   const filtered = companies.filter(

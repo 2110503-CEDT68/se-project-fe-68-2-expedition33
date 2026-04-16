@@ -11,7 +11,7 @@ import { AppDispatch, useAppSelector } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { setBookings, removeBooking } from "@/redux/features/bookingSlice";
 
-export default function UserBookings({ bookingsResponse, userToken }: { bookingsResponse: BookingResponse, userToken: string }) {
+export default function UserBookings({ bookingsResponse, userToken }: Readonly<{ bookingsResponse: BookingResponse, userToken: string }>) {
     
     const bookings = useAppSelector(state => state.bookings.bookingItems);
     const dispatch = useDispatch<AppDispatch>();
@@ -82,7 +82,7 @@ export default function UserBookings({ bookingsResponse, userToken }: { bookings
                                         {booking.company?.name || "Unknown"}
                                     </span>
                                     <span className="tracking-widest uppercase">
-                                        May {booking.bookingDate.split("-")[2].split("T")[0]} 2022
+                                        {new Date(booking.bookingDate).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })}
                                     </span>
                                 </div>
                                 
@@ -132,6 +132,7 @@ export default function UserBookings({ bookingsResponse, userToken }: { bookings
                                     <button 
                                         onClick={(e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); setUpdatingBooking(booking); }} 
                                         className="p-2.5 rounded-xl bg-white/20 text-white hover:bg-white hover:text-primary hover:scale-110 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer relative z-20"
+                                        title="Update Booking"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                     </button>
@@ -140,6 +141,7 @@ export default function UserBookings({ bookingsResponse, userToken }: { bookings
                                     <button 
                                         onClick={(e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); setDeletingBooking(booking); }} 
                                         className="p-2.5 rounded-xl bg-white/20 text-white hover:bg-white hover:text-red-500 hover:scale-110 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer relative z-20"
+                                        title="Delete Booking"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                                     </button>
@@ -150,7 +152,7 @@ export default function UserBookings({ bookingsResponse, userToken }: { bookings
                     ))}
 
                     {bookings.length < 3 && Array.from({ length: 3 - bookings.length }).map((_, index) => (
-                        <Link key={index} href="/companies" className="group bg-surface border-2 border-surface-border hover:border-primary rounded-4xl flex flex-col shadow-sm hover:shadow-lg transition-all duration-300 w-full max-w-85 h-105 cursor-pointer overflow-hidden">
+                        <Link key={`empty-slot-${0 + index}`} href="/companies" className="group bg-surface border-2 border-surface-border hover:border-primary rounded-4xl flex flex-col shadow-sm hover:shadow-lg transition-all duration-300 w-full max-w-85 h-105 cursor-pointer overflow-hidden">
                             
                             <div className="flex-1 flex items-center justify-center group-hover:bg-primary/5 transition-colors duration-300">
                                 <span className="text-[100px] text-surface-border font-light group-hover:scale-110 group-hover:text-primary transition-all drop-shadow-sm leading-none">+</span>

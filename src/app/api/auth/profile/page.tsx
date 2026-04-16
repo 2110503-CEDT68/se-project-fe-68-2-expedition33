@@ -7,15 +7,18 @@ import LinearProgress from "@mui/material/LinearProgress";
 import UserProfile from "@/components/UserProfile";
 import AdminProfile from "@/components/AdminProfile";
 import CompanyProfile from "@/components/CompanyProfile";
+import { UserItem } from "../../../../../interfaces";
 
-async function ProfileContent({ token }: { token: string }) {
+async function ProfileContent({ token }: Readonly<{ token: string }>) {
   const response = await getUserProfile(token);
-  const user = response.data;
+  const user:UserItem = response.data;
 
   if (user.role === "admin") {
     return <AdminProfile user={user} />;
   }
-  else if (user.role === "company"){return <CompanyProfile user={user}/>}
+  else if (user.role === "company"){
+    return <CompanyProfile user={user} />
+  }
   return <UserProfile user={user} />;
 }
 
