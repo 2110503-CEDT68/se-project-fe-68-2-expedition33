@@ -30,6 +30,12 @@ export interface UserResponse {
     data: UserItem;
 }
 
+export interface UserResponseWithCompanyData extends UserResponse {
+    companyData: CompanyItem | null;
+}
+
+export type GetMeResponse = UserResponse | UserResponseWithCompanyData;
+
 export interface RegisterPayload {
     name: string;
     email: string;
@@ -73,6 +79,13 @@ export interface CompanyResponse {
     pagination: PaginationMeta;
     data: CompanyItem[];
 }
+
+export interface CompanyDetailResponse {
+    success: boolean;
+    data: CompanyItem;
+}
+
+export type CompanyDetailApiResponse = CompanyItem | CompanyDetailResponse;
 
 export interface CompanyBasePayload {
     name: string;
