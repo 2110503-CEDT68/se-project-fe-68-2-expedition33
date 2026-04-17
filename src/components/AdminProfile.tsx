@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { UserItem , CompanyCreatePayload } from "../../interfaces";
+import { UserItem, CompanyCreatePayload } from "../../interfaces";
 import createCompany from "@/libs/createCompany";
 import ProfileCard from "./ProfileCard";
 
@@ -42,7 +42,7 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
   const [error, setError] = useState("");
   const [errorField, setErrorField] = useState<string>("");
   const [success, setSuccess] = useState("");
-  const [showModal, setShowModal] = useState(false);  
+  const [showModal, setShowModal] = useState(false);
   const [createdName, setCreatedName] = useState("");
   const [createdManagerEmail, setCreatedManagerEmail] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -220,7 +220,7 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
       setCreatedManagerEmail(createdCompany.managerEmail ?? "");
       setSuccess(`Company ${createdCompany.data.name} created successfully.`);
       setShowModal(true);
-      
+
     } catch (err: any) {
       const errorMessage = err?.message ?? "Failed to create company";
       setError(errorMessage);
@@ -228,27 +228,27 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
         setErrorField("name");
         nameRef.current?.focus();
       }
-      
+
     } finally {
       setLoading(false);
     }
   };
 
   const fields: { label: string; name: CompanyTextFieldName; type: string; placeholder: string }[] = [
-    { label: "Name",             name: "name",        type: "text", placeholder: "e.g. ABC Company" },
-    { label: "Description",      name: "description", type: "text", placeholder: "e.g. Leading tech company in Thailand" },
-    { label: "Website",          name: "website",     type: "text", placeholder: "e.g. https://abc.com" },
-    { label: "Telephone number", name: "tel",         type: "tel",  placeholder: "e.g. 02-123-4567" },
-    { label: "Address",          name: "address",     type: "text", placeholder: "e.g. 123 Sukhumvit Rd." },
-    { label: "District",         name: "district",    type: "text", placeholder: "e.g. Khlong Toei" },
-    { label: "Province",         name: "province",    type: "text", placeholder: "e.g. Bangkok" },
-    { label: "Postal Code",      name: "postalcode",  type: "text", placeholder: "e.g. 10110" },
-    
+    { label: "Name", name: "name", type: "text", placeholder: "e.g. ABC Company" },
+    { label: "Description", name: "description", type: "text", placeholder: "e.g. Leading tech company in Thailand" },
+    { label: "Website", name: "website", type: "text", placeholder: "e.g. https://abc.com" },
+    { label: "Telephone number", name: "tel", type: "tel", placeholder: "e.g. 02-123-4567" },
+    { label: "Address", name: "address", type: "text", placeholder: "e.g. 123 Sukhumvit Rd." },
+    { label: "District", name: "district", type: "text", placeholder: "e.g. Khlong Toei" },
+    { label: "Province", name: "province", type: "text", placeholder: "e.g. Bangkok" },
+    { label: "Postal Code", name: "postalcode", type: "text", placeholder: "e.g. 10110" },
+
   ];
 
   const fieldsAccount: { label: string; name: CompanyTextFieldName; type: string; placeholder: string }[] = [
-    { label: "Manager Tel",      name: "managerTel",  type: "tel",  placeholder: "e.g. 0812345678" },
-    { label: "Manager Password", name: "password",    type: "password", placeholder: "Enter manager password" },
+    { label: "Manager Tel", name: "managerTel", type: "tel", placeholder: "e.g. 0812345678" },
+    { label: "Manager Password", name: "password", type: "password", placeholder: "Enter manager password" },
     { label: "Confirm Password", name: "confirmPassword", type: "password", placeholder: "Enter Confirm password" },
   ];
 
@@ -266,9 +266,10 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
       {/* ── Right: Create Company ── */}
       <div className="flex flex-col items-center">
         <h1 className="text-3xl md:text-4xl font-extrabold text-primary tracking-widest uppercase mb-10 drop-shadow-sm">
+          Company Details
           Add Company        
         </h1>
-      
+
         <form
           onSubmit={handleSubmit}
           className="w-full bg-surface/50 border border-surface-border rounded-3xl p-8 md:p-14 shadow-xl backdrop-blur-sm flex flex-col gap-5"
@@ -290,11 +291,10 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
                 value={form[field.name] ?? ""}
                 onChange={handleChange}
                 placeholder={field.placeholder}
-                className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${
-                  errorField === field.name
+                className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${errorField === field.name
                     ? "border-red-500 focus:ring-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]"
                     : "border-primary focus:ring-primary"
-                }`}
+                  }`}
               />
             </div>
           ))}
@@ -316,11 +316,10 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
                 value={form[field.name] ?? ""}
                 onChange={handleChange}
                 placeholder={field.placeholder}
-                className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${
-                  errorField === field.name
+                className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${errorField === field.name
                     ? "border-red-500 focus:ring-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]"
                     : "border-primary focus:ring-primary"
-                }`}
+                  }`}
               />
             </div>
           ))}
@@ -387,27 +386,37 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
         </form>
       </div>
 
-      {/* ── Modal Popup ── */}  
+      {/* ── Modal Popup ── */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl shadow-2xl px-10 py-12 flex flex-col items-center gap-4 max-w-sm w-full mx-4 text-center">
-            <h2 className="text-3xl font-extrabold text-primary">Account Created!</h2>
-            <p className="text-gray-500 text-sm tracking-wide">This company has been created</p>
-            <p className="text-base font-semibold">
-              <span className="text-primary font-bold">Company : </span>
-              <span className="text-gray-700">{createdName}</span>
+          <div className="bg-zinc-900 rounded-3xl shadow-2xl px-12 py-10 flex flex-col items-center max-w-md w-full mx-4 text-center">
+
+            {/* Title */}
+            <h2 className="text-4xl font-bold text-orange-500 mb-3 tracking-wide">
+              Account Created!
+            </h2>
+
+            {/* Subtitle */}
+            <p className="text-gray-400 text-sm mb-4">
+              You can now log in using this email:
             </p>
-            {createdManagerEmail && (
-              <p className="text-sm text-foreground/80">
-                Manager email: <span className="font-semibold">{createdManagerEmail}</span>
-              </p>
-            )}
+
+            {/* Email */}
+            <p className="text-base mb-6">
+              <span className="text-orange-500 font-semibold">Email : </span>
+              <span className="text-gray-200">
+                {createdManagerEmail}
+              </span>
+            </p>
+
+            {/* Button */}
             <button
               onClick={() => setShowModal(false)}
-              className="mt-2 bg-primary hover:opacity-90 text-white font-bold tracking-widest uppercase px-10 py-3 rounded-full transition-opacity"
+              className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-10 py-3 rounded-full shadow-md transition"
             >
               Done
             </button>
+
           </div>
         </div>
       )}
