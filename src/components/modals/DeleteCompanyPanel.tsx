@@ -50,11 +50,11 @@ export default function DeleteCompanyPanel({
           ↩
         </button>
 
-        <h2 className="text-3xl font-bold tracking-[0.2em] mb-5 text-primary">
+        <h2 className="text-3xl font-bold mb-5 text-primary">
           Delete Company
         </h2>
 
-        <p className="text-sm tracking-[0.15em] mb-6 text-foreground/70">
+        <p className="text-sm mb-6 text-foreground/70">
           Do you want to Delete company?
         </p>
 
@@ -63,9 +63,9 @@ export default function DeleteCompanyPanel({
           onMouseEnter={() => setDeleteHovered(true)}
           onMouseLeave={() => setDeleteHovered(false)}
           disabled={loading}
-          className={`px-10 py-2 rounded-lg font-bold tracking-[0.2em] text-white transition-all duration-150 
+          className={`px-10 py-2 rounded-full font-bold text-white transition-all duration-150 
             ${loading ? "cursor-not-allowed opacity-70" : "cursor-pointer"}
-            ${deleteHovered ? "bg-primary-hover -translate-y-0.5 shadow-lg shadow-primary/30" : "bg-primary"}`}
+            ${deleteHovered ? "bg-red-700 -translate-y-0.5 shadow-lg shadow-primary/30" : "bg-button-red"}`}
         >
           Delete
         </button>
