@@ -7,10 +7,12 @@ import DeleteCompanyPanel from "./modals/DeleteCompanyPanel";
 
 export default function AdminCompanyDetail({
   company,
-  adminToken
+  adminToken,
+  showBookButton = false
 }: Readonly<{
-  company: CompanyItem;
-  adminToken?: string;
+  company: CompanyItem,
+  adminToken?: string,
+  showBookButton?: boolean
 }>) {
   const [updating, setUpdating] = useState<CompanyItem | null>(null);
   const [deleting, setDeleting] = useState<CompanyItem | null>(null);
@@ -21,7 +23,7 @@ export default function AdminCompanyDetail({
         company={company}
         token={adminToken}
         isAdmin={true}
-        showBooking={true}
+        showBooking={showBookButton}
         footerActions={
           <>
             <button

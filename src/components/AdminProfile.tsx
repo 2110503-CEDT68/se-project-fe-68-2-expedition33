@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useRef } from "react";
 import { UserItem , CompanyCreatePayload } from "../../interfaces";
 import createCompany from "@/libs/createCompany";
@@ -262,15 +261,12 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
           Admin Profile
         </h1>
         <ProfileCard user={user} />
-        <div className="mt-auto relative w-62.5 md:w-100 h-62.5 md:h-87.5 opacity-90 pointer-events-none">
-          <Image src="/images/people-stance.svg" alt="Admin illustration" fill className="object-contain object-bottom" priority />
-        </div>
       </div>
 
       {/* ── Right: Create Company ── */}
       <div className="flex flex-col items-center">
         <h1 className="text-3xl md:text-4xl font-extrabold text-primary tracking-widest uppercase mb-10 drop-shadow-sm">
-          Company Details        
+          Add Company        
         </h1>
       
         <form

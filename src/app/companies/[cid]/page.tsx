@@ -17,7 +17,7 @@ export default async function CompanyDetailPage({ params }: Readonly<{ params: P
         <main className="relative min-h-screen flex flex-col items-center pt-24">
         {
             role === "admin"
-            ? <AdminCompanyDetail company={company} adminToken={token} />
+            ? <AdminCompanyDetail company={company} adminToken={token} showBookButton={true} />
             : <UserCompanyDetail company={company} token={token} isAdmin={false} />
         }
         </main>
