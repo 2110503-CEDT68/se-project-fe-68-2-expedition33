@@ -28,14 +28,14 @@ export default function AdminCompanyDetail({
           <>
             <button
               onClick={() => setUpdating(company)}
-              className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-2 rounded-lg font-semibold"
+              className="bg-button-blue hover:bg-cyan-700 text-white px-6 py-2 rounded-full font-semibold"
             >
               Update
             </button>
 
             <button
               onClick={() => setDeleting(company)}
-              className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold"
+              className="bg-button-red hover:bg-red-700 text-white px-6 py-2 rounded-full font-semibold"
             >
               Delete
             </button>

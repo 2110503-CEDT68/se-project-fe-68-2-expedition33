@@ -6,7 +6,7 @@ export default function ProfileCard({ user }: Readonly<{ user: UserItem }>) {
 
     <div className="max-h-full h-full flex flex-col items-center">
 
-      <div className="w-full bg-surface/50 border border-surface-border rounded-3xl p-8 md:p-14 shadow-xl backdrop-blur-sm">
+      <div className="w-full bg-surface border border-surface-border rounded-3xl p-8 md:p-14 shadow-xl backdrop-blur-sm">
         <div className="grid grid-cols-[80px_20px_1fr] md:grid-cols-[100px_30px_1fr] gap-y-6 md:gap-y-8 items-center text-lg md:text-xl font-bold">
           <span className="text-primary tracking-widest text-right">Role</span>
           <span className="text-primary/70 text-center">:</span>
