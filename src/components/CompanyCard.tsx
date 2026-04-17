@@ -10,10 +10,10 @@ export default function CompanyCard({ company }: Readonly<{ company: CompanyItem
     >
       {/* Top: logo + info side by side */}
       <div className="flex flex-1 p-4 gap-4">
-        
+        {/* Logo */}
         <div className="w-32 h-32 shrink-0 rounded-2xl bg-background border border-surface-border shadow-sm flex items-center justify-center text-center text-[11px] text-foreground/45 font-bold tracking-wide overflow-hidden">
           <Image
-            src={`/images/${company.id}.png`}
+            src={company.logo?.url || `/images/${company.id}.png`}
             alt={company.name + " logo"}
             className="object-cover w-full h-full"
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {

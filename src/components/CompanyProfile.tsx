@@ -1,49 +1,96 @@
 "use client";
 
 import Image from "next/image";
-import { UserItem } from "../../interfaces";
+import { useState, useRef, useEffect } from "react";
+import { useSession, signOut } from "next-auth/react";
+import { CompanyItem, UserItem } from "../../interfaces";
+import UpdateCompanyPanel from "./modals/UpdateCompanyPanel";
+import DeleteCompanyPanel from "./modals/DeleteCompanyPanel";
+import getUserProfile from "@/libs/getUserProfile";
+import ProfileCard from "./ProfileCard";
 
-export default function CompanyProfile({ user }: Readonly<{ user: UserItem }>) {
+interface Props {
+  user: UserItem;
+}
+
+export default function CompanyProfile({ user }: Props) {
+  const { data: session } = useSession();
+
+  // Refs for moving user focus automatically
+
+  const [company, setCompany] = useState<CompanyItem | null>(null);
+  const [updating, setUpdating] = useState<CompanyItem | null>(null);
+  const [deleting, setDeleting] = useState<CompanyItem | null>(null);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const fetchCompany = async () => {
+      if (!session?.user?.token) return;
+
+      try {
+        const res = await getUserProfile(session.user.token);
+
+        if (!res?.data?.companyData) {
+          setCompany(null);
+          return;
+        }
+
+        const companyData = res.data.companyData;
+
+        const mappedCompany: CompanyItem = {
+          id: companyData.id,
+          name: companyData.name,
+          address: companyData.address,
+          district: companyData.district,
+          province: companyData.province,
+          postalcode: companyData.postalcode,
+          tel: companyData.tel,
+          website: companyData.website,
+          description: companyData.description,
+          logo: companyData.logo,
+          photoList: companyData.photoList,
+        };
+
+        setCompany(mappedCompany);
+      } catch (err) {
+        console.error("Fetch company error:", err);
+      }
+    };
+
+    fetchCompany();
+  }, [session]);
+
+  const handleDelete = async () => {
+    try {
+      setCompany(null);
+      setDeleting(null);
+
+      await signOut({ callbackUrl: "/login" });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  /*if (loading) {
 
   return (
-    
+    <div className="w-full flex-1 flex flex-col items-center justify-center text-primary font-bold text-xl tracking-widest gap-4">
+      Loading Company...
+      <div className="w-full max-w-md mt-4">
+        <LinearProgress color="warning" />
+      </div>
+    </div>
+  );
+}*/
+
+  return (
     <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-10">
-    <h1 className="col-span-5 text-3xl md:text-4xl font-extrabold text-primary tracking-widest uppercase drop-shadow-sm">
-          Company Profile
-        </h1>
+      <h1 className="col-span-5 text-3xl md:text-4xl font-extrabold text-primary tracking-widest uppercase drop-shadow-sm">
+        Company Profile
+      </h1>
       {/* ── Left: Company Profile ── */}
       <div className="flex flex-col items-center col-span-2">
-        
-
-        <div className="w-full bg-surface/50 border border-surface-border rounded-3xl p-8 md:p-14 shadow-xl backdrop-blur-sm">
-          <div className="grid grid-cols-[80px_20px_1fr] md:grid-cols-[100px_30px_1fr] gap-y-6 md:gap-y-8 items-center text-lg md:text-xl font-bold">
-            <span className="text-primary tracking-widest text-right">
-              Role
-            </span>
-            <span className="text-primary/70 text-center">:</span>
-            <span className="text-foreground tracking-wide capitalize">
-              {user.role}
-            </span>
-
-            <span className="text-primary tracking-widest text-right">
-              Name
-            </span>
-            <span className="text-primary/70 text-center">:</span>
-            <span className="text-foreground tracking-wide">{user.name}</span>
-
-            <span className="text-primary tracking-widest text-right">
-              Email
-            </span>
-            <span className="text-primary/70 text-center">:</span>
-            <span className="text-foreground tracking-wide break-all">
-              {user.email}
-            </span>
-
-            <span className="text-primary tracking-widest text-right">Tel</span>
-            <span className="text-primary/70 text-center">:</span>
-            <span className="text-foreground tracking-wide">{user.tel}</span>
-          </div>
-        </div>
+        <ProfileCard user={user} />
 
         {/* Illustration */}
         <div className="mt-auto relative w-62.5 md:w-100 h-62.5 md:h-87.5 opacity-90 pointer-events-none">
@@ -59,11 +106,10 @@ export default function CompanyProfile({ user }: Readonly<{ user: UserItem }>) {
 
       {/* ── Right: Company INFO ── */}
       <div className="flex flex-col items-center col-span-3">
-
         <div className="w-full bg-surface/50 border border-surface-border rounded-3xl p-8 md:p-5 shadow-xl backdrop-blur-sm">
           <div className="flex flex-column">
             <div className="flex-0 rounded-3xl w-auto h-auto bg-gray-200 p-10 text-4xl">
-              Logo
+              {company?.name}
             </div>
             <div className="flex-1 rounded-3xl w-auto h-auto bg-gray-200 p-5 text-xl ml-5">
               <div className="grid grid-cols-[80px_20px_1fr] md:grid-cols-[100px_30px_1fr] gap-y-4 md:gap-y-1 items-center text-lg md:text-md ">
@@ -72,7 +118,7 @@ export default function CompanyProfile({ user }: Readonly<{ user: UserItem }>) {
                 </span>
                 <span className="text-primary/70 text-center">:</span>
                 <span className="text-foreground tracking-wide capitalize">
-                  Example Name
+                  {company?.name}
                 </span>
 
                 <span className="text-primary tracking-widest text-right">
@@ -80,7 +126,7 @@ export default function CompanyProfile({ user }: Readonly<{ user: UserItem }>) {
                 </span>
                 <span className="text-primary/70 text-center">:</span>
                 <span className="text-foreground tracking-wide">
-                  Example Address
+                  {company?.address}
                 </span>
 
                 <span className="text-primary tracking-widest text-right">
@@ -88,7 +134,7 @@ export default function CompanyProfile({ user }: Readonly<{ user: UserItem }>) {
                 </span>
                 <span className="text-primary/70 text-center">:</span>
                 <span className="text-foreground tracking-wide break-all">
-                  ExampleWebsite.com
+                  {company?.website}
                 </span>
 
                 <span className="text-primary tracking-widest text-right">
@@ -96,18 +142,16 @@ export default function CompanyProfile({ user }: Readonly<{ user: UserItem }>) {
                 </span>
                 <span className="text-primary/70 text-center">:</span>
                 <span className="text-foreground tracking-wide">
-                  0801234567
+                  {company?.tel}
                 </span>
               </div>
             </div>
           </div>
 
           <div className="my-5">
-            <span className="text-2xl font-md text-primary">Description </span><span className="text-2xl font-md">Company A</span>
-            <div className="text-sm">
-              Description Company ADescription Company ADescription Company
-              ADescription Company A
-            </div>
+            <span className="text-2xl font-md text-primary">Description </span>
+            <span className="text-2xl font-md">Company {company?.name}</span>
+            <div className="text-sm">{company?.description}</div>
           </div>
 
           <div className="flex flex-column border-b-2 border-surface-border pb-3">
@@ -123,17 +167,75 @@ export default function CompanyProfile({ user }: Readonly<{ user: UserItem }>) {
           </div>
 
           <div className="my-5 mx-30 flex items-center ">
-            {/* Update Button */}
-            <button className="flex-1 bg-teal-500 hover:bg-teal-600 text-white px-6 py-2 rounded-lg font-semibold mx-5">
+            <button
+              onClick={() => {
+                if (!company) return;
+                setUpdating(company);
+                setShowModal(true);
+              }}
+              className="flex-1 bg-teal-500 hover:bg-teal-600 text-white px-6 py-2 rounded-lg font-semibold mx-5"
+            >
               UPDATE
             </button>
-            {/* Delete Button */}
-            <button className="flex-1 bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold mx-5">
+            <button
+              onClick={() => setDeleting(company)}
+              className="flex-1 bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold mx-5"
+            >
               DELETE
             </button>
           </div>
         </div>
       </div>
+      {updating && session?.user.token && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-xl p-6 relative">
+            <button
+              onClick={() => {
+                setUpdating(null);
+                setShowModal(false);
+              }}
+              className="absolute top-3 right-3 text-gray-500 hover:text-black"
+            >
+              ✕
+            </button>
+
+            <UpdateCompanyPanel
+              company={updating}
+              token={session.user.token}
+              onClose={() => {
+                setUpdating(null);
+                setShowModal(false);
+              }}
+              onUpdated={() => {
+                setShowModal(false);
+                window.location.reload();
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {deleting && session?.user.token && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
+            <button
+              onClick={() => setDeleting(null)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-black"
+            >
+              ✕
+            </button>
+
+            <DeleteCompanyPanel
+              company={deleting}
+              token={session.user.token}
+              onClose={() => setDeleting(null)}
+              onDeleted={() => {
+                signOut({ callbackUrl: "/api/auth/login" });
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

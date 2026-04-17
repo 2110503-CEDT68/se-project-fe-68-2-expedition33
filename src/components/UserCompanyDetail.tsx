@@ -46,7 +46,7 @@ export default function UserCompanyDetail({
         {/* Logo section */}
         <div className="w-32 h-32 sm:w-40 sm:h-40 bg-background border border-surface-border rounded-2xl flex items-center justify-center shrink-0 overflow-hidden shadow-sm mx-auto md:mx-0">
           <Image
-            src={`/images/${company.id}.png`}
+            src={company.logo?.url || `/images/${company.id}.png`}
             alt={company.name + " logo"}
             className="object-cover w-full h-full"
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
