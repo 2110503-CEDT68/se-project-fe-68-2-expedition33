@@ -119,8 +119,40 @@ export default function UserCompanyDetail({
 
       <hr className="border-t-2 border-surface-border my-8" />
 
-      {/* ── 3. Description ── */}
-      <div className="flex items-start gap-3 relative pr-6 min-h-[80px]">
+      {/* ── 3. Pictures ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mb-10 max-w-4xl mx-auto px-4 md:px-12">
+        {[0, 1, 2].map((i: number) => (
+          <div
+            key={i}
+            className="rounded-2xl flex items-center justify-center overflow-hidden"
+          >
+            <Image
+              src={`/images/${company.id}_pic${i}.png`}
+              alt={`${company.name} picture ${i}`}
+              className="w-full h-auto rounded-2xl"
+              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                e.currentTarget.style.display = 'none';
+                const fallback: HTMLSpanElement = document.createElement('span');
+                // ใส่ background สีเทาอ่อนกลับมาเฉพาะเมื่อเกิด Error เพื่อให้ Fallback Text ดูสะอาดตา
+                fallback.className = 'text-foreground/80 font-medium text-center text-base bg-surface-border/30 w-full h-full flex items-center justify-center p-4 rounded-2xl'; 
+                fallback.innerHTML = `${company.name}<br />Picture`;
+                e.currentTarget.parentNode?.appendChild(fallback);
+              }}
+              // เราจะระบุ Canonical Width/Height ที่นี่เพื่อให้ Next.js จัดการ Placeholder ได้ถูกต้อง 
+              // โดยสมมติขนาดภาพแบบ landscape เพื่อการสาธิต แต่ h-auto ใน CSS จะจัดการส่วนที่เหลือ
+              width={600} 
+              height={400} 
+              sizes="100vw"
+              priority
+            />
+          </div>
+        ))}
+      </div>
+
+      
+
+      {/* ── 4. Description ── */}
+      <div className="flex items-start gap-4 relative pr-6 min-h-[80px] mb-8">
         <svg className={`${iconClassName} mt-0.5`} {...iconProps}>
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
           <path d="M14 2v6h6"/>
@@ -129,42 +161,15 @@ export default function UserCompanyDetail({
           <path d="M10 9H8"/>
         </svg>
         
-        <p className="leading-relaxed text-base pr-8 text-foreground/70 font-medium">
+        <p className="leading-relaxed text-sm md:text-base pr-8 text-foreground/60 font-medium">
           {company.description || "No description available."}
         </p>
         
         {/* ขีดสีส้มแนวตั้งด้านขวาสุด */}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-primary rounded-full"></div>
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-16 bg-primary rounded-full"></div>
       </div>
 
       <hr className="border-t-2 border-surface-border my-8" />
-
-      {/* ── 4. Pictures ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-10 max-w-4xl mx-auto px-2 md:px-8">
-        {[0, 1, 2].map((i: number) => (
-          <div
-            key={i}
-            className="rounded-2xl aspect-square flex items-center justify-center overflow-hidden"
-          >
-            <Image
-              src={`/images/${company.id}_pic${i}.png`}
-              alt={`${company.name} picture ${i}`}
-              className="object-cover w-full h-full"
-              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                e.currentTarget.style.display = 'none';
-                const fallback: HTMLSpanElement = document.createElement('span');
-                fallback.className = 'text-foreground/50 font-bold text-center text-sm bg-background w-full h-full flex items-center justify-center';
-                fallback.innerHTML = `${company.name}<br />Picture`;
-                e.currentTarget.parentNode?.appendChild(fallback);
-              }}
-              width={0}
-              height={0}
-              sizes="100vw"
-              priority
-            />
-          </div>
-        ))}
-      </div>
 
       {/* ── 5. Buttons (Booking & Footer Actions) ── */}
       <div className="flex flex-col items-center justify-center gap-6 mt-6 w-full">
