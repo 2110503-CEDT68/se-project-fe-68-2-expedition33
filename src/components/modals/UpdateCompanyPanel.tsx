@@ -79,9 +79,21 @@ export default function UpdateCompanyPanel({
     setPhotoFiles(Array.from(e.target.files ?? []));
   };
 
+  // สร้างชุดข้อมูลสำหรับวนลูปสร้าง Input พร้อม Label
+  const inputFields = [
+    { key: 'name', label: 'Name', value: name, setter: setName, placeholder: 'e.g. ABC Company' },
+    { key: 'description', label: 'Description', value: description, setter: setDescription, placeholder: 'e.g. Leading tech company in Thailand' },
+    { key: 'website', label: 'Website', value: website, setter: setWebsite, placeholder: 'e.g. http://abc.com' },
+    { key: 'tel', label: 'Telephone number', value: tel, setter: setTel, placeholder: 'e.g. 02-123-4567' },
+    { key: 'address', label: 'Address', value: address, setter: setAddress, placeholder: 'e.g. 123 Sukhumvit Rd.' },
+    { key: 'district', label: 'District', value: district, setter: setDistrict, placeholder: 'e.g. Khlong Toei' },
+    { key: 'province', label: 'Province', value: province, setter: setProvince, placeholder: 'e.g. Bangkok' },
+    { key: 'postalcode', label: 'Postal Code', value: postalcode, setter: setPostalcode, placeholder: 'e.g. 10110' },
+  ] as const;
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm p-4">
-      <div className="bg-surface border border-surface-border rounded-2xl w-full max-w-sm px-8 py-7 relative shadow-2xl text-foreground">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm pt-5">
+      <div className="bg-white border border-surface-border rounded-2xl w-full max-w-xl px-8 py-7 relative shadow-2xl text-foreground max-h-[80vh] overflow-y-auto">
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-surface/80 z-50 rounded-2xl">
             <span className="text-primary font-bold text-lg animate-pulse">Updating...</span>
@@ -95,40 +107,35 @@ export default function UpdateCompanyPanel({
           ↩
         </button>
 
-        <h2 className="text-2xl font-bold text-center tracking-[0.15em] mb-5 text-primary">
+        <h2 className="text-3xl font-bold text-center mb-5 text-primary">
           Update Company
         </h2>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-          {(
-            [
-              { key: 'name', value: name, setter: setName, placeholder: 'Name' },
-              { key: 'description', value: description, setter: setDescription, placeholder: 'Description' },
-              { key: 'website', value: website, setter: setWebsite, placeholder: 'Website' },
-              { key: 'tel', value: tel, setter: setTel, placeholder: 'Telephone number' },
-              { key: 'address', value: address, setter: setAddress, placeholder: 'Address' },
-              { key: 'district', value: district, setter: setDistrict, placeholder: 'District' },
-              { key: 'province', value: province, setter: setProvince, placeholder: 'Province' },
-              { key: 'postalcode', value: postalcode, setter: setPostalcode, placeholder: 'Postal Code' },
-            ] as const
-          ).map(({ key, value, setter, placeholder }) => (
-            <input
-              key={key}
-              value={value}
-              onChange={e => setter(e.target.value)}
-              placeholder={placeholder}
-              className="w-full border-2 border-primary rounded-md px-3 py-2 text-sm bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 hover:bg-black/5 transition-all"
-            />
+        {inputFields.map(({ key, label, value, setter, placeholder }) => (
+            <div key={key} className="flex flex-col gap-1">
+              {/* เพิ่ม Label ตรงนี้ */}
+              <label className="text-base font-bold text-foreground">
+                {label}
+              </label>
+              <input
+                value={value}
+                onChange={e => setter(e.target.value)}
+                placeholder={placeholder}
+                
+                className="w-full border-2 border-primary rounded-md px-3 py-2 text-sm bg-white text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary placeholder-gray-300"
+              />
+            </div>
           ))}
 
           <div className="flex flex-col items-center gap-2 mt-3">
-            <span className="text-xs tracking-widest text-primary font-bold">
-              Upload logo
+            <span className="text-base font-bold">
+              Upload Logo
             </span>
             <button
               type="button"
-              className="w-full border-2 border-primary rounded-md p-2 flex flex-col items-center cursor-pointer hover:bg-primary/5 hover:scale-[1.02] transition-all group focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="border-2 border-primary rounded-md p-2 flex flex-col items-center cursor-pointer hover:bg-primary/5 hover:scale-[1.02] transition-all group focus:outline-none focus:ring-2 focus:ring-primary/50"
               onClick={() => fileInputRef.current?.click()}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
@@ -176,12 +183,17 @@ export default function UpdateCompanyPanel({
               aria-label="Upload gallery photos"
               onChange={handlePhotoListChange}
             />
+            
+            <span className="text-base font-bold mt-5">
+              Upload Photos
+            </span>
+
             <button
               type="button"
-              className="text-xs rounded-md px-3 py-1 border border-primary text-primary hover:bg-primary/10 transition-colors cursor-pointer"
+              className="text-base rounded-md px-3 py-1 border border-primary text-primary hover:bg-primary/10 transition-colors cursor-pointer"
               onClick={() => photoInputRef.current?.click()}
             >
-              Upload gallery photos
+              Choose Files
             </button>
             <p className="text-xs text-primary/70">
               {photoFiles.length > 0
@@ -189,13 +201,14 @@ export default function UpdateCompanyPanel({
                 : "No gallery photos selected"}
             </p>
           </div>
-
-          <button
-            type="submit"
-            className="w-full py-2 rounded-lg mt-4 font-bold tracking-[0.2em] bg-primary text-white hover:bg-primary-hover hover:-translate-y-0.5 hover:shadow-lg transition-all cursor-pointer"
-          >
-            Update
-          </button>
+          <div className="flex justify-center mt-4 mb-2">
+            <button
+              type="submit"
+              className="px-8 py-2 rounded-full mt-4 font-bold bg-button-blue text-white hover:bg-cyan-700 hover:-translate-y-0.5 hover:shadow-lg transition-all cursor-pointer"
+            >
+              Update
+            </button>
+          </div>
 
         </form>
       </div>

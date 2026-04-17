@@ -19,28 +19,30 @@ export default function CompanyProfile({ user, token }: Readonly<{ user: UserIte
   }, [user]);
 
   return (
-    <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-8 items-start mb-10">
+    <div className="w-full max-w-6xl mx-auto flex flex-col items-center gap-10 mb-10 relative">
       
       {/* ── Header ── */}
-      <h1 className="lg:col-span-5 text-3xl md:text-4xl font-extrabold text-primary tracking-widest uppercase drop-shadow-sm text-center lg:text-left">
+      <h1 className="text-3xl md:text-4xl font-extrabold text-primary tracking-widest uppercase drop-shadow-sm text-center">
         Company Profile
       </h1>
       
-      {/* ── Left: Company Profile ── */}
-      <div className="lg:col-span-2 w-full">
+      {/* ── Top: Company Profile ── */}
+      <div className="w-full max-w-2xl z-10">
         <ProfileCard user={user} />
       </div>
 
-      {/* ── Right: Company INFO ── */}
-      <div className="lg:col-span-3">
-      
-        {
-          company ?
-          <AdminCompanyDetail company={company} adminToken={token}/> 
-          : ""
-        }
-
+      {/* ── Bottom: Company INFO ── */}
+      <div className="w-full flex flex-col items-center gap-4 z-10">
+        <h1 className="text-3xl md:text-4xl font-extrabold text-primary tracking-widest uppercase drop-shadow-sm text-center mt-15">
+          Company Details
+        </h1>
+        
+        <div className="w-full flex justify-center">
+          {company ? (
+            <AdminCompanyDetail company={company} adminToken={token}/> 
+          ) : ""}
         </div>
+      </div>
 
       {/* --- Modals --- */}
       {updating && (

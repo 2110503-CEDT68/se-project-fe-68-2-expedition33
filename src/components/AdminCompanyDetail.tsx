@@ -4,6 +4,7 @@ import { CompanyItem } from "../../interfaces";
 import UserCompanyDetail from "./UserCompanyDetail";
 import UpdateCompanyPanel from "./modals/UpdateCompanyPanel";
 import DeleteCompanyPanel from "./modals/DeleteCompanyPanel";
+import BookButton from "./BookButton";
 
 export default function AdminCompanyDetail({
   company,
@@ -23,19 +24,25 @@ export default function AdminCompanyDetail({
         company={company}
         token={adminToken}
         isAdmin={true}
-        showBooking={showBookButton}
+        showBooking={false} 
         footerActions={
           <>
+            {/* เอาปุ่มทั้งหมดมาเรียงต่อกันตรงนี้แทน (Update -> Book -> Delete) */}
             <button
               onClick={() => setUpdating(company)}
-              className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-2 rounded-lg font-semibold"
+              className="bg-button-blue hover:bg-cyan-700 text-white px-6 py-2 rounded-full font-semibold"
             >
               Update
             </button>
 
+            {/* แทรกปุ่ม Book ไว้ตรงกลาง */}
+            {showBookButton && adminToken && (
+              <BookButton company={company} token={adminToken} isAdmin={true} />
+            )}
+
             <button
               onClick={() => setDeleting(company)}
-              className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold"
+              className="bg-button-red hover:bg-red-700 text-white px-6 py-2 rounded-full font-semibold"
             >
               Delete
             </button>

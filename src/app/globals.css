@@ -16,6 +16,12 @@
 
 	/* Base color for shadows */
 	--shadow-base: 0, 0, 0;
+
+	/* Button */
+	--button-red: #ff1919;
+	--button-blue: #009eba;
+	--button-green: #00ba16;
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -67,6 +73,11 @@
 	--drop-shadow-sm: 0 1px 1px rgba(var(--shadow-base), 0.05);
 	--drop-shadow-md: 0 4px 3px rgba(var(--shadow-base), 0.07);
 	--drop-shadow-lg: 0 10px 8px rgba(var(--shadow-base), 0.04);
+
+	/* Button */
+	--color-button-red: var(--button-red);
+	--color-button-blue: var(--button-blue);
+	--color-button-green: var(--button-green);
 }
 
 body {
