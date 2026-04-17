@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useState, useRef } from "react";
-import { useSession } from "next-auth/react";
 import { UserItem , CompanyCreatePayload } from "../../interfaces";
 import createCompany from "@/libs/createCompany";
 import ProfileCard from "./ProfileCard";
@@ -38,8 +37,7 @@ const initialForm: AdminCreateCompanyForm = {
   confirmPassword: "",
 };
 
-export default function AdminProfile({ user }: Readonly<{ user: UserItem }>) {
-  const { data: session } = useSession();
+export default function AdminProfile({ user, token }: Readonly<{ user: UserItem, token: string }>) {
   const [form, setForm] = useState<AdminCreateCompanyForm>(initialForm);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -182,9 +180,8 @@ export default function AdminProfile({ user }: Readonly<{ user: UserItem }>) {
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!session?.user?.token) return;
 
-    if (!validateForm()) return;
+    if (!token || !validateForm()) return;
 
     setLoading(true);
     setError("");
@@ -213,7 +210,7 @@ export default function AdminProfile({ user }: Readonly<{ user: UserItem }>) {
         formData.append("photoList", photo);
       }
 
-      const createdCompany = await createCompany(session.user.token, formData);
+      const createdCompany = await createCompany(token, formData);
       setForm(initialForm);
       setLogoFile(null);
       setPhotoFiles([]);
@@ -224,6 +221,7 @@ export default function AdminProfile({ user }: Readonly<{ user: UserItem }>) {
       setCreatedManagerEmail(createdCompany.managerEmail ?? "");
       setSuccess(`Company ${createdCompany.data.name} created successfully.`);
       setShowModal(true);
+      
     } catch (err: any) {
       const errorMessage = err?.message ?? "Failed to create company";
       setError(errorMessage);
@@ -231,6 +229,7 @@ export default function AdminProfile({ user }: Readonly<{ user: UserItem }>) {
         setErrorField("name");
         nameRef.current?.focus();
       }
+      
     } finally {
       setLoading(false);
     }
@@ -288,7 +287,7 @@ export default function AdminProfile({ user }: Readonly<{ user: UserItem }>) {
                 {field.label}
               </label>
               <input
-                ref={refMap[field.name] as React.RefObject<HTMLInputElement>}
+                ref={refMap[field.name]}
                 type={field.type}
                 name={field.name}
                 required
@@ -314,7 +313,7 @@ export default function AdminProfile({ user }: Readonly<{ user: UserItem }>) {
                 {field.label}
               </label>
               <input
-                ref={refMap[field.name] as React.RefObject<HTMLInputElement>}
+                ref={refMap[field.name]}
                 type={field.type}
                 name={field.name}
                 required

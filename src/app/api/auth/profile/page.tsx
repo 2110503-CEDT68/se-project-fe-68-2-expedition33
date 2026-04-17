@@ -14,10 +14,10 @@ async function ProfileContent({ token }: Readonly<{ token: string }>) {
   const user:UserItem = response.data;
 
   if (user.role === "admin") {
-    return <AdminProfile user={user} />;
+    return <AdminProfile user={user} token={token} />;
   }
   else if (user.role === "company"){
-    return <CompanyProfile user={user} />
+    return <CompanyProfile user={user} token={token} />
   }
   return <UserProfile user={user} />;
 }

@@ -1,89 +1,25 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signOut } from "next-auth/react";
 import { CompanyItem, UserItem } from "../../interfaces";
 import UpdateCompanyPanel from "./modals/UpdateCompanyPanel";
 import DeleteCompanyPanel from "./modals/DeleteCompanyPanel";
-import getUserProfile from "@/libs/getUserProfile";
 import ProfileCard from "./ProfileCard";
 
-interface Props {
-  user: UserItem;
-}
-
-export default function CompanyProfile({ user }: Props) {
-  const { data: session } = useSession();
-
-  // Refs for moving user focus automatically
+export default function CompanyProfile({ user, token }: Readonly<{ user: UserItem, token: string }>) {
 
   const [company, setCompany] = useState<CompanyItem | null>(null);
   const [updating, setUpdating] = useState<CompanyItem | null>(null);
   const [deleting, setDeleting] = useState<CompanyItem | null>(null);
-  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const fetchCompany = async () => {
-      if (!session?.user?.token) return;
+    if (!user.companyData) return;
+    setCompany(user.companyData);
+  }, [user]);
 
-      try {
-        const res = await getUserProfile(session.user.token);
-
-        if (!res?.data?.companyData) {
-          setCompany(null);
-          return;
-        }
-
-        const companyData = res.data.companyData;
-
-        const mappedCompany: CompanyItem = {
-          id: companyData.id,
-          name: companyData.name,
-          address: companyData.address,
-          district: companyData.district,
-          province: companyData.province,
-          postalcode: companyData.postalcode,
-          tel: companyData.tel,
-          website: companyData.website,
-          description: companyData.description,
-          logo: companyData.logo,
-          photoList: companyData.photoList,
-        };
-
-        setCompany(mappedCompany);
-      } catch (err) {
-        console.error("Fetch company error:", err);
-      }
-    };
-
-    fetchCompany();
-  }, [session]);
-
-  const handleDelete = async () => {
-    try {
-      setCompany(null);
-      setDeleting(null);
-
-      await signOut({ callbackUrl: "/login" });
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  /*if (loading) {
-
-  return (
-    <div className="w-full flex-1 flex flex-col items-center justify-center text-primary font-bold text-xl tracking-widest gap-4">
-      Loading Company...
-      <div className="w-full max-w-md mt-4">
-        <LinearProgress color="warning" />
-      </div>
-    </div>
-  );
-}*/
-
-  return (
+return (
     <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-10">
       <h1 className="col-span-5 text-3xl md:text-4xl font-extrabold text-primary tracking-widest uppercase drop-shadow-sm">
         Company Profile
@@ -171,7 +107,6 @@ export default function CompanyProfile({ user }: Props) {
               onClick={() => {
                 if (!company) return;
                 setUpdating(company);
-                setShowModal(true);
               }}
               className="flex-1 bg-teal-500 hover:bg-teal-600 text-white px-6 py-2 rounded-lg font-semibold mx-5"
             >
@@ -186,13 +121,14 @@ export default function CompanyProfile({ user }: Props) {
           </div>
         </div>
       </div>
-      {updating && session?.user.token && (
+
+
+      {updating && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-xl p-6 relative">
             <button
               onClick={() => {
                 setUpdating(null);
-                setShowModal(false);
               }}
               className="absolute top-3 right-3 text-gray-500 hover:text-black"
             >
@@ -201,21 +137,19 @@ export default function CompanyProfile({ user }: Props) {
 
             <UpdateCompanyPanel
               company={updating}
-              token={session.user.token}
+              token={token}
               onClose={() => {
                 setUpdating(null);
-                setShowModal(false);
               }}
               onUpdated={() => {
-                setShowModal(false);
-                window.location.reload();
+                globalThis.location.reload();
               }}
             />
           </div>
         </div>
       )}
 
-      {deleting && session?.user.token && (
+      {deleting && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
             <button
@@ -227,7 +161,7 @@ export default function CompanyProfile({ user }: Props) {
 
             <DeleteCompanyPanel
               company={deleting}
-              token={session.user.token}
+              token={token}
               onClose={() => setDeleting(null)}
               onDeleted={() => {
                 signOut({ callbackUrl: "/api/auth/login" });
