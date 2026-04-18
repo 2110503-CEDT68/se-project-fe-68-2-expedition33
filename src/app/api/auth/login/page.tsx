@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { LinearProgress } from "@mui/material";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -79,6 +80,14 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {loading && (
+              <div className="w-full flex flex-col items-center justify-center px-2 text-primary font-bold text-xl tracking-widest gap-4">
+                Loading Login...
+                <div className="w-full max-w-md">
+                  <LinearProgress color="warning" />
+                </div>
+              </div>
+            )}
             
             {/* Email Field */}
             <div>
@@ -152,7 +161,8 @@ export default function LoginPage() {
           </div>
 
         </div>
-      </div>
+      </div>    
     </div>
+
   );
 }

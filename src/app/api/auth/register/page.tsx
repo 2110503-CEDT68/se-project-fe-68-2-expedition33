@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import userRegister from "@/libs/userRegister";
 import { signIn } from "next-auth/react";
+import { LinearProgress } from "@mui/material";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -164,6 +165,14 @@ export default function RegisterPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {loading && (
+              <div className="w-full flex flex-col items-center justify-center px-2 text-primary font-bold text-xl tracking-widest gap-4">
+                Loading Register...
+                <div className="w-full max-w-md">
+                  <LinearProgress color="warning" />
+                </div>
+              </div>
+            )}
             
             {/* Name Field */}
             <div>
