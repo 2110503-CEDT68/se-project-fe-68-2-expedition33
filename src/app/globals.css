@@ -22,6 +22,11 @@
 	--button-blue: #009eba;
 	--button-green: #00ba16;
 
+	/* Hovered Button */
+	--button-red-hover: #ad0303;
+	--button-blue-hover: #005c6c;
+	--button-green-hover: #00710d;
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -78,6 +83,11 @@
 	--color-button-red: var(--button-red);
 	--color-button-blue: var(--button-blue);
 	--color-button-green: var(--button-green);
+
+	/* Hovered Button */
+	--color-button-red-hover: var(--button-red-hover);
+	--color-button-blue-hover: var(--button-blue-hover);
+	--color-button-green-hover: var(--button-green-hover);
 }
 
 body {

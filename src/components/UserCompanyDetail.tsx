@@ -9,13 +9,13 @@ export default function UserCompanyDetail({
   company,
   token,
   isAdmin, 
-  showBooking = true,
+  showBookButton = true,
   footerActions
 }: Readonly<{
   company: CompanyItem;
   token?: string;
   isAdmin: boolean;
-  showBooking?: boolean;
+  showBookButton?: boolean;
   footerActions?: ReactNode;
 }>) {
   const iconClassName: string = "w-5 h-5 text-primary shrink-0";
@@ -29,7 +29,7 @@ export default function UserCompanyDetail({
   };
 
   return (
-    <div className="bg-surface rounded-2xl shadow-md w-[98%] max-w-4xl p-6 md:p-10 relative border border-surface-border mb-10 mx-auto">
+    <div className="bg-surface rounded-2xl shadow-md w-[98%] max-w-4xl p-6 md:p-10 relative border border-surface-border mx-auto">
 
       {/* ปุ่ม Back */}
       <Link
@@ -62,22 +62,22 @@ export default function UserCompanyDetail({
         
         {/* Logo section */}
         <div className="w-40 h-40 bg-background border border-surface-border rounded-xl flex items-center justify-center shrink-0 overflow-hidden shadow-sm mx-auto md:mx-0">
-          <Image
-            src={company.logo?.url || `/images/${company.id}.png`}
-            alt={company.name + " logo"}
-            className="object-cover w-full h-full"
-            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-              e.currentTarget.style.display = 'none';
-              const fallback: HTMLSpanElement = document.createElement('span');
-              fallback.className = 'text-foreground/50 font-bold text-center text-sm';
-              fallback.innerHTML = `LOGO<br />${company.name}`;
-              e.currentTarget.parentNode?.appendChild(fallback);
-            }}
-            width={0}
-            height={0}
-            sizes="100vw"
-            priority
-          />
+          {
+            company.logo?.url ?
+            <Image
+              src={company.logo?.url}
+              alt={company.name + " logo"}
+              className="object-cover w-full h-full"
+              width={0}
+              height={0}
+              sizes="100vw"
+              priority
+            />
+            : 
+            <div className="text-foreground/50 font-bold text-center text-sm">
+              LOGO<br />{company.name}
+            </div>
+          }
         </div>
 
         {/* Info section */}
@@ -88,7 +88,7 @@ export default function UserCompanyDetail({
               <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
               <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
-            <span className="leading-relaxed break-words text-base">
+            <span className="leading-relaxed wrap-break-word text-base">
               {company.address}, {company.district}, {company.province} {company.postalcode}
             </span>
           </div>
@@ -122,29 +122,29 @@ export default function UserCompanyDetail({
       {/* ── 3. Pictures ── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mb-10 max-w-4xl mx-auto px-4 md:px-12">
         {[0, 1, 2].map((i: number) => (
+          company.photoList?.[i]?.url ?
           <div
             key={i}
             className="rounded-2xl flex items-center justify-center overflow-hidden"
           >
             <Image
-              src={`/images/${company.id}_pic${i}.png`}
+              src={company.photoList?.[i]?.url}
               alt={`${company.name} picture ${i}`}
               className="w-full h-auto rounded-2xl"
-              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                e.currentTarget.style.display = 'none';
-                const fallback: HTMLSpanElement = document.createElement('span');
-                // ใส่ background สีเทาอ่อนกลับมาเฉพาะเมื่อเกิด Error เพื่อให้ Fallback Text ดูสะอาดตา
-                fallback.className = 'text-foreground/80 font-medium text-center text-base bg-surface-border/30 w-full h-full flex items-center justify-center p-4 rounded-2xl'; 
-                fallback.innerHTML = `${company.name}<br />Picture`;
-                e.currentTarget.parentNode?.appendChild(fallback);
-              }}
-              // เราจะระบุ Canonical Width/Height ที่นี่เพื่อให้ Next.js จัดการ Placeholder ได้ถูกต้อง 
-              // โดยสมมติขนาดภาพแบบ landscape เพื่อการสาธิต แต่ h-auto ใน CSS จะจัดการส่วนที่เหลือ
               width={600} 
               height={400} 
               sizes="100vw"
               priority
             />
+          </div> 
+          :
+          <div
+            key={i}
+            className="rounded-2xl flex items-center justify-center overflow-hidden"
+          >
+            <div className="text-foreground/80 font-medium text-center text-base bg-surface-border/30 w-full h-full flex items-center justify-center p-4 rounded-2xl">
+              {company.name}<br />Picture {i + 1}
+            </div>
           </div>
         ))}
       </div>
@@ -152,7 +152,7 @@ export default function UserCompanyDetail({
       
 
       {/* ── 4. Description ── */}
-      <div className="flex items-start gap-4 relative pr-6 min-h-[80px] mb-8">
+      <div className="flex items-start gap-4 relative pr-6 min-h-20 mb-8">
         <svg className={`${iconClassName} mt-0.5`} {...iconProps}>
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
           <path d="M14 2v6h6"/>
@@ -173,7 +173,7 @@ export default function UserCompanyDetail({
 
       {/* ── 5. Buttons (Booking & Footer Actions) ── */}
       <div className="flex flex-col items-center justify-center gap-6 mt-6 w-full">
-        {showBooking && (
+        {showBookButton && (
           <div className="w-full flex justify-center">
             {token ? (
               <BookButton company={company} token={token} isAdmin={isAdmin} />

@@ -43,13 +43,12 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
   const [errorField, setErrorField] = useState<string>("");
   const [success, setSuccess] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [createdName, setCreatedName] = useState("");
+  const[createdName, setCreatedName] = useState("");
   const [createdManagerEmail, setCreatedManagerEmail] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [photoFiles, setPhotoFiles] = useState<File[]>([]);
+  const[photoFiles, setPhotoFiles] = useState<File[]>([]);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const photoListInputRef = useRef<HTMLInputElement>(null);
-
 
   const nameRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLInputElement>(null);
@@ -82,7 +81,7 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
     const websiteRegex = /^(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/;
     const postalcodeRegex = /^\d{5}$/;
 
-    const validations = [
+    const validations =[
       {
         condition: form.name.trim().length === 0,
         message: "Please add a company name.",
@@ -234,7 +233,7 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
     }
   };
 
-  const fields: { label: string; name: CompanyTextFieldName; type: string; placeholder: string }[] = [
+  const fields: { label: string; name: CompanyTextFieldName; type: string; placeholder: string }[] =[
     { label: "Name", name: "name", type: "text", placeholder: "e.g. ABC Company" },
     { label: "Description", name: "description", type: "text", placeholder: "e.g. Leading tech company in Thailand" },
     { label: "Website", name: "website", type: "text", placeholder: "e.g. https://abc.com" },
@@ -243,10 +242,9 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
     { label: "District", name: "district", type: "text", placeholder: "e.g. Khlong Toei" },
     { label: "Province", name: "province", type: "text", placeholder: "e.g. Bangkok" },
     { label: "Postal Code", name: "postalcode", type: "text", placeholder: "e.g. 10110" },
-
   ];
 
-  const fieldsAccount: { label: string; name: CompanyTextFieldName; type: string; placeholder: string }[] = [
+  const fieldsAccount: { label: string; name: CompanyTextFieldName; type: string; placeholder: string }[] =[
     { label: "Manager Tel", name: "managerTel", type: "tel", placeholder: "e.g. 0812345678" },
     { label: "Manager Password", name: "password", type: "password", placeholder: "Enter manager password" },
     { label: "Confirm Password", name: "confirmPassword", type: "password", placeholder: "Enter Confirm password" },
@@ -290,10 +288,11 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
                 value={form[field.name] ?? ""}
                 onChange={handleChange}
                 placeholder={field.placeholder}
-                className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${errorField === field.name
-                    ? "border-red-500 focus:ring-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]"
-                    : "border-primary focus:ring-primary"
-                  }`}
+                className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${
+                  errorField === field.name
+                    ? "border-button-red focus:ring-button-red/30 shadow-sm"
+                    : "border-surface-border focus:border-primary focus:ring-primary/30"
+                }`}
               />
             </div>
           ))}
@@ -315,14 +314,14 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
                 value={form[field.name] ?? ""}
                 onChange={handleChange}
                 placeholder={field.placeholder}
-                className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${errorField === field.name
-                    ? "border-red-500 focus:ring-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]"
-                    : "border-primary focus:ring-primary"
-                  }`}
+                className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${
+                  errorField === field.name
+                    ? "border-button-red focus:ring-button-red/30 shadow-sm"
+                    : "border-surface-border focus:border-primary focus:ring-primary/30"
+                }`}
               />
             </div>
           ))}
-
 
           {/* Upload Logo */}
           <div className="flex flex-col items-center gap-2 pt-1">
@@ -359,9 +358,9 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
               ref={photoListInputRef}
               type="file"
               accept="image/*"
-              multiple
+              multiple 
               onChange={(e) => setPhotoFiles(Array.from(e.target.files ?? []))}
-              className="block w-full text-xs text-foreground file:mr-2 file:rounded file:border file:border-primary file:px-2 file:py-1 file:text-primary"
+              className="block w-full text-xs text-foreground file:mr-2 file:rounded file:border file:border-primary file:px-2 file:py-1 file:text-primary file:bg-primary-light/30 file:cursor-pointer"
               title="Upload company photos"
               aria-label="Upload company photos"
             />
@@ -372,13 +371,13 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
             </p>
           </div>
 
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-          {success && <p className="text-green-500 text-sm text-center">{success}</p>}
+          {error && <p className="text-button-red text-sm text-center font-semibold">{error}</p>}
+          {success && <p className="text-button-green text-sm text-center font-semibold">{success}</p>}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-green-500 hover:bg-green-600 disabled:opacity-50 text-white font-bold tracking-widest uppercase text-sm py-3 rounded-lg transition-colors mt-2"
+            className="w-full bg-button-green hover:opacity-90 disabled:opacity-50 text-white font-bold tracking-widest uppercase text-sm py-3 rounded-lg transition-all mt-2 shadow-md active:scale-[0.98]"
           >
             {loading ? "Creating..." : "CREATE"}
           </button>
@@ -387,31 +386,36 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
 
       {/* ── Modal Popup ── */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-zinc-900 rounded-3xl shadow-2xl px-12 py-10 flex flex-col items-center max-w-md w-full mx-4 text-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+          <div className="bg-surface border border-surface-border rounded-3xl shadow-2xl px-8 py-10 md:px-12 flex flex-col items-center max-w-md w-full text-center">
 
             {/* Title */}
-            <h2 className="text-4xl font-bold text-orange-500 mb-3 tracking-wide">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground tracking-wide mb-1">
+              {createdName}
+            </h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-primary mb-5 tracking-wide">
               Account Created!
             </h2>
 
             {/* Subtitle */}
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-foreground/80 text-sm mb-4">
               You can now log in using this email:
             </p>
 
-            {/* Email */}
-            <p className="text-base mb-6">
-              <span className="text-orange-500 font-semibold">Email : </span>
-              <span className="text-gray-200">
-                {createdManagerEmail}
-              </span>
-            </p>
+            {/* Email Box */}
+            <div className="bg-background border border-surface-border rounded-xl p-4 w-full mb-8">
+              <p className="text-sm md:text-base break-all">
+                <span className="text-primary font-bold">Email : </span>
+                <span className="text-foreground font-medium">
+                  {createdManagerEmail}
+                </span>
+              </p>
+            </div>
 
             {/* Button */}
             <button
               onClick={() => setShowModal(false)}
-              className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-10 py-3 rounded-full shadow-md transition"
+              className="bg-primary hover:bg-primary-hover text-white font-bold tracking-widest uppercase px-12 py-3 rounded-full shadow-lg transition-colors active:scale-95"
             >
               Done
             </button>

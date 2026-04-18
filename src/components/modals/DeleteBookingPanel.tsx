@@ -18,10 +18,10 @@ export default function DeleteBookingPanel({ booking, onClose, onDelete }: Reado
                 title="Close delete panel"
                 className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer"
                 >
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 14L4 9l5-5" />
-                    <path d="M4 9h10.5a5.5 5.5 0 015.5 5.5v.5" />
-                </svg>
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M9 14L4 9l5-5" />
+                        <path d="M4 9h10.5a5.5 5.5 0 015.5 5.5v.5" />
+                    </svg>
                 </button>
 
                 <h2 className="text-4xl md:text-5xl font-extrabold text-primary tracking-widest mb-6 mt-2">

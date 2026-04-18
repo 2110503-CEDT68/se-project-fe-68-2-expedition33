@@ -58,7 +58,7 @@ export default function UpdateBookingPanel({ companyName, oldDate, onClose, onUp
         </div>
 
         {/* Instructional Text */}
-        <p className="text-foreground font-bold text-xs md:text-sm tracking-widest uppercase mb-8 text-center">
+        <p className="text-foreground font-bold text-xs md:text-sm tracking-widest mb-8 text-center">
           Select your preferred interview date (May 10–13, 2022)
         </p>
 

@@ -10,13 +10,25 @@ import AdminCompanyDetail from "./AdminCompanyDetail";
 
 export default function CompanyProfile({ user, token }: Readonly<{ user: UserItem, token: string }>) {
   const [company, setCompany] = useState<CompanyItem | null>(null);
-  const[updating, setUpdating] = useState<CompanyItem | null>(null);
-  const[deleting, setDeleting] = useState<CompanyItem | null>(null);
+  const [updating, setUpdating] = useState<CompanyItem | null>(null);
+  const [deleting, setDeleting] = useState<CompanyItem | null>(null);
 
   useEffect(() => {
     if (!user.companyData) return;
     setCompany(user.companyData);
   }, [user]);
+
+  if (!company) {
+    return (
+      <div className="max-h-full h-full flex flex-col items-center">
+        <div className="w-full bg-surface border border-surface-border rounded-3xl p-8 md:p-14 shadow-xl backdrop-blur-sm">
+          <h1>
+            ERROR: There is no company data for this mananger account.
+          </h1>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="w-full max-w-6xl mx-auto flex flex-col items-center gap-10 mb-10 relative">
@@ -26,22 +38,23 @@ export default function CompanyProfile({ user, token }: Readonly<{ user: UserIte
         Company Profile
       </h1>
       
-      {/* ── Top: Company Profile ── */}
-      <div className="w-full max-w-2xl z-10">
-        <ProfileCard user={user} />
-      </div>
+      {/* ── Company Profile & Detail ── */}
+      <div className="w-full">
+        <ProfileCard user={user}>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-primary tracking-widest uppercase drop-shadow-sm text-center">
+            Company Details
+          </h1>
+          
+          {
+            company ? (
+            <div className="w-full flex justify-center">    
+                <AdminCompanyDetail company={company} adminToken={token}/> 
+            </div>
+            ) : null
+          }
 
-      {/* ── Bottom: Company INFO ── */}
-      <div className="w-full flex flex-col items-center gap-4 z-10">
-        <h1 className="text-3xl md:text-4xl font-extrabold text-primary tracking-widest uppercase drop-shadow-sm text-center mt-15">
-          Company Details
-        </h1>
-        
-        <div className="w-full flex justify-center">
-          {company ? (
-            <AdminCompanyDetail company={company} adminToken={token}/> 
-          ) : ""}
-        </div>
+        </ProfileCard>
+
       </div>
 
       {/* --- Modals --- */}

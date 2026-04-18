@@ -19,7 +19,7 @@ export default function BookButton({
             {/* Book Trigger Button */}
             <button
                 onClick={() => setIsBooking(true)}
-                className="bg-primary hover:bg-primary-hover text-white font-bold px-8 py-3 rounded-full transition-colors"
+                className="bg-primary hover:bg-primary-hover text-white px-22 py-3 rounded-full font-semibold transition-all active:scale-95 duration-300 hover:-translate-y-1 cursor-pointer hover:shadow-lg"
             >
                 Book
             </button>
