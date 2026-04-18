@@ -82,7 +82,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {loading && (
               <div className="w-full flex flex-col items-center justify-center px-2 text-primary font-bold text-xl tracking-widest gap-4">
-                Loading Login...
+                Logging in...
                 <div className="w-full max-w-md">
                   <LinearProgress color="warning" />
                 </div>

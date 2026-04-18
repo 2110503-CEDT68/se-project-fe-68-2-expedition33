@@ -167,7 +167,7 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {loading && (
               <div className="w-full flex flex-col items-center justify-center px-2 text-primary font-bold text-xl tracking-widest gap-4">
-                Loading Register...
+                Registering...
                 <div className="w-full max-w-md">
                   <LinearProgress color="warning" />
                 </div>
