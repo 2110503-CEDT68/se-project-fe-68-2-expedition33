@@ -25,6 +25,7 @@ export default function UpdateCompanyPanel({
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [photoFiles, setPhotoFiles] = useState<File[]>([]);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState("");
   
   const logoInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
@@ -176,9 +177,20 @@ export default function UpdateCompanyPanel({
             title="Upload gallery photos"
             aria-label="Upload gallery photos"
             placeholder="Select photo files"
-            onChange={(e) => setPhotoFiles(Array.from(e.target.files ?? []))}
+            onChange={(e) => {
+              const files = Array.from(e.target.files ?? []);
+              if (files.length > 3) {
+                setPhotoError("Maximum 3 photos allowed.");
+                setPhotoFiles([]);
+                if (photoInputRef.current) photoInputRef.current.value = "";
+              } else {
+                setPhotoError("");
+                setPhotoFiles(files);
+              }
+            }}
             className="block w-full text-xs text-foreground file:mr-2 file:rounded file:border file:border-primary file:px-2 file:py-1 file:text-primary file:bg-primary-light/30 file:cursor-pointer"
           />
+          {photoError && <p className="text-button-red text-xs font-semibold text-center">{photoError}</p>}
           <p className="text-[10px] text-foreground/50 italic">
             {photoFiles.length > 0
               ? `${photoFiles.length} new photo(s) selected`
