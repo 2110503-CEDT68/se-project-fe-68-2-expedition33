@@ -4,6 +4,7 @@ import BookButton from "./BookButton";
 import Link from "next/link";
 import Image from "next/image";
 import { ReactNode } from "react";
+import { usePathname } from "next/navigation";
 
 export default function UserCompanyDetail({
   company,
@@ -18,6 +19,7 @@ export default function UserCompanyDetail({
   showBookButton?: boolean;
   footerActions?: ReactNode;
 }>) {
+  const pathname = usePathname();
   const iconClassName: string = "w-5 h-5 text-primary shrink-0";
   const iconProps = {
     fill: "none",
@@ -32,16 +34,18 @@ export default function UserCompanyDetail({
     <div className="bg-surface rounded-2xl shadow-md w-[98%] max-w-4xl p-6 md:p-10 relative border border-surface-border mx-auto">
 
       {/* ปุ่ม Back */}
-      <Link
-        href="/companies"
-        className="absolute top-6 right-6 md:top-8 md:right-8 text-primary hover:text-primary-hover transition-colors z-10 bg-surface rounded-full p-1"
-        title="Back"
-      >
-        <svg className="w-6 h-6 md:w-7 md:h-7" {...iconProps}>
-          <path d="M19 12H6" />
-          <path d="M12 18l-6-6 6-6" />
-        </svg>
-      </Link>
+      { pathname !== "/api/auth/profile" &&
+        <Link
+          href="/companies"
+          className="absolute top-6 right-6 md:top-8 md:right-8 text-primary hover:text-primary-hover transition-colors z-10 bg-surface rounded-full p-1"
+          title="Go to Company List"
+        >
+          <svg className="w-6 h-6 md:w-7 md:h-7" {...iconProps}>
+            <path d="M19 12H6" />
+            <path d="M12 18l-6-6 6-6" />
+          </svg>
+        </Link>
+      }
 
       {/* ── 1. Header ── */}
       <div className="flex items-center gap-3 text-primary mb-6 pr-12">

@@ -19,7 +19,7 @@ export default function AdminProfile({ user, token }: Readonly<{ user: UserItem,
       {/* ── Right: Create Company ── */}
       <div className="flex flex-col items-center">
         <h1 className="text-3xl md:text-4xl font-extrabold text-primary tracking-widest uppercase mb-10 drop-shadow-sm">
-          ADD NEW COMPANY        
+          Add New Company      
         </h1>
         <CompanyCreateForm token={token}/>
       </div>
