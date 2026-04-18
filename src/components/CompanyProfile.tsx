@@ -71,7 +71,6 @@ export default function CompanyProfile({ user, token }: Readonly<{ user: UserIte
               company={updating}
               token={token}
               onClose={() => setUpdating(null)}
-              onUpdated={() => globalThis.location.reload()}
             />
           </div>
         </div>

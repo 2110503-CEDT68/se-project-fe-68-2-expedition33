@@ -16,7 +16,6 @@ export default function DeleteCompanyPanel({
 }>) {
   const [loading, setLoading] = useState(false);
   const [deleteHovered, setDeleteHovered] = useState(false);
-  const [closeHovered, setCloseHovered] = useState(false);
 
   const handleDelete = async () => {
     setLoading(true);
@@ -32,30 +31,28 @@ export default function DeleteCompanyPanel({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-surface border border-surface-border rounded-2xl w-full max-w-md px-10 py-8 relative shadow-2xl text-center">
+      <div className="bg-surface border border-surface-border rounded-2xl w-full max-w-lg px-10 py-8 relative shadow-2xl text-center">
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-surface/80 z-50 rounded-2xl">
             <span className="text-primary font-bold text-lg animate-pulse">Deleting...</span>
           </div>
         )}
 
-        <button
-          onClick={onClose}
-          onMouseEnter={() => setCloseHovered(true)}
-          onMouseLeave={() => setCloseHovered(false)}
-          className={`absolute top-4 right-5 text-2xl text-primary transition-transform duration-150 ${
-            closeHovered ? "scale-125 -rotate-12" : "scale-100"
-          }`}
-        >
-          ↩
-        </button>
+      {/* Close Button */}
+      <button
+        onClick={onClose}
+        className="absolute top-5 right-6 text-foreground/50 hover:text-primary transition-colors text-xl"
+      >
+        ✕
+      </button>
 
-        <h2 className="text-3xl font-bold mb-5 text-primary">
+        <h2 className="text-3xl font-extrabold text-center mb-8 text-primary tracking-widest uppercase drop-shadow-sm">
           Delete Company
         </h2>
 
         <p className="text-sm mb-6 text-foreground/70">
-          Do you want to Delete company?
+          Do you want to delete this company? <br/>
+          This action cannot be undone.
         </p>
 
         <button
@@ -65,7 +62,7 @@ export default function DeleteCompanyPanel({
           disabled={loading}
           className={`px-10 py-2 rounded-full font-bold text-white transition-all duration-150 
             ${loading ? "cursor-not-allowed opacity-70" : "cursor-pointer"}
-            ${deleteHovered ? "bg-red-700 -translate-y-0.5 shadow-lg shadow-primary/30" : "bg-button-red"}`}
+            ${deleteHovered ? "bg-red-700 -translate-y-0.5 shadow-lg" : "bg-button-red"}`}
         >
           Delete
         </button>

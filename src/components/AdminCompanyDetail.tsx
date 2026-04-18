@@ -30,7 +30,7 @@ export default function AdminCompanyDetail({
             {/* --- UPDATE BUTTON --- */}
             <button
               onClick={() => setUpdating(company)}
-              className="bg-button-blue hover:bg-button-blue-hover text-white px-6 py-2 rounded-full font-semibold transition-all active:scale-95"
+              className="bg-button-blue hover:bg-button-blue-hover text-white px-6 py-2 rounded-full font-semibold transition-all active:scale-95 duration-300 hover:-translate-y-1 hover:shadow-md"
             >
               Update
             </button>
@@ -38,7 +38,7 @@ export default function AdminCompanyDetail({
             {/* --- DELETE BUTTON --- */}
             <button
               onClick={() => setDeleting(company)}
-              className="bg-button-red hover:bg-button-red-hover text-white px-6 py-2 rounded-full font-semibold transition-all active:scale-95"
+              className="bg-button-red hover:bg-button-red-hover text-white px-6 py-2 rounded-full font-semibold transition-all active:scale-95 duration-300 hover:-translate-y-1 hover:shadow-md"
             >
               Delete
             </button>
@@ -51,7 +51,6 @@ export default function AdminCompanyDetail({
           company={updating}
           token={adminToken}
           onClose={() => setUpdating(null)}
-          onUpdated={() => globalThis.location.reload()}
         />
       )}
 

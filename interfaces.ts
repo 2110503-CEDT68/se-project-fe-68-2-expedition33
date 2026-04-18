@@ -100,23 +100,18 @@ export interface CompanyBasePayload {
     description: string;
 }
 
-export interface CompanyCreatePayload extends CompanyBasePayload {
+export interface ManagerPayload {
     managerTel: string;
     password: string;
 }
-
-export type CompanyUpdatePayload = Partial<CompanyBasePayload>;
 
 export interface CompanyUploadFields {
     logo?: File | null;
     photoList?: File[];
 }
 
-export type CompanyCreateFormState = CompanyCreatePayload & CompanyUploadFields;
-export type CompanyUpdateFormState = CompanyUpdatePayload & CompanyUploadFields;
-
-// Backward-compatible alias for existing form-only usages.
-export type CompanyPayload = CompanyBasePayload;
+export type CompanyCreatePayload = CompanyBasePayload & ManagerPayload & CompanyUploadFields;
+export type CompanyUpdatePayload = Partial<CompanyBasePayload> & CompanyUploadFields;
 
 export interface CreateCompanyResponse {
     success: boolean;
