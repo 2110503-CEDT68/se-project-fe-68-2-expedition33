@@ -46,7 +46,7 @@ export default async function createCompany(
     await processPayloadEntry(formData, key, value);
   }
 
-  const res = await fetch(`${process.env.BACKEND_URL}/api/v1/companies`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/api/v1/companies`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -54,10 +54,10 @@ export default async function createCompany(
     body: formData,
   });
 
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}));
     throw new Error(body?.msg || body?.message || "Failed to create company");
   }
 
-  return res.json();
+  return response.json();
 }
