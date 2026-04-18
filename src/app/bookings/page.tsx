@@ -9,12 +9,12 @@ import LinearProgress from "@mui/material/LinearProgress";
 
 async function BookingsDataWrapper({ token, role }: Readonly<{ token: string, role: string }>) {
   
-  const bookingsResponse = await getBookings(token);
+  const bookings = (await getBookings(token)).data;
 
   if (role === "user") {
-    return <UserBookings bookingsResponse={bookingsResponse} userToken={token} />;
+    return <UserBookings bookingList={bookings} userToken={token} />;
   }
-  return <AdminBookings bookingsResponse={bookingsResponse} adminToken={token} />;
+  return <AdminBookings bookingList={bookings} adminToken={token} />;
 }
 
 export default async function BookingsPage() {

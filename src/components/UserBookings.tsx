@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { BookingItem, BookingResponse } from "../../interfaces";
+import { BookingItem } from "../../interfaces";
 import UpdateBookingPanel from "@/components/modals/UpdateBookingPanel";
 import DeleteBookingPanel from "@/components/modals/DeleteBookingPanel";
 import deleteBooking from "@/libs/deleteBooking";
@@ -11,7 +11,7 @@ import { AppDispatch, useAppSelector } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { setBookings, removeBooking } from "@/redux/features/bookingSlice";
 
-export default function UserBookings({ bookingsResponse, userToken }: Readonly<{ bookingsResponse: BookingResponse, userToken: string }>) {
+export default function UserBookings({ bookingList, userToken }: Readonly<{ bookingList: BookingItem[], userToken: string }>) {
     
     const bookings = useAppSelector(state => state.bookings.bookingItems);
     const dispatch = useDispatch<AppDispatch>();
@@ -20,10 +20,10 @@ export default function UserBookings({ bookingsResponse, userToken }: Readonly<{
     const [deletingBooking, setDeletingBooking] = useState<BookingItem | null>(null);
 
     useEffect(() => {
-        if (bookingsResponse?.data) {
-            dispatch(setBookings(bookingsResponse.data));
+        if (bookingList) {
+            dispatch(setBookings(bookingList));
         }
-    }, [bookingsResponse, dispatch]);
+    }, [bookingList, dispatch]);
 
 
     const handleDelete = (e: React.MouseEvent, target: BookingItem, token: string) => {
@@ -97,27 +97,22 @@ export default function UserBookings({ bookingsResponse, userToken }: Readonly<{
                                 
                                 <div className="flex-1 flex flex-col items-center justify-center mt-5">
                                     <div className="w-28 h-28 bg-background border-2 border-surface-border rounded-2xl shadow-inner flex items-center justify-center overflow-hidden">
-                                            {booking.company?.id ? (
-                                                <Image
-                                                    src={`/images/${booking.company.id}.png`}
-                                                    alt={booking.company.name + " logo"}
-                                                    className="object-cover w-full h-full"
-                                                    onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                                                        e.currentTarget.style.display = 'none';
-                                                        const fallback: HTMLSpanElement = document.createElement('span');
-                                                        fallback.className = 'text-foreground/50 font-bold text-center text-xs';
-                                                        fallback.innerHTML = `LOGO<br />${booking.company?.name || 'Unknown'}`;
-                                                        e.currentTarget.parentNode?.appendChild(fallback);
-                                                    }}
-                                                    width={0}
-                                                    height={0}
-                                                    sizes="100vw"
-                                                    priority
-                                                />
-                                            ) : (
-                                                <span className="text-foreground/50 font-bold text-center text-xs">LOGO<br />Unknown</span>
-                                            )}
-                                        </div>
+                                        {booking.company?.logo?.url ? (
+                                            <Image
+                                                src={booking.company.logo.url}
+                                                alt={booking.company.name + " logo"}
+                                                className="object-cover w-full h-full"
+                                                width={0}
+                                                height={0}
+                                                sizes="100vw"
+                                                priority
+                                            />
+                                        ) : (
+                                            <div className="text-foreground/50 font-bold text-center text-xs">
+                                                LOGO<br />{booking.company?.name || 'Unknown'}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                             

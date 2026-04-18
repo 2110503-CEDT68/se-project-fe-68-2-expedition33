@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import createBooking from "@/libs/createBooking";
 import { CompanyItem } from "../../../interfaces";
 import { useAppSelector } from "@/redux/store";
+import { useSession } from "next-auth/react";
 
-export default function AddBookingPanel({ company, token, onClose, isAdmin }: Readonly<{
+export default function AddBookingPanel({ company, token, onClose }: Readonly<{
     company: CompanyItem,
     token: string,
     onClose: () => void, 
@@ -14,15 +15,17 @@ export default function AddBookingPanel({ company, token, onClose, isAdmin }: Re
 }>) {
 
   const router = useRouter();
-
-  const currentBookingCount = useAppSelector(state => state.bookings.bookingItems.length);
+  const session = useSession();
+  const bookings = useAppSelector(state => state.bookings.bookingItems);
+  const isLoading = useAppSelector(state => state.bookings.loading);
 
   const [selectedDate, setSelectedDate] = useState<string>("10");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  
 
+  const BOOKING_LIMIT = 3;
   const dates: string[] = ["10", "11", "12", "13"];
-  const isLimitReached = currentBookingCount >= 3 && !isAdmin;
+  const isAdmin = session?.data?.user?.role === "admin";
+  const isLimitReached = bookings.length >= BOOKING_LIMIT && !isAdmin;
 
   const handleBookingSubmit = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -42,6 +45,13 @@ export default function AddBookingPanel({ company, token, onClose, isAdmin }: Re
     }
 
   };
+
+  let buttonText = "Book";
+  if (isSubmitting) {
+    buttonText = "Submitting...";
+  } else if (isLoading) {
+    buttonText = "Calculating...";
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
@@ -90,15 +100,15 @@ export default function AddBookingPanel({ company, token, onClose, isAdmin }: Re
         {/* Dynamic Submit Button */}
         <button 
           onClick={handleBookingSubmit}
-          disabled={isLimitReached || isSubmitting}
+          disabled={isLimitReached || isSubmitting || isLoading}
           className={`px-16 py-3 rounded-full font-bold text-xl tracking-widest transition-all duration-300 mb-2
-            ${isLimitReached 
+            ${isLimitReached || isSubmitting || isLoading 
                 ? 'bg-surface-border text-foreground/40 cursor-not-allowed'
                 : 'bg-primary hover:bg-primary-hover text-white shadow-lg hover:shadow-xl hover:-translate-y-1 cursor-pointer'
             }
           `}
         >
-          {isSubmitting ? 'Booking...' : 'Book'}
+          {buttonText}
         </button>
 
         {/* Dynamic Feedback Text */}

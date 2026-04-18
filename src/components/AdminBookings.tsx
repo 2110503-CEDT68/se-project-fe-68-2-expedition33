@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { BookingResponse, BookingItem } from "../../interfaces";
+import { BookingItem } from "../../interfaces";
 import UpdateBookingPanel from "@/components/modals/UpdateBookingPanel";
 import DeleteBookingPanel from "@/components/modals/DeleteBookingPanel";
 import deleteBooking from "@/libs/deleteBooking";
@@ -10,7 +10,7 @@ import { AppDispatch, useAppSelector } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { setBookings, removeBooking } from "@/redux/features/bookingSlice";
 
-export default function AdminBookings({bookingsResponse, adminToken}: Readonly<{bookingsResponse: BookingResponse, adminToken: string}>) {
+export default function AdminBookings({bookingList, adminToken}: Readonly<{bookingList: BookingItem[], adminToken: string}>) {
   
     const bookings = useAppSelector(state => state.bookings.bookingItems);
     const dispatch = useDispatch<AppDispatch>();
@@ -20,10 +20,10 @@ export default function AdminBookings({bookingsResponse, adminToken}: Readonly<{
     const [deletingBooking, setDeletingBooking] = useState<BookingItem | null>(null);
 
     useEffect(() => {
-        if (bookingsResponse?.data) {
-            dispatch(setBookings(bookingsResponse.data));
+        if (bookingList) {
+            dispatch(setBookings(bookingList));
         }
-    }, [bookingsResponse, dispatch]);
+    }, [bookingList, dispatch]);
 
     const handleDelete = (e: React.MouseEvent, target: BookingItem, token: string) => {
         e.preventDefault();

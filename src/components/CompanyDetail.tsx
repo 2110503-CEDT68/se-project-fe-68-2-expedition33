@@ -68,7 +68,7 @@ export default function CompanyDetail({
           {
             company.logo?.url ?
             <Image
-              src={company.logo?.url}
+              src={company.logo.url}
               alt={company.name + " logo"}
               className="object-cover w-full h-full"
               width={0}
@@ -131,7 +131,7 @@ export default function CompanyDetail({
             className="rounded-2xl flex items-center justify-center overflow-hidden"
           >
             <Image
-              src={company.photoList?.[i]?.url}
+              src={company.photoList[i].url}
               alt={`${company.name} picture ${i}`}
               className="w-full h-auto rounded-2xl"
               width={600} 
