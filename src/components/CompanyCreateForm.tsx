@@ -157,12 +157,6 @@ export default function CompanyCreateForm ({ token }: Readonly<{ token: string }
             ref: confirmPasswordRef,
         },
         {
-            condition: photoFiles.length === 0,
-            message: "Please select at least one photo.",
-            field: "photoList",
-            ref: photoListInputRef,
-        },
-        {
             condition: photoFiles.length > 3,
             message: "Maximum 3 photos allowed.",
             field: "photoList",

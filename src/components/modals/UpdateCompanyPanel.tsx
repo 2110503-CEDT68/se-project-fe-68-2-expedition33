@@ -26,13 +26,27 @@ export default function UpdateCompanyPanel({
   const [photoFiles, setPhotoFiles] = useState<File[]>([]);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [photoError, setPhotoError] = useState("");
+  const [error, setError] = useState("");
+  const [errorField, setErrorField] = useState<string | null>(null);
   
   const logoInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const telRef = useRef<HTMLInputElement>(null);
+  const websiteRef = useRef<HTMLInputElement>(null);
+  const postalcodeRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
+    setErrorField(null);
+    
+    if (!validateForm()) {
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     try {
       
@@ -55,8 +69,69 @@ export default function UpdateCompanyPanel({
       onClose();
     } catch (err) {
       setLoading(false);
+      const errorMessage = err instanceof Error ? err.message : "Failed to update company";
+      setError(errorMessage);
       console.error("Failed to update company:", err);
     }
+  };
+
+  const validateForm = (): boolean => {
+    const telRegex = /^0\d{8,9}$/;
+    const websiteRegex = /^(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/;
+    const postalcodeRegex = /^\d{5}$/;
+    const nameRef_local = nameRef;
+    const telRef_local = telRef;
+    const websiteRef_local = websiteRef;
+    const postalcodeRef_local = postalcodeRef;
+
+    const validations = [
+      { 
+        condition: name.trim().length === 0, 
+        message: "Please add a company name.", 
+        field: "name", 
+        ref: nameRef_local 
+      },
+      { 
+        condition: name.trim().length > 50, 
+        message: "Company name cannot be more than 50 characters.", 
+        field: "name", 
+        ref: nameRef_local 
+      },
+      { 
+        condition: !telRegex.test(tel.replaceAll(/[-\s]/g, "")), 
+        message: "Please add a valid telephone number.", 
+        field: "tel", 
+        ref: telRef_local 
+      },
+      { 
+        condition: website.trim().length > 0 && !websiteRegex.test(website), 
+        message: "Please add a valid website URL.", 
+        field: "website", 
+        ref: websiteRef_local 
+      },
+      { 
+        condition: !postalcodeRegex.test(postalcode), 
+        message: "Postal code must be exactly 5 digits.", 
+        field: "postalcode", 
+        ref: postalcodeRef_local 
+      },
+      { 
+        condition: photoFiles.length > 3, 
+        message: "Maximum 3 photos allowed.", 
+        field: "photoList", 
+        ref: null 
+      },
+    ];
+
+    for (const validation of validations) {
+      if (validation.condition) {
+        setError(validation.message);
+        setErrorField(validation.field);
+        validation.ref?.current?.focus();
+        return false;
+      }
+    }
+    return true;
   };
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,14 +149,14 @@ export default function UpdateCompanyPanel({
   };
 
   const inputFields = [
-    { key: 'name', label: 'Name', value: name, setter: setName, placeholder: 'e.g. ABC Company', type: 'text' },
-    { key: 'description', label: 'Description', value: description, setter: setDescription, placeholder: 'e.g. Leading tech company', type: 'text' },
-    { key: 'website', label: 'Website', value: website, setter: setWebsite, placeholder: 'e.g. http://abc.com', type: 'text' },
-    { key: 'tel', label: 'Telephone number', value: tel, setter: setTel, placeholder: 'e.g. 02-123-4567', type: 'tel' },
-    { key: 'address', label: 'Address', value: address, setter: setAddress, placeholder: 'e.g. 123 Sukhumvit Rd.', type: 'text' },
-    { key: 'district', label: 'District', value: district, setter: setDistrict, placeholder: 'e.g. Khlong Toei', type: 'text' },
-    { key: 'province', label: 'Province', value: province, setter: setProvince, placeholder: 'e.g. Bangkok', type: 'text' },
-    { key: 'postalcode', label: 'Postal Code', value: postalcode, setter: setPostalcode, placeholder: 'e.g. 10110', type: 'text' },
+    { key: 'name', label: 'Name', value: name, setter: setName, placeholder: 'e.g. ABC Company', type: 'text', ref: nameRef },
+    { key: 'description', label: 'Description', value: description, setter: setDescription, placeholder: 'e.g. Leading tech company', type: 'text', ref: null },
+    { key: 'website', label: 'Website', value: website, setter: setWebsite, placeholder: 'e.g. http://abc.com', type: 'text', ref: websiteRef },
+    { key: 'tel', label: 'Telephone number', value: tel, setter: setTel, placeholder: 'e.g. 02-123-4567', type: 'tel', ref: telRef },
+    { key: 'address', label: 'Address', value: address, setter: setAddress, placeholder: 'e.g. 123 Sukhumvit Rd.', type: 'text', ref: null },
+    { key: 'district', label: 'District', value: district, setter: setDistrict, placeholder: 'e.g. Khlong Toei', type: 'text', ref: null },
+    { key: 'province', label: 'Province', value: province, setter: setProvince, placeholder: 'e.g. Bangkok', type: 'text', ref: null },
+    { key: 'postalcode', label: 'Postal Code', value: postalcode, setter: setPostalcode, placeholder: 'e.g. 10110', type: 'text', ref: postalcodeRef },
   ] as const;
 
   return (
@@ -101,6 +176,8 @@ export default function UpdateCompanyPanel({
         Update Company
       </h2>
 
+      {error && <p className="text-button-red text-sm text-center font-semibold mb-4 p-3 bg-button-red/10 rounded-lg">{error}</p>}
+
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         
         {/* Text Fields */}
@@ -110,6 +187,7 @@ export default function UpdateCompanyPanel({
               {field.label}
             </label>
             <input
+              ref={field.ref}
               type={field.type}
               value={field.value}
               onChange={e => field.setter(e.target.value)}
@@ -117,7 +195,11 @@ export default function UpdateCompanyPanel({
               title={field.label}
               aria-label={field.label}
               required
-              className="w-full border border-surface-border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+              className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none transition-all ${
+                errorField === field.key
+                  ? "border-button-red focus:ring-2 focus:ring-button-red/30 shadow-sm"
+                  : "border-surface-border focus:ring-2 focus:ring-primary/30"
+              }`}
             />
           </div>
         ))}
@@ -179,18 +261,10 @@ export default function UpdateCompanyPanel({
             placeholder="Select photo files"
             onChange={(e) => {
               const files = Array.from(e.target.files ?? []);
-              if (files.length > 3) {
-                setPhotoError("Maximum 3 photos allowed.");
-                setPhotoFiles([]);
-                if (photoInputRef.current) photoInputRef.current.value = "";
-              } else {
-                setPhotoError("");
-                setPhotoFiles(files);
-              }
+              setPhotoFiles(files);
             }}
             className="block w-full text-xs text-foreground file:mr-2 file:rounded file:border file:border-primary file:px-2 file:py-1 file:text-primary file:bg-primary-light/30 file:cursor-pointer"
           />
-          {photoError && <p className="text-button-red text-xs font-semibold text-center">{photoError}</p>}
           <p className="text-[10px] text-foreground/50 italic">
             {photoFiles.length > 0
               ? `${photoFiles.length} new photo(s) selected`
