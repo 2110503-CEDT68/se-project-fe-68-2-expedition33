@@ -110,6 +110,12 @@ export default function UpdateCompanyPanel({
         ref: websiteRef_local 
       },
       { 
+        condition: postalcode.trim().length > 0 && !/^\d+$/.test(postalcode), 
+        message: "Postal code must contain only numbers.", 
+        field: "postalcode", 
+        ref: postalcodeRef_local 
+      },
+      { 
         condition: !postalcodeRegex.test(postalcode), 
         message: "Postal code must be exactly 5 digits.", 
         field: "postalcode", 
