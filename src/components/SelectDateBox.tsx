@@ -25,7 +25,7 @@ const SelectDateBox: React.FC<SelectDateBoxProps> = ({ onPurchaseClick }) => {
       <div className="grid grid-cols-4 gap-10 mb-6 ">
         {dates.map((item, index) => (
           <button
-            key={index}
+            key={`${item.date}-${item.month}`}
             className={`py-10 px-12 rounded-2xl font-semibold text-center transition-all ${
               index === 1 || index === 2
                 ? 'bg-primary text-white'

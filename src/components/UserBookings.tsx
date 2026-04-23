@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { BookingItem } from "../../interfaces";
 import UpdateBookingPanel from "@/components/modals/UpdateBookingPanel";
 import DeleteBookingPanel from "@/components/modals/DeleteBookingPanel";
-import deleteBooking from "@/libs/deleteBooking";
 import cancelBooking from "@/libs/cancelBooking";
 import updateBooking from "@/libs/updateBooking";
 import { AppDispatch, useAppSelector } from "@/redux/store";

@@ -11,12 +11,12 @@ export default function BookingList({
   bookingsResponse, 
   adminToken,
   userToken
-}: {
+}: Readonly<{
   company: CompanyItem,
   bookingsResponse: BookingResponse, 
   adminToken: string,
   userToken: string
-}) {
+}>) {
   const [bookings, setBookings] = useState<BookingItem[]>(bookingsResponse?.data || []);
   const [bookingCount, setBookingCount] = useState<number>(bookingsResponse?.count || 0);
   const [pendingBooking, setPendingBooking] = useState<{ companyName: string, date: string; userRole: string } | null>(null);

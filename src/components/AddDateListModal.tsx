@@ -66,7 +66,7 @@ const AddDateListModal: React.FC<AddDateListModalProps> = ({
         <div className="grid grid-cols-4 gap-4 mb-8">
           {availableDates.map((item, index) => (
             <button
-              key={index}
+              key={`${item.date}-${item.month}`}
               onClick={() => handleToggleDate(index)}
               className={`py-8 px-4 rounded-2xl font-semibold text-center transition-all text-white ${
                 selectedDates.includes(index)

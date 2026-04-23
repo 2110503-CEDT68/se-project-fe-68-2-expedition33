@@ -9,7 +9,7 @@ interface PaymentEventProps {
   events: PaymentEvent[];
 }
 
-export default function PaymentEventComponent({ events }: PaymentEventProps) {
+export default function PaymentEventComponent({ events }: Readonly<PaymentEventProps>) {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'success':

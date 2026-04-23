@@ -8,7 +8,7 @@ export default function ReceiptComponent({
   onDownloadReceipt,
   onViewInvoice,
   onViewCompanyInfo,
-}: ReceiptProps) {
+}: Readonly<ReceiptProps>) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-8">
       <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-2">

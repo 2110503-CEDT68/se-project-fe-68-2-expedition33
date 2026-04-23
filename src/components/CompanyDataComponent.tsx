@@ -11,7 +11,7 @@ interface CompanyDataProps {
   data: CompanyData;
 }
 
-export default function CompanyDataComponent({ data }: CompanyDataProps) {
+export default function CompanyDataComponent({ data }: Readonly<CompanyDataProps>) {
   return (
     <div className="bg-surface border border-surface-border rounded-lg shadow-md p-6 mb-8">
       <h2 className="text-2xl font-bold text-foreground mb-6">Payment Details</h2>
@@ -19,7 +19,7 @@ export default function CompanyDataComponent({ data }: CompanyDataProps) {
       <div className="flex items-start justify-between">
         {/* Company Icon and Info */}
         <div className="flex gap-4 flex-1">
-          <div className="w-16 h-16 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+          <div className="w-16 h-16 bg-primary rounded-lg flex items-center justify-center shrink-0">
             <span className="text-white text-2xl font-bold">🏢</span>
           </div>
           

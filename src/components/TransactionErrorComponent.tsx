@@ -6,11 +6,11 @@ interface TransactionErrorProps {
 export default function TransactionErrorComponent({
   errorType,
   message,
-}: TransactionErrorProps) {
+}: Readonly<TransactionErrorProps>) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-8 border-l-4 border-button-red">
       <div className="flex items-start gap-4">
-        <div className="w-12 h-12 bg-button-red/20 rounded-full flex items-center justify-center flex-shrink-0">
+        <div className="w-12 h-12 bg-button-red/20 rounded-full flex items-center justify-center shrink-0">
           <span className="text-button-red text-2xl font-bold">!</span>
         </div>
 
@@ -37,7 +37,7 @@ export default function TransactionErrorComponent({
         </div>
 
         {/* Illustration placeholder */}
-        <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
           <span className="text-4xl">👤</span>
         </div>
       </div>
