@@ -162,3 +162,41 @@ export interface BookingResponse {
     pagination?: PaginationMeta;
     data: BookingItem[];
 }
+
+// ==========================================
+//                  PAYMENTS
+// ==========================================
+
+export interface PaymentItem {
+    id: string;
+    company: CompanyItem;
+    totalPrice: number;
+    status: "initiated" | "authorized" | "captured" | "cancelled" | "failed";
+    dateList: string[];
+    events: PaymentEvent[];
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface PaymentResponse {
+    success: boolean;
+    count: number;
+    pagination?: PaginationMeta;
+    data: PaymentItem[];
+}
+
+export interface PaymentEvent {
+    id: string;
+    eventType: "PAYMENT_INITIATED" | "PAYMENT_AUTHORIZED" | "PAYMENT_CANCELLED" | "PAYMENT_FAILED";
+    createdAt: string;
+    payload: {
+        oldStatus?: string | null;
+        newStatus?: string;
+        transactionId?: string | null;
+        errorMessage?: string | null;
+    };
+}
+export interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+}

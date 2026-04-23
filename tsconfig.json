@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-   "lib": [
+    "lib": [
       "dom",
       "dom.iterable",
       "esnext"
@@ -12,6 +12,7 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
+    "forceConsistentCasingInFileNames": true,
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,

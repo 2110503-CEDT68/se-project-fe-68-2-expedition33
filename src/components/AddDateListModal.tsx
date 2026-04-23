@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useClickOutside } from '@/components/useClickOutside';
 
 interface DateOption {
   date: number;
@@ -22,7 +23,10 @@ const AddDateListModal: React.FC<AddDateListModalProps> = ({
   availableDates,
   onPurchase,
 }) => {
+  const modalRef = React.useRef<HTMLDivElement>(null);
   const [selectedDates, setSelectedDates] = React.useState<number[]>([0, 3]);
+
+  useClickOutside(modalRef, onClose);
 
   const handleToggleDate = (index: number) => {
     setSelectedDates((prev) =>
@@ -39,7 +43,7 @@ const AddDateListModal: React.FC<AddDateListModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl p-12 max-w-2xl w-full shadow-2xl">
+      <div ref={modalRef} className="bg-white rounded-3xl p-12 max-w-2xl w-full shadow-2xl">
         {/* Close Button */}
         <div className="text-right mb-6">
           <button
