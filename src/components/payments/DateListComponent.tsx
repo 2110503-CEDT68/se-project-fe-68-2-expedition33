@@ -3,7 +3,7 @@ interface DateListProps {
   onAddMore?: () => void;
 }
 
-export default function DateListComponent({ dates, onAddMore }: DateListProps) {
+export default function DateListComponent({ dates, onAddMore }: Readonly<DateListProps>) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-8">
       <div className="flex items-center justify-between mb-6">
@@ -21,7 +21,7 @@ export default function DateListComponent({ dates, onAddMore }: DateListProps) {
       <div className="flex gap-4 flex-wrap">
         {dates.map((date, index) => (
           <button
-            key={index}
+            key={`${date.month}-${date.date}`}
             className={`py-4 px-6 rounded-lg font-semibold text-center text-white transition-all ${
               index === 1 || index === 2
                 ? 'bg-orange-500 hover:bg-orange-600'
