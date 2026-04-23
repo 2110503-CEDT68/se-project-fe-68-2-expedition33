@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { useClickOutside } from "@/components/useClickOutside";
+import { useClickOutside } from "@/libs/utils/useClickOutside";
 
 export default function UpdateBookingPanel({ companyName, oldDate, onClose, onUpdate: onSubmit }: Readonly<{ companyName: string, oldDate: string, onClose: () => void, onUpdate: (e: React.MouseEvent, date: string) => void }>) {
   const modalRef = useRef<HTMLDivElement>(null);

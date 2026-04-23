@@ -2,8 +2,8 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import updateCompany from "../../libs/updateCompany";
-import { CompanyItem, CompanyUpdatePayload } from "../../../interfaces";
-import { useClickOutside } from "@/components/useClickOutside";
+import { CompanyItem, CompanyUpdatePayload } from "@/../interfaces";
+import { useClickOutside } from "@/libs/utils/useClickOutside";
 
 export default function UpdateCompanyPanel({
   company,
@@ -26,7 +26,6 @@ export default function UpdateCompanyPanel({
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [photoFiles, setPhotoFiles] = useState<File[]>([]);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const [photoError, setPhotoError] = useState("");
   const [error, setError] = useState("");
   const [errorField, setErrorField] = useState<string | null>(null);
   

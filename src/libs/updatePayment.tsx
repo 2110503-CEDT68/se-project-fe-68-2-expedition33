@@ -1,4 +1,4 @@
-import { PaymentItem, ApiResponse } from "../../interfaces";
+import { PaymentItem, ApiResponse } from "@/../interfaces";
 
 export default async function updatePayment(
     id: string,

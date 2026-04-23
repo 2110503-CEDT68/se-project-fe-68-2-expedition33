@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CompanyItem } from "../../interfaces";
+import { CompanyItem } from "@/../interfaces";
 import CompanyCard from "./CompanyCard";
 
 

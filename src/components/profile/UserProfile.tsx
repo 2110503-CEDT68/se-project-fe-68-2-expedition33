@@ -1,4 +1,4 @@
-import { UserItem } from "../../interfaces";
+import { UserItem } from "@/../interfaces";
 import ProfileCard from "./ProfileCard";
 
 export default function UserProfile({ user }: Readonly<{ user: UserItem }>) {

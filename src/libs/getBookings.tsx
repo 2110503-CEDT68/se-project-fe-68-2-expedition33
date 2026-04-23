@@ -1,4 +1,4 @@
-import { BookingResponse } from "../../interfaces";
+import { BookingResponse } from "@/../interfaces";
 
 export default async function getBookings(token: string): Promise<BookingResponse> {
     const response = await fetch(`${process.env.BACKEND_URL}/api/v1/bookings`,

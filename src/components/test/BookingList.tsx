@@ -1,7 +1,7 @@
 "use client"
 import cancelBooking from "@/libs/cancelBooking";
 import createBooking from "@/libs/createBooking";
-import { BookingItem, BookingResponse, CompanyItem } from "../../../interfaces";
+import { BookingItem, BookingResponse, CompanyItem } from "@/../interfaces";
 import { useState } from "react";
 import getBookings from "@/libs/getBookings";
 import LinearProgress from "@mui/material/LinearProgress";

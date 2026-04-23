@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from "react";
-import SelectDateBox from "@/components/SelectDateBox";
-import CompanyReseve from "@/components/companyReseve";
-import AddDateListModal from "@/components/AddDateListModal";
+import SelectDateBox from "@/components/payments/SelectDateBox";
+import CompanyReseve from "@/components/payments/CompanyReserve";
+import AddDateListModal from "@/components/payments/AddDateListModal";
 
 export default function Paymentpage() {
   const [isModalOpen, setIsModalOpen] = useState(false);

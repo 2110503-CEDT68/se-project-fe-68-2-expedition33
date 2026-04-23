@@ -3,10 +3,10 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import createBooking from "@/libs/createBooking";
-import { CompanyItem } from "../../../interfaces";
+import { CompanyItem } from "@/../interfaces";
 import { useAppSelector } from "@/redux/store";
 import { useSession } from "next-auth/react";
-import { useClickOutside } from "@/components/useClickOutside";
+import { useClickOutside } from "@/libs/utils/useClickOutside";
 
 export default function AddBookingPanel({ company, token, onClose }: Readonly<{
     company: CompanyItem,

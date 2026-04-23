@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { signOut } from "next-auth/react";
-import { CompanyItem, UserItem } from "../../interfaces";
-import UpdateCompanyPanel from "./modals/UpdateCompanyPanel";
-import DeleteCompanyPanel from "./modals/DeleteCompanyPanel";
+import { CompanyItem, UserItem } from "@/../interfaces";
+import UpdateCompanyPanel from "../modals/UpdateCompanyPanel";
+import DeleteCompanyPanel from "../modals/DeleteCompanyPanel";
 import ProfileCard from "./ProfileCard";
-import AdminCompanyDetail from "./AdminCompanyDetail";
+import AdminCompanyDetail from "../companies/AdminCompanyDetail";
 
 export default function CompanyProfile({ user, token }: Readonly<{ user: UserItem, token: string }>) {
   const [company, setCompany] = useState<CompanyItem | null>(null);

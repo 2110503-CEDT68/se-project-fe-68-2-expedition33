@@ -1,9 +1,9 @@
 "use client"
 import { useState } from "react";
-import { CompanyItem } from "../../interfaces";
+import { CompanyItem } from "@/../interfaces";
 import CompanyDetail from "./CompanyDetail";
-import UpdateCompanyPanel from "./modals/UpdateCompanyPanel";
-import DeleteCompanyPanel from "./modals/DeleteCompanyPanel";
+import UpdateCompanyPanel from "../modals/UpdateCompanyPanel";
+import DeleteCompanyPanel from "../modals/DeleteCompanyPanel";
 import { signOut } from "next-auth/react";
 
 export default function AdminCompanyDetail({

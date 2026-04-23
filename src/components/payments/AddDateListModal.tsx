@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useClickOutside } from '@/components/useClickOutside';
+import { useClickOutside } from '@/libs/utils/useClickOutside';
 
 interface DateOption {
   date: number;

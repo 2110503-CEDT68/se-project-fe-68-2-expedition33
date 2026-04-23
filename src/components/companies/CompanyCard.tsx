@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { CompanyItem } from "../../interfaces";
+import { CompanyItem } from "@/../interfaces";
 
 export default function CompanyCard({ company }: Readonly<{ company: CompanyItem }>) {
   return (

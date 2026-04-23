@@ -1,4 +1,4 @@
-import { GetMeResponse } from "../../interfaces";
+import { GetMeResponse } from "@/../interfaces";
 
 export default async function getUserProfile(token: string): Promise<GetMeResponse> {
     const response = await fetch(`${process.env.BACKEND_URL}/api/v1/auth/me`, {

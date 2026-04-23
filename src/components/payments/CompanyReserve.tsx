@@ -111,7 +111,7 @@ const CompanyReseve: React.FC<CompanyReveProps> = () => {
           <Link key={company.id} href={`/details`}>
             <div className="w-full flex items-center gap-4 p-4 rounded-lg transition-all border-2 bg-white border-gray-200 shadow-sm hover:border-orange-500 cursor-pointer hover:shadow-lg">
               {/* Company Logo */}
-              <div className="w-20 h-20 bg-gray-300 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-20 h-20 bg-gray-300 rounded-lg flex items-center justify-center shrink-0">
                 <span className="text-black text-xs font-semibold text-center px-1">
                   Logo
                   <br />
@@ -136,9 +136,9 @@ const CompanyReseve: React.FC<CompanyReveProps> = () => {
                 {/* Color Indicators for Reserved Dates */}
                 <div className="flex gap-2 items-center">
                   <span className="text-black text-xs font-semibold">Reserved:</span>
-                  {company.availableDates.map((date, index) => (
+                  {company.availableDates.map((date) => (
                     <div
-                      key={index}
+                      key={`${date.date}-${date.month}`}
                       className={`w-4 h-4 rounded-full ${company.dotColor}`}
                       title={`${date.date} ${date.month}`}
                     />
@@ -148,7 +148,7 @@ const CompanyReseve: React.FC<CompanyReveProps> = () => {
 
               {/* Color Indicator Bar */}
               <div
-                className={`w-1 h-24 rounded-r-lg flex-shrink-0 ${company.dotColor}`}
+                className={`w-1 h-24 rounded-r-lg shrink-0 ${company.dotColor}`}
               />
             </div>
           </Link>

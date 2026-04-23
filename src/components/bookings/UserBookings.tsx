@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { BookingItem } from "../../interfaces";
+import { BookingItem } from "@/../interfaces";
 import UpdateBookingPanel from "@/components/modals/UpdateBookingPanel";
 import DeleteBookingPanel from "@/components/modals/DeleteBookingPanel";
 import cancelBooking from "@/libs/cancelBooking";

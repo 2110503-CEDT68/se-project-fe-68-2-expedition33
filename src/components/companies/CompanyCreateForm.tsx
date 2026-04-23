@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
-import { CompanyCreatePayload } from "../../interfaces";
+import { CompanyCreatePayload } from "@/../interfaces";
 import createCompany from "@/libs/createCompany";
 
 type CompanyTextFieldName =

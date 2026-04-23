@@ -1,5 +1,5 @@
-import { UserItem } from "../../interfaces";
-import CompanyCreateForm from "./CompanyCreateForm";
+import { UserItem } from "@/../interfaces";
+import CompanyCreateForm from "../companies/CompanyCreateForm";
 import ProfileCard from "./ProfileCard";
 
 export default function AdminProfile({ user, token }: Readonly<{ user: UserItem, token: string }>) {

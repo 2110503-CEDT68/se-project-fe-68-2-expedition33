@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import CompanyDataComponent from '@/components/CompanyDataComponent';
-import DateListComponent from '@/components/DateListComponent';
-import PaymentEventComponent from '@/components/PaymentEventComponent';
-import ReceiptComponent from '@/components/ReceiptComponent';
-import TransactionErrorComponent from '@/components/TransactionErrorComponent';
-import PaymentActionComponent from '@/components/PaymentActionComponent';
+import CompanyDataComponent from '@/components/companies/CompanyDataComponent';
+import DateListComponent from '@/components/payments/DateListComponent';
+import PaymentEventComponent from '@/components/payments/PaymentEventComponent';
+import ReceiptComponent from '@/components/payments/ReceiptComponent';
+import TransactionErrorComponent from '@/components/payments/TransactionErrorComponent';
+import PaymentActionComponent from '@/components/payments/PaymentActionComponent';
 import cancelPayment from '@/libs/cancelPayment';
 
 interface CompanyDetails {

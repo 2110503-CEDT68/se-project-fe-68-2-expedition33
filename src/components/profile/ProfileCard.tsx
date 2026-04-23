@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { UserItem } from "../../interfaces";
+import { UserItem } from "@/../interfaces";
 
 export default function ProfileCard({ user, children }: Readonly<{ user: UserItem, children?: React.ReactNode }>) {
   return (
