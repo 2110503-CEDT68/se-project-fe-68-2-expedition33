@@ -1,5 +1,5 @@
 "use client"
-import deleteBooking from "@/libs/deleteBooking";
+import cancelBooking from "@/libs/cancelBooking";
 import createBooking from "@/libs/createBooking";
 import { BookingItem, BookingResponse, CompanyItem } from "../../../interfaces";
 import { useState } from "react";
@@ -53,11 +53,16 @@ export default function BookingList({
     }
   };
 
-  const handleDelete = (e: React.MouseEvent, id: string) => {
+  const handleDelete = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    deleteBooking(id, adminToken);
-    setBookings((prev) => prev.filter((booking) => booking.id !== id));
-    setBookingCount((prevCount) => prevCount - 1);
+    try {
+      await cancelBooking(id, adminToken);
+      setBookings((prev) => prev.filter((booking) => booking.id !== id));
+      setBookingCount((prevCount) => prevCount - 1);
+    } catch (error) {
+      console.error("Failed to cancel booking:", error);
+      alert("Failed to cancel booking");
+    }
   };
 
   return (

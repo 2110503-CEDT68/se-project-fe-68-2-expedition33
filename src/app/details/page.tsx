@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import CompanyDataComponent from '@/components/CompanyDataComponent';
 import DateListComponent from '@/components/DateListComponent';
 import PaymentEventComponent from '@/components/PaymentEventComponent';
 import ReceiptComponent from '@/components/ReceiptComponent';
 import TransactionErrorComponent from '@/components/TransactionErrorComponent';
 import PaymentActionComponent from '@/components/PaymentActionComponent';
+import cancelPayment from '@/libs/cancelPayment';
 
 interface CompanyDetails {
   id: number;
@@ -19,8 +21,13 @@ interface CompanyDetails {
 }
 
 export default function DetailsPage() {
+  const { data: session } = useSession();
+  const token = session?.user?.accessToken as string;
+  
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [cancellationError, setCancellationError] = useState<string | null>(null);
 
   // Mock data for company details
   const mockCompany: CompanyDetails = {
@@ -88,14 +95,38 @@ export default function DetailsPage() {
     setIsConfirmModalOpen(false);
   };
 
-  const handleCancelConfirmConfirm = () => {
-    console.log('Payment cancelled');
-    setIsCancelConfirmOpen(false);
+  const handleCancelConfirmConfirm = async () => {
+    if (!token) {
+      setCancellationError('No authentication token available');
+      return;
+    }
+
+    setIsCancelling(true);
+    setCancellationError(null);
+
+    try {
+      // Using a mock payment ID - in real scenario, this would come from page params or context
+      const paymentId = 'PAY-2022-123456';
+      await cancelPayment(paymentId, token, 'User requested cancellation');
+      
+      console.log('Payment cancelled successfully');
+      setIsCancelConfirmOpen(false);
+      // Optionally redirect to payments page after successful cancellation
+      // router.push('/payments');
+    } catch (error) {
+      console.error('Failed to cancel payment:', error);
+      setCancellationError(
+        error instanceof Error ? error.message : 'Failed to cancel payment. Please try again.'
+      );
+    } finally {
+      setIsCancelling(false);
+    }
   };
 
   const handleCancelConfirmCancel = () => {
     console.log('Cancel cancelled');
     setIsCancelConfirmOpen(false);
+    setCancellationError(null);
   };
 
   return (
@@ -207,7 +238,8 @@ export default function DetailsPage() {
             <div className="flex justify-end mb-6">
               <button
                 onClick={handleCancelConfirmCancel}
-                className="text-gray-400 hover:text-gray-600 text-2xl w-8 h-8"
+                disabled={isCancelling}
+                className="text-gray-400 hover:text-gray-600 text-2xl w-8 h-8 disabled:opacity-50"
               >
                 ✕
               </button>
@@ -233,13 +265,36 @@ export default function DetailsPage() {
               This action cannot be undone.
             </p>
 
+            {/* Error Message */}
+            {cancellationError && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p className="text-red-800 text-sm font-medium">{cancellationError}</p>
+              </div>
+            )}
+
+            {/* Loading State */}
+            {isCancelling && (
+              <div className="flex items-center justify-center mb-6">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-500"></div>
+                <span className="ml-2 text-gray-600">Cancelling payment...</span>
+              </div>
+            )}
+
             {/* Modal Action Button */}
-            <div className="flex justify-center">
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={handleCancelConfirmCancel}
+                disabled={isCancelling}
+                className="bg-gray-300 hover:bg-gray-400 disabled:opacity-50 text-black font-bold py-4 px-8 rounded-full transition-colors text-lg"
+              >
+                Keep It
+              </button>
               <button
                 onClick={handleCancelConfirmConfirm}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-16 rounded-full transition-colors text-lg"
+                disabled={isCancelling}
+                className="bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white font-bold py-4 px-8 rounded-full transition-colors text-lg disabled:cursor-not-allowed"
               >
-                Cancel
+                {isCancelling ? 'Cancelling...' : 'Cancel Payment'}
               </button>
             </div>
           </div>

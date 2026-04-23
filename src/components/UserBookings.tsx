@@ -6,6 +6,7 @@ import { BookingItem } from "../../interfaces";
 import UpdateBookingPanel from "@/components/modals/UpdateBookingPanel";
 import DeleteBookingPanel from "@/components/modals/DeleteBookingPanel";
 import deleteBooking from "@/libs/deleteBooking";
+import cancelBooking from "@/libs/cancelBooking";
 import updateBooking from "@/libs/updateBooking";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import { useDispatch } from "react-redux";
@@ -34,10 +35,12 @@ export default function UserBookings({ bookingList, userToken }: Readonly<{ book
         dispatch(removeBooking(target));
 
         try {
-            await deleteBooking(target.id, token);
+            // Try using the cancel endpoint first (PATCH)
+            // If backend supports it, this is the preferred method
+            await cancelBooking(target.id, token);
         } catch (error) {
-            console.error("Failed to delete booking", error);
-            alert("Failed to delete booking");
+            console.error("Failed to cancel booking", error);
+            alert("Failed to cancel booking");
             dispatch(setBookings(oldBookings));
         }
     };
