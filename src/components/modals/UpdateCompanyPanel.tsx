@@ -209,6 +209,9 @@ export default function UpdateCompanyPanel({
                   : "border-surface-border focus:ring-2 focus:ring-primary/30"
               }`}
             />
+            {errorField === field.key && (
+              <p className="text-button-red text-xs font-bold tracking-wider mt-1">{error}</p>
+            )}
           </div>
         ))}
 
@@ -282,7 +285,7 @@ export default function UpdateCompanyPanel({
 
         {/* Action Buttons */}
         <div className="flex flex-col gap-3 mt-15">
-          {error && <p className="text-button-red text-sm text-center font-semibold mb-2 p-3 bg-button-red/10 rounded-lg">{error}</p>}
+          {error && !errorField && <p className="text-button-red text-sm text-center font-semibold mb-2 p-3 bg-button-red/10 rounded-lg">{error}</p>}
           
           <button
             type="submit"

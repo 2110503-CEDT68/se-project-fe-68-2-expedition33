@@ -299,6 +299,9 @@ export default function CompanyCreateForm ({ token }: Readonly<{ token: string }
                         : "border-surface-border focus:border-primary focus:ring-primary/30"
                     }`}
                 />
+                {errorField === field.name && (
+                    <p className="text-button-red text-xs font-bold tracking-wider mt-1">{error}</p>
+                )}
                 </div>
             ))}
 
@@ -325,6 +328,9 @@ export default function CompanyCreateForm ({ token }: Readonly<{ token: string }
                         : "border-surface-border focus:border-primary focus:ring-primary/30"
                     }`}
                 />
+                {errorField === field.name && (
+                    <p className="text-button-red text-xs font-bold tracking-wider mt-1">{error}</p>
+                )}
                 </div>
             ))}
 
@@ -399,7 +405,7 @@ export default function CompanyCreateForm ({ token }: Readonly<{ token: string }
                 </p>
             </div>
 
-            {error && <p className="text-button-red text-sm text-center font-semibold">{error}</p>}
+            {error && !errorField && <p className="text-button-red text-sm text-center font-semibold">{error}</p>}
             {success && <p className="text-button-green text-sm text-center font-semibold">{success}</p>}
 
             <button

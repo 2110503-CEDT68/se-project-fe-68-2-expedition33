@@ -196,6 +196,9 @@ export default function RegisterPage() {
                     : "border-primary/60 focus:border-primary"
                 }`}
               />
+              {errorField === "name" && (
+                <p className="text-red-500 text-xs font-bold tracking-wider mt-1">{error}</p>
+              )}
             </div>
 
             {/* Tel Field */}
@@ -220,6 +223,9 @@ export default function RegisterPage() {
                     : "border-primary/60 focus:border-primary"
                 }`}
               />
+              {errorField === "tel" && (
+                <p className="text-red-500 text-xs font-bold tracking-wider mt-1">{error}</p>
+              )}
             </div>
 
             {/* Email Field */}
@@ -244,6 +250,9 @@ export default function RegisterPage() {
                     : "border-primary/60 focus:border-primary"
                 }`}
               />
+              {errorField === "email" && (
+                <p className="text-red-500 text-xs font-bold tracking-wider mt-1">{error}</p>
+              )}
             </div>
 
             {/* Password Field */}
@@ -268,6 +277,9 @@ export default function RegisterPage() {
                     : "border-primary/60 focus:border-primary"
                 }`}
               />
+              {errorField === "password" && (
+                <p className="text-red-500 text-xs font-bold tracking-wider mt-1">{error}</p>
+              )}
             </div>
 
             {/* Confirm Password Field */}
@@ -292,9 +304,12 @@ export default function RegisterPage() {
                     : "border-primary/60 focus:border-primary"
                 }`}
               />
+              {errorField === "confirmPassword" && (
+                <p className="text-red-500 text-xs font-bold tracking-wider mt-1">{error}</p>
+              )}
             </div>
 
-            {error && (
+            {error && !errorField && (
               <p className="text-red-500 text-xs font-bold tracking-wider text-center">{error}</p>
             )}
 
