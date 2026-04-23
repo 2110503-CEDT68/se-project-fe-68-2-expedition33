@@ -1,11 +1,12 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import createBooking from "@/libs/createBooking";
 import { CompanyItem } from "../../../interfaces";
 import { useAppSelector } from "@/redux/store";
 import { useSession } from "next-auth/react";
+import { useClickOutside } from "@/components/useClickOutside";
 
 export default function AddBookingPanel({ company, token, onClose }: Readonly<{
     company: CompanyItem,
@@ -16,6 +17,7 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
 
   const router = useRouter();
   const session = useSession();
+  const modalRef = useRef<HTMLDivElement>(null);
   const bookings = useAppSelector(state => state.bookings.bookingItems);
   const isLoading = useAppSelector(state => state.bookings.loading);
 
@@ -26,6 +28,8 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
   const dates: string[] = ["10", "11", "12", "13"];
   const isAdmin = session?.data?.user?.role === "admin";
   const isLimitReached = bookings.length >= BOOKING_LIMIT && !isAdmin;
+
+  useClickOutside(modalRef, onClose);
 
   const handleBookingSubmit = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -56,7 +60,7 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
       
-      <div className="bg-surface border border-surface-border rounded-[2.5rem] p-8 md:p-12 max-w-2xl w-full relative flex flex-col items-center shadow-2xl">
+      <div ref={modalRef} className="bg-surface border border-surface-border rounded-[2.5rem] p-8 md:p-12 max-w-2xl w-full relative flex flex-col items-center shadow-2xl">
         
         <button 
           onClick={onClose} 

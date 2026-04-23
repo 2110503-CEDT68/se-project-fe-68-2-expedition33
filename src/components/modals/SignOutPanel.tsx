@@ -1,11 +1,16 @@
 "use client";
 
+import { useRef } from "react";
 import { signOut } from "next-auth/react";
+import { useClickOutside } from "@/components/useClickOutside";
 
 export default function SignOutModal({ onClose }: Readonly<{ onClose: () => void }>) {
+    const modalRef = useRef<HTMLDivElement>(null);
+    useClickOutside(modalRef, onClose);
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-            <div className="bg-background rounded-3xl shadow-2xl w-[90%] max-w-md p-10 relative flex flex-col items-center border border-surface-border">
+            <div ref={modalRef} className="bg-background rounded-3xl shadow-2xl w-[90%] max-w-md p-10 relative flex flex-col items-center border border-surface-border">
 
                 {/* Close Button */}
                 <button

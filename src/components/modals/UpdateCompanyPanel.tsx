@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import updateCompany from "../../libs/updateCompany";
 import { CompanyItem, CompanyUpdatePayload } from "../../../interfaces";
+import { useClickOutside } from "@/components/useClickOutside";
 
 export default function UpdateCompanyPanel({
   company,
@@ -35,7 +36,10 @@ export default function UpdateCompanyPanel({
   const telRef = useRef<HTMLInputElement>(null);
   const websiteRef = useRef<HTMLInputElement>(null);
   const postalcodeRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
+
+  useClickOutside(modalRef, onClose);
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -167,7 +171,7 @@ export default function UpdateCompanyPanel({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm pt-5" onScroll={(e) => {e.stopPropagation()}}>
-      <div className="bg-surface border border-surface-border rounded-3xl w-full max-w-xl p-8 md:p-10 relative shadow-2xl text-foreground max-h-[90vh] overflow-y-auto">
+      <div ref={modalRef} className="bg-surface border border-surface-border rounded-3xl w-full max-w-xl p-8 md:p-10 relative shadow-2xl text-foreground max-h-[90vh] overflow-y-auto">
 
       {/* Close Button */}
       <button
