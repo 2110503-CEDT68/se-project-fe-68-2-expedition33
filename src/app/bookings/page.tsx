@@ -37,5 +37,9 @@ export default async function BookingsPage() {
     >  
       <BookingsDataWrapper token={session.user.token} role={session.user.role} />
     </Suspense>
+
+
+
+
   );
 }
