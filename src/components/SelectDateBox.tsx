@@ -28,8 +28,8 @@ const SelectDateBox: React.FC<SelectDateBoxProps> = ({ onPurchaseClick }) => {
             key={index}
             className={`py-10 px-12 rounded-2xl font-semibold text-center transition-all ${
               index === 1 || index === 2
-                ? 'bg-orange-500 text-white'
-                : 'bg-orange-300 text-white'
+                ? 'bg-primary text-white'
+                : 'bg-primary/60 text-white'
             }`}
           >
             <div className="text-2xl font-bold">{item.date}</div>
@@ -47,7 +47,7 @@ const SelectDateBox: React.FC<SelectDateBoxProps> = ({ onPurchaseClick }) => {
       <div className="text-center">
         <button
           onClick={onPurchaseClick}
-          className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-8 rounded-full transition-colors"
+          className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-8 rounded-full transition-colors"
         >
           Purchase
         </button>

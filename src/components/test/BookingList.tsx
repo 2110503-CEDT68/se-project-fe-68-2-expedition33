@@ -132,7 +132,7 @@ export default function BookingList({
 
               <button 
                 onClick={(e) => handleDelete(e, booking.id)}
-                className="text-red-500 hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-md font-bold transition-colors border border-red-200 cursor-pointer"
+                className="text-button-red hover:text-button-red-hover hover:bg-button-red/10 px-4 py-2 rounded-md font-bold transition-colors border border-button-red/20 cursor-pointer"
               >
                 Delete
               </button>

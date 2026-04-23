@@ -43,22 +43,22 @@ const AddDateListModal: React.FC<AddDateListModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div ref={modalRef} className="bg-white rounded-3xl p-12 max-w-2xl w-full shadow-2xl">
+      <div ref={modalRef} className="bg-surface border border-surface-border rounded-3xl p-12 max-w-2xl w-full shadow-2xl">
         {/* Close Button */}
         <div className="text-right mb-6">
           <button
             onClick={onClose}
-            className="text-orange-500 hover:text-orange-600 text-3xl font-bold"
+            className="text-primary hover:text-primary-hover text-3xl font-bold"
           >
             ↗
           </button>
         </div>
 
         {/* Title */}
-        <h2 className="text-center text-4xl font-bold text-orange-500 mb-3">
+        <h2 className="text-center text-4xl font-bold text-primary mb-3">
           Add Date List
         </h2>
-        <p className="text-center text-orange-500 font-semibold text-lg mb-8">
+        <p className="text-center text-primary font-semibold text-lg mb-8">
           {companyName}
         </p>
 
@@ -70,8 +70,8 @@ const AddDateListModal: React.FC<AddDateListModalProps> = ({
               onClick={() => handleToggleDate(index)}
               className={`py-8 px-4 rounded-2xl font-semibold text-center transition-all text-white ${
                 selectedDates.includes(index)
-                  ? 'bg-orange-500'
-                  : 'bg-orange-300 hover:bg-orange-400'
+                  ? 'bg-primary'
+                  : 'bg-primary/60 hover:bg-primary/80'
               }`}
             >
               <div className="text-2xl font-bold">{item.date}</div>
@@ -81,23 +81,23 @@ const AddDateListModal: React.FC<AddDateListModalProps> = ({
         </div>
 
         {/* Info Text */}
-        <p className="text-center text-black text-sm mb-2">
+        <p className="text-center text-foreground text-sm mb-2">
           Purchase for additional organizing job fair interviews dates
         </p>
-        <p className="text-center text-orange-500 font-semibold text-sm mb-8">
+        <p className="text-center text-primary font-semibold text-sm mb-8">
           Additional Dates 300 Bath per day
         </p>
 
         {/* Price */}
         <div className="text-center mb-8">
-          <div className="text-5xl font-bold text-orange-500">300 B</div>
+          <div className="text-5xl font-bold text-primary">300 B</div>
         </div>
 
         {/* Purchase Button */}
         <div className="text-center mb-8">
           <button
             onClick={handlePurchase}
-            className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-12 rounded-full transition-colors text-lg"
+            className="bg-primary hover:bg-primary-hover text-white font-bold py-3 px-12 rounded-full transition-colors text-lg"
           >
             Purchase
           </button>
@@ -105,7 +105,7 @@ const AddDateListModal: React.FC<AddDateListModalProps> = ({
 
         {/* Illustration */}
         <div className="flex justify-center">
-          <div className="w-32 h-32 bg-gradient-to-b from-orange-100 to-orange-50 rounded-full flex items-center justify-center">
+          <div className="w-32 h-32 bg-linear-to-b from-primary-light to-background rounded-full flex items-center justify-center">
             <svg
               className="w-20 h-20"
               viewBox="0 0 100 100"

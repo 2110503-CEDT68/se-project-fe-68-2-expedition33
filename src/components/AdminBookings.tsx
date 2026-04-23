@@ -142,7 +142,7 @@ export default function AdminBookings({bookingList, adminToken}: Readonly<{booki
                                 >
                                     Update
                                 </button>
-                                <button className="flex-1 md:flex-none px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold text-sm transition-colors cursor-pointer shadow-sm"
+                                <button className="flex-1 md:flex-none px-4 py-2 bg-button-red hover:bg-button-red-hover text-white rounded-lg font-bold text-sm transition-colors cursor-pointer shadow-sm"
                                     onClick={(e) => setDeletingBooking(booking)}
                                 >
                                     Delete

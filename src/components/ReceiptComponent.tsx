@@ -18,21 +18,21 @@ export default function ReceiptComponent({
       <div className="flex gap-4 mb-6">
         <button
           onClick={onDownloadReceipt}
-          className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+          className="flex-1 bg-primary hover:bg-primary-hover text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
         >
           <span>⬇</span> Download Receipt
         </button>
         
         <button
           onClick={onViewInvoice}
-          className="flex-1 border-2 border-orange-500 text-orange-500 hover:bg-orange-50 font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+          className="flex-1 border-2 border-primary text-primary hover:bg-primary/10 font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
         >
           <span>📄</span> View Invoice
         </button>
         
         <button
           onClick={onViewCompanyInfo}
-          className="flex-1 border-2 border-orange-500 text-orange-500 hover:bg-orange-50 font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+          className="flex-1 border-2 border-primary text-primary hover:bg-primary/10 font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
         >
           <span>🏢</span> Company Info
         </button>

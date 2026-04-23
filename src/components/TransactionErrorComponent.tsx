@@ -8,10 +8,10 @@ export default function TransactionErrorComponent({
   message,
 }: TransactionErrorProps) {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-8 border-l-4 border-red-500">
+    <div className="bg-white rounded-lg shadow-md p-6 mb-8 border-l-4 border-button-red">
       <div className="flex items-start gap-4">
-        <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-          <span className="text-red-500 text-2xl font-bold">!</span>
+        <div className="w-12 h-12 bg-button-red/20 rounded-full flex items-center justify-center flex-shrink-0">
+          <span className="text-button-red text-2xl font-bold">!</span>
         </div>
 
         <div className="flex-1">

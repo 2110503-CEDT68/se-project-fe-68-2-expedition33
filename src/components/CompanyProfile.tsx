@@ -60,10 +60,10 @@ export default function CompanyProfile({ user, token }: Readonly<{ user: UserIte
       {/* --- Modals --- */}
       {updating && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-xl p-6 relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-surface border border-surface-border rounded-3xl shadow-2xl w-full max-w-xl p-6 relative max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setUpdating(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-black bg-gray-100 hover:bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
+              className="absolute top-4 right-4 text-foreground/50 hover:text-foreground bg-surface-border/30 hover:bg-surface-border/60 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
             >
               ✕
             </button>
@@ -78,10 +78,10 @@ export default function CompanyProfile({ user, token }: Readonly<{ user: UserIte
 
       {deleting && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6 relative">
+          <div className="bg-surface border border-surface-border rounded-3xl shadow-2xl w-full max-w-md p-6 relative">
             <button
               onClick={() => setDeleting(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-black bg-gray-100 hover:bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
+              className="absolute top-4 right-4 text-foreground/50 hover:text-foreground bg-surface-border/30 hover:bg-surface-border/60 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
             >
               ✕
             </button>

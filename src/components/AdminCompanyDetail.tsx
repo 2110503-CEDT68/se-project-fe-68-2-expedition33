@@ -72,7 +72,7 @@ export default function AdminCompanyDetail({
       )}
 
       {!adminToken && (
-        <p className="mt-4 text-sm text-red-500 font-semibold">Admin token is missing.</p>
+        <p className="mt-4 text-sm text-button-red font-semibold">Admin token is missing.</p>
       )}
     </>
   );
