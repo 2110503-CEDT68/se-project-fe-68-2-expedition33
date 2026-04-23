@@ -24,11 +24,12 @@ export default function Paymentpage() {
   };
 
   return(
-      <main className="flex flex-row pt-8 px-8 gap-8 ">
+      <main className="flex flex-row pt-24 px-8 gap-8 ">
 
         <div className="flex flex-row">
             <div className="flex flex-col items-start justify-start w-fit p-10 m-5 rounded-lg shadow-md bg-gray-900">
             <div className="text-white font-semibold mb-4 text-center"> Date List </div>
+            
             <SelectDateBox onPurchaseClick={handlePurchaseClick} />
             
         </div>
