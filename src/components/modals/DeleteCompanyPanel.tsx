@@ -2,7 +2,7 @@
 import deleteCompany from "@/libs/deleteCompany";
 import { CompanyItem } from "@/../interfaces";
 import { useRef, useState } from "react";
-import { useClickOutside } from "@/libs/utils/useClickOutside";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 export default function DeleteCompanyPanel({
   company,

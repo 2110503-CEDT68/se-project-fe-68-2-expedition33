@@ -1,28 +1,23 @@
 'use client';
 
 import React from 'react';
-import { useClickOutside } from '@/libs/utils/useClickOutside';
+import { useClickOutside } from '@/hooks/useClickOutside';
+import { useAppSelector } from '@/redux/store';
 
-interface DateOption {
-  date: number;
-  month: string;
-}
-
-interface AddDateListModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  companyName: string;
-  availableDates: DateOption[];
-  onPurchase?: (selectedDates: number[]) => void;
-}
-
-const AddDateListModal: React.FC<AddDateListModalProps> = ({
+export default function AddDateListModal({
   isOpen,
   onClose,
-  companyName,
-  availableDates,
   onPurchase,
-}) => {
+  reservedDate
+}: Readonly<{
+  isOpen: boolean;
+  onClose: () => void;
+  onPurchase?: (selectedDates: number[]) => void;
+  reservedDate: Date[];
+}>) {
+
+  const company = useAppSelector((state) => state.user.userProfile?.companyData);
+
   const modalRef = React.useRef<HTMLDivElement>(null);
   const [selectedDates, setSelectedDates] = React.useState<number[]>([0, 3]);
 
@@ -59,14 +54,14 @@ const AddDateListModal: React.FC<AddDateListModalProps> = ({
           Add Date List
         </h2>
         <p className="text-center text-primary font-semibold text-lg mb-8">
-          {companyName}
+          {company?.name}
         </p>
 
         {/* Date Options Grid */}
         <div className="grid grid-cols-4 gap-4 mb-8">
-          {availableDates.map((item, index) => (
+          {reservedDate.map((item, index) => (
             <button
-              key={`${item.date}-${item.month}`}
+              key={item.toISOString()}
               onClick={() => handleToggleDate(index)}
               className={`py-8 px-4 rounded-2xl font-semibold text-center transition-all text-white ${
                 selectedDates.includes(index)
@@ -74,8 +69,8 @@ const AddDateListModal: React.FC<AddDateListModalProps> = ({
                   : 'bg-primary/60 hover:bg-primary/80'
               }`}
             >
-              <div className="text-2xl font-bold">{item.date}</div>
-              <div className="text-sm">{item.month}</div>
+              <div className="text-2xl font-bold">{item.toLocaleString("en-GB", { day: "numeric" })}</div>
+              <div className="text-sm">{item.toLocaleString("en-GB", { month: "long" })}</div>
             </button>
           ))}
         </div>
@@ -125,6 +120,4 @@ const AddDateListModal: React.FC<AddDateListModalProps> = ({
       </div>
     </div>
   );
-};
-
-export default AddDateListModal;
+}

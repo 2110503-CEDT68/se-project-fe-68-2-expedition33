@@ -1,14 +1,12 @@
-interface PaymentActionProps {
-  onConfirm?: () => void;
-  onCancel?: () => void;
-  isDisabled?: boolean;
-}
-
 export default function PaymentActionComponent({
   onConfirm,
   onCancel,
   isDisabled,
-}: PaymentActionProps) {
+}: Readonly<{
+  onConfirm?: () => void,
+  onCancel?: () => void,
+  isDisabled?: boolean
+}>) {
   return (
     <div className="bg-background rounded-2xl border border-surface-border px-8 py-4 flex flex-col items-center mx-auto" >
       <h2 className="text-base font-bold text-foreground mb-4 self-start">Payment Actions</h2>

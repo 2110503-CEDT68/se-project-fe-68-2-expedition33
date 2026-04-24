@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { BookingItem } from "@/../interfaces";
 import UpdateBookingPanel from "@/components/modals/UpdateBookingPanel";
 import DeleteBookingPanel from "@/components/modals/DeleteBookingPanel";
-import cancelBooking from "@/libs/cancelBooking";
+import deleteBooking from "@/libs/deleteBooking";
 import updateBooking from "@/libs/updateBooking";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import { useDispatch } from "react-redux";
@@ -34,9 +34,7 @@ export default function UserBookings({ bookingList, userToken }: Readonly<{ book
         dispatch(removeBooking(target));
 
         try {
-            // Try using the cancel endpoint first (PATCH)
-            // If backend supports it, this is the preferred method
-            await cancelBooking(target.id, token);
+            await deleteBooking(target.id, token);
         } catch (error) {
             console.error("Failed to cancel booking", error);
             alert("Failed to cancel booking");
@@ -109,7 +107,7 @@ export default function UserBookings({ bookingList, userToken }: Readonly<{ book
                                         {booking.company?.name || "Unknown"}
                                     </span>
                                     <span className="tracking-widest uppercase">
-                                        {new Date(booking.bookingDate).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })}
+                                        {new Date(booking.bookingDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
                                     </span>
                                 </div>
                                 

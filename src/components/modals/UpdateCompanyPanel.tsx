@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import updateCompany from "../../libs/updateCompany";
 import { CompanyItem, CompanyUpdatePayload } from "@/../interfaces";
-import { useClickOutside } from "@/libs/utils/useClickOutside";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 export default function UpdateCompanyPanel({
   company,

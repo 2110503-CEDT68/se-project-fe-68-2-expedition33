@@ -1,41 +1,28 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, use } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { PaymentItem } from '@/../interfaces';
 
 import CompanyDataComponent from '@/components/payments/CompanyDataComponent';
 import DateListComponent from '@/components/payments/DateListComponent';
 import PaymentEventComponent from '@/components/payments/PaymentEventComponent';
 import ReceiptComponent from '@/components/payments/ReceiptComponent';
-import TransactionErrorComponent from '@/components/payments/TransactionErrorComponent';
+import PaymentError from '@/components/payments/PaymentError';
 import PaymentActionComponent from '@/components/payments/PaymentActionComponent';
 
 import getPayment from '@/libs/getPayment';
-import getCompany from '@/libs/getCompany';
 import putPayment from '@/libs/updatePayment';
 import deletePayment from '@/libs/deletePayment';
 
-interface CompanyDetails {
-  id: string;
-  companyId: string;
-  companyName: string;
-  totalAmount: string;
-  latestUpdate: string;
-  status: string;
-  availableDates: { date: number; month: string }[];
-  realEvents: any[];
-}
-
-export default function DetailsPage() {
-  const params = useParams();
-  const pid = (params.pid || params.cid) as string;
+export default function DetailsPage({ params }: Readonly<{ params: Promise<{ pid: string }> }>) {
+  const { pid } = use(params);
   const { data: session, status } = useSession();
 
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
-  const [company, setCompany] = useState<CompanyDetails | null>(null);
+  const [payment, setPayment] = useState<PaymentItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -44,51 +31,16 @@ export default function DetailsPage() {
     try {
       const token = session?.user?.token;
       if (!token || !pid) return;
+
       setLoading(true);
       setErrorMsg(null);
 
       const response = await getPayment(pid, token);
-      const item = response.data || response;
-      if (!item || item.error) throw new Error('Payment data is invalid');
+      const payment = response.data;
 
-      const extractedCompanyId = typeof item.company === 'string'
-        ? item.company
-        : (item.company?.id || item.company?._id || '');
-
-      let companyName = 'Unknown Company';
-      if (typeof item.company === 'object' && item.company?.name) {
-        companyName = item.company.name;
-      } else if (extractedCompanyId) {
-        try {
-          const companyInfo = await getCompany(extractedCompanyId);
-          companyName = companyInfo.name || companyName;
-        } catch {
-          companyName = `Company ID: ${extractedCompanyId}`;
-        }
-      }
-
-      setCompany({
-        id: item.id || item._id,
-        companyId: extractedCompanyId,
-        companyName,
-        totalAmount: `${item.totalPrice?.toLocaleString() || 0} Baht`,
-        latestUpdate: new Date(item.updatedAt).toLocaleString('en-GB'),
-        status: item.status,
-        availableDates: (item.dateList || []).map((d: string) => {
-          const dateObj = new Date(d);
-          return { date: dateObj.getDate(), month: dateObj.toLocaleString('en-US', { month: 'short' }) };
-        }),
-        realEvents: (item.events || []).map((ev: any) => ({
-          title: ev.eventType,
-          description: ev.payload?.errorMessage || `Status changed to ${ev.payload?.newStatus}`,
-          timestamp: new Date(ev.createdAt).toLocaleString('en-GB', {
-            day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
-          }),
-          status: ev.eventType.includes('FAILED') || ev.eventType.includes('CANCELLED') ? 'failed' : 'success',
-        })),
-      });
+      setPayment(payment);
     } catch (err: any) {
-      setErrorMsg(err.message || 'Failed to load payment details');
+      setErrorMsg(err.message || "Failed to load payment details");
     } finally {
       setLoading(false);
     }
@@ -99,10 +51,10 @@ export default function DetailsPage() {
   }, [status, fetchData]);
 
   const handleConfirmPayment = async () => {
-    if (!session?.user?.token || !company) return;
+    if (!session?.user?.token || !payment) return;
     try {
       setIsProcessing(true);
-      await putPayment(company.id, session.user.token, 'captured');
+      await putPayment(payment.id, session.user.token, "captured");
       setIsConfirmModalOpen(false);
       await fetchData();
     } catch {
@@ -113,10 +65,10 @@ export default function DetailsPage() {
   };
 
   const handleCancelPayment = async () => {
-    if (!session?.user?.token || !company) return;
+    if (!session?.user?.token || !payment) return;
     try {
       setIsProcessing(true);
-      await deletePayment(company.id, session.user.token);
+      await deletePayment(payment.id, session.user.token);
       setIsCancelConfirmOpen(false);
       await fetchData();
     } catch {
@@ -138,39 +90,30 @@ export default function DetailsPage() {
       </div>
     );
   }
-  if (!company) {
+  if (!payment) {
     return <div className="p-20 text-center text-button-red">Payment Not Found</div>;
   }
 
-  const paymentFailed = company.status === 'cancelled' || company.status === 'failed';
+  const paymentFailed = payment.status === "cancelled" || payment.status === "failed";
 
   return (
     <div className="min-h-screen bg-surface">
-      <div className="max-w-screen-xl mx-auto px-12 pt-20 pb-100">
+      <div className="max-w-7xl mx-auto px-12 pt-20 pb-100">
 
         {/* 1. Heading */}
         <h1 className="text-2xl font-bold text-foreground mb-6">Payment Details</h1>
 
         {/* 2. Company info card */}
-        <CompanyDataComponent
-          data={{
-            companyName: company.companyName,
-            companyId: company.companyId,
-            totalPrice: company.totalAmount,
-            status: company.status,
-            paymentId: company.id,
-            createdAt: company.latestUpdate,
-          }}
-        />
+        <CompanyDataComponent payment={payment} />
 
         {/* 3. Date list */}
-        <DateListComponent dates={company.availableDates} />
+        <DateListComponent dates={payment.dateList} />
 
         {/* 4. Two-column: Payment Events | Error box — always both visible */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 items-stretch">
-          <PaymentEventComponent events={company.realEvents} />
-          <TransactionErrorComponent
-            errorType={paymentFailed ? (company.status.toUpperCase() as 'CANCELLED' | 'FAILED') : 'FAILED'}
+          <PaymentEventComponent events={payment.events} />
+          <PaymentError
+            errorType={paymentFailed ? (payment.status.toUpperCase() as 'CANCELLED' | 'FAILED') : 'FAILED'}
             visible={true}
           />
         </div>
@@ -182,7 +125,7 @@ export default function DetailsPage() {
         <PaymentActionComponent
           onConfirm={() => setIsConfirmModalOpen(true)}
           onCancel={() => setIsCancelConfirmOpen(true)}
-          isDisabled={company.status.toLowerCase() !== 'authorized'}
+          isDisabled={payment.status.toLowerCase() !== 'authorized'}
         />
 
       </div>

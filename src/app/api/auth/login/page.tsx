@@ -91,8 +91,8 @@ export default function LoginPage() {
             
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="flex items-center gap-2 text-sm text-primary mb-2 font-bold tracking-widest uppercase">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <label htmlFor="email" className="flex items-center gap-2 text-sm text-icon-themed mb-2 font-bold tracking-widest uppercase">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-icon-themed" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 Email
@@ -103,14 +103,14 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
+                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
               />
             </div>
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="flex items-center gap-2 text-sm text-primary mb-2 font-bold tracking-widest uppercase">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <label htmlFor="password" className="flex items-center gap-2 text-sm text-icon-themed mb-2 font-bold tracking-widest uppercase">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-icon-themed" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
                 Password
@@ -121,7 +121,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
+                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
               />
 
             </div>

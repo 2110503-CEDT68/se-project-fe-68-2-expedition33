@@ -176,7 +176,7 @@ export default function RegisterPage() {
             
             {/* Name Field */}
             <div>
-              <label htmlFor="name" className={`flex items-center gap-2 text-xs mb-1.5 font-bold tracking-widest uppercase transition-colors ${errorField === "name" ? "text-red-500" : "text-primary"}`}>
+              <label htmlFor="name" className={`flex items-center gap-2 text-xs mb-1.5 font-bold tracking-widest uppercase transition-colors ${errorField === "name" ? "text-red-500" : "text-icon-themed"}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
@@ -190,7 +190,7 @@ export default function RegisterPage() {
                 required
                 value={form.name}
                 onChange={handleChange}
-                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground focus:outline-none focus:ring-0 bg-transparent transition-colors ${
+                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 bg-transparent transition-colors ${
                     errorField === "name" 
                     ? "border-red-500 focus:border-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]" 
                     : "border-primary/60 focus:border-primary"
@@ -203,7 +203,7 @@ export default function RegisterPage() {
 
             {/* Tel Field */}
             <div>
-              <label htmlFor="tel" className={`flex items-center gap-2 text-xs mb-1.5 font-bold tracking-widest uppercase transition-colors ${errorField === "tel" ? "text-red-500" : "text-primary"}`}>
+              <label htmlFor="tel" className={`flex items-center gap-2 text-xs mb-1.5 font-bold tracking-widest uppercase transition-colors ${errorField === "tel" ? "text-red-500" : "text-icon-themed"}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
@@ -217,7 +217,7 @@ export default function RegisterPage() {
                 required
                 value={form.tel}
                 onChange={handleChange}
-                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground focus:outline-none focus:ring-0 bg-transparent transition-colors ${
+                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 bg-transparent transition-colors ${
                     errorField === "tel" 
                     ? "border-red-500 focus:border-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]" 
                     : "border-primary/60 focus:border-primary"
@@ -230,7 +230,7 @@ export default function RegisterPage() {
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className={`flex items-center gap-2 text-xs mb-1.5 font-bold tracking-widest uppercase transition-colors ${errorField === "email" ? "text-red-500" : "text-primary"}`}>
+              <label htmlFor="email" className={`flex items-center gap-2 text-xs mb-1.5 font-bold tracking-widest uppercase transition-colors ${errorField === "email" ? "text-red-500" : "text-icon-themed"}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
@@ -244,7 +244,7 @@ export default function RegisterPage() {
                 required
                 value={form.email}
                 onChange={handleChange}
-                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground focus:outline-none focus:ring-0 bg-transparent transition-colors ${
+                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 bg-transparent transition-colors ${
                     errorField === "email" 
                     ? "border-red-500 focus:border-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]" 
                     : "border-primary/60 focus:border-primary"
@@ -257,7 +257,7 @@ export default function RegisterPage() {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className={`flex items-center gap-2 text-xs mb-1.5 font-bold tracking-widest uppercase transition-colors ${errorField === "password" ? "text-red-500" : "text-primary"}`}>
+              <label htmlFor="password" className={`flex items-center gap-2 text-xs mb-1.5 font-bold tracking-widest uppercase transition-colors ${errorField === "password" ? "text-red-500" : "text-icon-themed"}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
@@ -271,7 +271,7 @@ export default function RegisterPage() {
                 required
                 value={form.password}
                 onChange={handleChange}
-                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground focus:outline-none focus:ring-0 bg-transparent transition-colors ${
+                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 bg-transparent transition-colors ${
                     errorField === "password" 
                     ? "border-red-500 focus:border-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]" 
                     : "border-primary/60 focus:border-primary"
@@ -284,7 +284,7 @@ export default function RegisterPage() {
 
             {/* Confirm Password Field */}
             <div>
-              <label htmlFor="confirmPassword" className={`flex items-center gap-2 text-xs mb-1.5 font-bold tracking-widest uppercase transition-colors ${errorField === "confirmPassword" ? "text-red-500" : "text-primary"}`}>
+              <label htmlFor="confirmPassword" className={`flex items-center gap-2 text-xs mb-1.5 font-bold tracking-widest uppercase transition-colors ${errorField === "confirmPassword" ? "text-red-500" : "text-icon-themed"}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
@@ -298,7 +298,7 @@ export default function RegisterPage() {
                 required
                 value={form.confirmPassword}
                 onChange={handleChange}
-                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground focus:outline-none focus:ring-0 bg-transparent transition-colors ${
+                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 bg-transparent transition-colors ${
                     errorField === "confirmPassword" 
                     ? "border-red-500 focus:border-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]" 
                     : "border-primary/60 focus:border-primary"

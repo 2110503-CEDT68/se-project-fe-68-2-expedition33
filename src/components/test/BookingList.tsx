@@ -1,5 +1,5 @@
 "use client"
-import cancelBooking from "@/libs/cancelBooking";
+import cancelBooking from "@/libs/deleteBooking";
 import createBooking from "@/libs/createBooking";
 import { BookingItem, BookingResponse, CompanyItem } from "@/../interfaces";
 import { useState } from "react";

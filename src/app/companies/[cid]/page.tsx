@@ -9,7 +9,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 async function CompanyDetailContent({ params }: Readonly<{ params: Promise<{ cid: string }> }>) {
     const { cid } = await params;
     const session = await getServerSession(authOptions);
-    const company = await getCompany(cid);
+    const company = (await getCompany(cid)).data;
 
     const role = session?.user?.role;
     const token = session?.user?.token;

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { useClickOutside } from "@/libs/utils/useClickOutside";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 export default function UpdateBookingPanel({ companyName, oldDate, onClose, onUpdate: onSubmit }: Readonly<{ companyName: string, oldDate: string, onClose: () => void, onUpdate: (e: React.MouseEvent, date: string) => void }>) {
   const modalRef = useRef<HTMLDivElement>(null);
@@ -63,7 +63,7 @@ export default function UpdateBookingPanel({ companyName, oldDate, onClose, onUp
 
         {/* Instructional Text */}
         <p className="text-foreground font-bold text-xs md:text-sm tracking-widest mb-8 text-center">
-          Select your preferred interview date (May 10–13, 2022)
+          Select your preferred interview date (10–13 May, 2022)
         </p>
 
         {/* Submit Button */}

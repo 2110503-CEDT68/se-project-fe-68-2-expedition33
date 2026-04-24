@@ -1,14 +1,12 @@
-interface ReceiptProps {
-  onDownloadReceipt?: () => void;
-  onViewInvoice?: () => void;
-  onViewCompanyInfo?: () => void;
-}
-
 export default function ReceiptComponent({
   onDownloadReceipt,
   onViewInvoice,
   onViewCompanyInfo,
-}: ReceiptProps) {
+}: Readonly<{  
+  onDownloadReceipt?: () => void,
+  onViewInvoice?: () => void,
+  onViewCompanyInfo?: () => void
+}>) {
   return (
     <div className="bg-background rounded-2xl border border-surface-border px-6 py-5 mb-4 flex flex-col items-center">
       {/* Icon */}

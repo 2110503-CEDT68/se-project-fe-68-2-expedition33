@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+	color-scheme: light dark;
 	/* Light Mode */
 	--background: #fafafa;
 	--foreground: #27272a;
@@ -9,6 +10,9 @@
 	--primary: #f97316;
 	--primary-hover: #ea580c;
 	--primary-light: #ffedd5;
+
+	/* Icon Color */
+	--icon-themed: var(--primary);
 
 	/* Surface colors */
 	--surface: #f4f4f5;
@@ -30,7 +34,8 @@
 }
 
 @media (prefers-color-scheme: dark) {
-	:root {
+	:root, html, body, input {
+		color-scheme: dark !important;
 		/* Dark Mode */
 		--background: #18181b;
 		--foreground: #e4e4e7;
@@ -40,9 +45,21 @@
 		--surface: #27272a;
 		--surface-border: #3f3f46;
 
+		/* Icon Color */
+		--icon-themed: var(--foreground);
+
 		/* Base color for dark mode shadows */
 		--shadow-base: 255, 255, 255;
 	}
+}
+
+/* Force browser native icons (like password eye) to use our themed color */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input::-webkit-credentials-auto-fill-button {
+	color: var(--icon-themed);
+	background-color: transparent;
+	filter: none !important;
 }
 
 @theme inline {
@@ -56,6 +73,7 @@
 	--color-primary-light: var(--primary-light);
 	--color-surface: var(--surface);
 	--color-surface-border: var(--surface-border);
+	--color-icon-themed: var(--icon-themed);
 
 	/* Fonts */
 	--font-sans: var(--font-geist-sans);

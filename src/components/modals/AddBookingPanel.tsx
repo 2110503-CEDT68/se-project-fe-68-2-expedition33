@@ -6,7 +6,7 @@ import createBooking from "@/libs/createBooking";
 import { CompanyItem } from "@/../interfaces";
 import { useAppSelector } from "@/redux/store";
 import { useSession } from "next-auth/react";
-import { useClickOutside } from "@/libs/utils/useClickOutside";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 export default function AddBookingPanel({ company, token, onClose }: Readonly<{
     company: CompanyItem,
