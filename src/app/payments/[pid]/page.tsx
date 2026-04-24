@@ -12,7 +12,6 @@ import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import getPayment from '@/libs/getPayment';
 import getCompany from '@/libs/getCompany';
-import getUserProfile from '@/libs/getUserProfile';
 
 interface CompanyDetails {
   id: string;          
@@ -34,67 +33,112 @@ export default function DetailsPage() {
   const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
   const [company, setCompany] = useState<CompanyDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = session?.user?.token;
-        if (!token || !pid) return;
+        
+        // ตรวจสอบเบื้องต้น
+        if (!token) {
+          console.warn("No token found in session");
+          return;
+        }
+
+        console.log("Fetching payment details for PID:", token);
+        if (!pid) return;
 
         setLoading(true);
+        setErrorMsg(null);
 
+        // 1. ดึงข้อมูล Payment
         const response = await getPayment(pid, token);
         
-        // ตรวจสอบข้อมูลจาก JSON (response.data)
+        // ดึง item ออกมา (รองรับทั้ง {data: ...} หรือ response ตรงๆ)
         const item = response.data || response;
 
-        // ดึงข้อมูลบริษัทเพิ่มเติมจาก companyId ใน item (เพื่อไม่ populate company data ใน backend)
-
-        //const companyresponse = await getCompany(item.companyId);
-
-        console.log("FETCHED PAYMENT DATA:", item.company.id); // ตรวจสอบข้อมูลที่ได้รับจาก API
-
-        if (item) {
-
-          const mapped: CompanyDetails = {
-            id: item.id || item._id,
-            companyId: typeof item.company === 'string' ? item.company : (item.company?.id || item.company?._id || ""),
-            companyName: item.company?.name || "Company ID: " + (typeof item.company === 'string' ? item.company : ""),
-            totalAmount: `${item.totalPrice} Baht`,
-            latestUpdate: new Date(item.updatedAt).toLocaleString('en-GB'),
-            status: item.status,
-            availableDates: (item.dateList || []).map((d: string) => {
-              const dateObj = new Date(d);
-              return {
-                date: dateObj.getDate(),
-                month: dateObj.toLocaleString('en-US', { month: 'short' }),
-              };
-            }),
-            // แมพ Events จริงจาก JSON
-            realEvents: (item.events || []).map((ev: any) => ({
-              title: ev.eventType,
-              description: ev.payload?.errorMessage || `Status changed to ${ev.payload?.newStatus}`,
-              timestamp: new Date(ev.createdAt).toLocaleString('en-GB', {
-                day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
-              }),
-              status: 'success',
-            })),
-          };
-          setCompany(mapped);
-          
+        if (!item || item.error) {
+           throw new Error("Payment data is invalid");
         }
-      } catch (err) {
+
+        // 2. สกัดเอา Company ID (ดักทั้ง String และ Object)
+        const extractedCompanyId = typeof item.company === 'string' 
+          ? item.company 
+          : (item.company?.id || item.company?._id || "");
+
+        // 3. ดึงชื่อบริษัท (ถ้า item.company ไม่มี name มาให้)
+        let companyName = "Unknown Company";
+        
+        if (typeof item.company === 'object' && item.company?.name) {
+          companyName = item.company.name;
+        } else if (extractedCompanyId) {
+          try {
+            // เรียก getCompany เฉพาะเมื่อจำเป็น
+            const companyInfo = await getCompany(extractedCompanyId);
+            const cData = companyInfo.data || companyInfo;
+            companyName = cData.name || companyName;
+          } catch (cErr) {
+            console.error("Could not fetch company info:", cErr);
+            companyName = `Company ID: ${extractedCompanyId}`;
+          }
+        }
+
+        // 4. Mapping ข้อมูล
+        const mapped: CompanyDetails = {
+          id: item.id || item._id,
+          companyId: extractedCompanyId,
+          companyName: companyName,
+          totalAmount: `${item.totalPrice?.toLocaleString() || 0} Baht`,
+          latestUpdate: new Date(item.updatedAt).toLocaleString('en-GB'),
+          status: item.status,
+          availableDates: (item.dateList || []).map((d: string) => {
+            const dateObj = new Date(d);
+            return {
+              date: dateObj.getDate(),
+              month: dateObj.toLocaleString('en-US', { month: 'short' }),
+            };
+          }),
+          realEvents: (item.events || []).map((ev: any) => ({
+            title: ev.eventType,
+            description: ev.payload?.errorMessage || `Status changed to ${ev.payload?.newStatus}`,
+            timestamp: new Date(ev.createdAt).toLocaleString('en-GB', {
+              day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            }),
+            status: 'success',
+          })),
+        };
+
+        setCompany(mapped);
+
+      } catch (err: any) {
         console.error("FETCH ERROR:", err);
+        setErrorMsg(err.message || "Failed to load payment details");
       } finally {
         setLoading(false);
       }
     };
 
-    if (status === "authenticated") fetchData();
-  }, [status, pid, session?.user?.token]);
+    if (status === "authenticated") {
+      fetchData();
+    }
+  }, [status, pid, session]);
 
   if (status === "loading" || loading) {
-    return <div className="p-20 text-center font-bold text-orange-500">Loading...</div>;
+    return <div className="p-20 text-center font-bold text-orange-500">Loading details...</div>;
+  }
+
+  // แสดงหน้าจอ Error ถ้าติด 403 หรือปัญหาอื่นๆ
+  if (errorMsg) {
+    return (
+      <div className="p-20 text-center">
+        <h1 className="text-red-500 text-2xl font-bold mb-4">Access Denied (403)</h1>
+        <p className="mb-6 text-gray-600">{errorMsg}</p>
+        <Link href="/payments" className="bg-orange-500 text-white px-6 py-2 rounded-full">
+          Back to Payments
+        </Link>
+      </div>
+    );
   }
 
   if (!company) {
@@ -122,10 +166,8 @@ export default function DetailsPage() {
         <DateListComponent dates={company.availableDates} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
           <PaymentEventComponent events={company.realEvents} />
           
-          {/* แสดง Error เฉพาะเมื่อสถานะเป็น cancelled หรือ failed */}
           {(company.status === 'cancelled' || company.status === 'failed') && (
             <TransactionErrorComponent 
               errorType={company.status.toUpperCase() as "CANCELLED" | "FAILED"} 
