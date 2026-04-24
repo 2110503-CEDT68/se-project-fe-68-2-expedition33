@@ -12,6 +12,10 @@ export interface PaginationMeta {
     };
 }
 
+export interface SimpleResponse<T> {
+    success: boolean;
+    data: T;
+}
 
 // ==========================================
 //           USER & AUTHENTICATION
@@ -73,6 +77,8 @@ export interface CompanyItem {
     createdAt?: string;
     logo?: CloudinaryAsset | null;
     photoList?: CloudinaryAsset[];
+    bookings: BookingItem[];
+    payments: PaymentItem[];
 }
 
 export interface CompanyResponse {
@@ -82,12 +88,7 @@ export interface CompanyResponse {
     data: CompanyItem[];
 }
 
-export interface CompanyDetailResponse {
-    success: boolean;
-    data: CompanyItem;
-}
-
-export type CompanyDetailApiResponse = CompanyItem | CompanyDetailResponse;
+export type CompanyDetailResponse = SimpleResponse<CompanyItem>;
 
 export interface CompanyBasePayload {
     name: string;
@@ -113,16 +114,11 @@ export interface CompanyUploadFields {
 export type CompanyCreatePayload = CompanyBasePayload & ManagerPayload & CompanyUploadFields;
 export type CompanyUpdatePayload = Partial<CompanyBasePayload> & CompanyUploadFields;
 
-export interface CreateCompanyResponse {
-    success: boolean;
-    data: CompanyItem;
+export interface CreateCompanyResponse extends SimpleResponse<CompanyItem> {
     managerEmail: string;
 }
 
-export interface UpdateCompanyResponse {
-    success: boolean;
-    data: CompanyItem;
-}
+export type UpdateCompanyResponse = SimpleResponse<CompanyItem>;
 
 // ==========================================
 //                  BOOKINGS
@@ -163,6 +159,9 @@ export interface BookingResponse {
     data: BookingItem[];
 }
 
+export type BookingDetailResponse = SimpleResponse<BookingItem>;
+export type CreateBookingResponse = SimpleResponse<BookingItem>;
+
 // ==========================================
 //                  PAYMENTS
 // ==========================================
@@ -185,9 +184,12 @@ export interface PaymentResponse {
     data: PaymentItem[];
 }
 
+export type PaymentDetailResponse = SimpleResponse<PaymentItem>;
+export type CreatePaymentResponse = SimpleResponse<PaymentItem>;
+
 export interface PaymentEvent {
     id: string;
-    eventType: "PAYMENT_INITIATED" | "PAYMENT_AUTHORIZED" | "PAYMENT_CANCELLED" | "PAYMENT_FAILED";
+    eventType: "PAYMENT_INITIATED" | "PAYMENT_AUTHORIZED" | "PAYMENT_SUCCESS" | "PAYMENT_CANCELLED" | "PAYMENT_FAILED";
     createdAt: string;
     payload: {
         oldStatus?: string | null;
@@ -195,8 +197,4 @@ export interface PaymentEvent {
         transactionId?: string | null;
         errorMessage?: string | null;
     };
-}
-export interface ApiResponse<T> {
-    success: boolean;
-    data: T;
 }
