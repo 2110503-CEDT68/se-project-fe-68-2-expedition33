@@ -49,33 +49,11 @@ const CompanyReseve: React.FC<CompanyReveProps> = () => {
           return;
         }
 
-        const userRes = await getUserProfile(token);
-        const user = userRes.data;
-
-        // console.log("USER:", user);
-
-        if (!hasCompanyData(user)) {
-          console.log("NO COMPANY", user);
-          setLoading(false);
-          return;
-        }
-
-        const companyId = user.companyData.id;
-
         const payments = await getPayments(token);
 
-        const myPayments = payments.filter((p) => {
-          const pid =
-            typeof p.company === "string"
-              ? p.company
-              : p.company?.id || (p.company as any)?._id;
-
-          return pid?.toString() === companyId?.toString();
-        });
-
-        const mapped = myPayments.map((item) => ({
+        const mapped = payments.map((item) => ({
           id: item.id,
-          companyName: user.companyData.name,
+          companyName: item.company?.name || "Unknown Company",
 
           logo: item.company?.logo?.url
             ? { url: item.company.logo.url }
