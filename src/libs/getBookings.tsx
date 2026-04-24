@@ -5,7 +5,7 @@ export default async function getBookings(token: string): Promise<BookingRespons
         {
             method: "GET",
             headers: {
-                authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
             },
         }
     );

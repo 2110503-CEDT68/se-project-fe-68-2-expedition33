@@ -1,16 +1,17 @@
-export default async function getPayment(id:string,token:string) {
-    const res = await fetch(`${process.env.BACKEND_URL}/api/v1/payments/${id}`, {
+import { PaymentDetailResponse } from "@/../interfaces";
+
+export default async function getPayment(id:string, token:string): Promise<PaymentDetailResponse> {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/v1/payments/${id}`, {
         method: "GET",
         headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
         cache: "no-store",
     });
 
-    if (!res.ok) {
+    if (!response.ok) {
         throw new Error("Failed to fetch payments");
     }
 
-    const data = await res.json();
-    return data.data;
+    return await response.json();
 }

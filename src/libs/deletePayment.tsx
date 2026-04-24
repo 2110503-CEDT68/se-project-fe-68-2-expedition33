@@ -1,4 +1,6 @@
-export default async function deletePayment(id: string, token: string) {
+import { SimpleResponse } from "@/../interfaces";
+
+export default async function deletePayment(id: string, token: string): Promise<SimpleResponse<[]>> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/payments/${id}`, {
     method: "DELETE",
     headers: {
@@ -7,7 +9,7 @@ export default async function deletePayment(id: string, token: string) {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to delete/cancel payment");
+    throw new Error("Failed to cancel payment");
   }
 
   return await response.json();

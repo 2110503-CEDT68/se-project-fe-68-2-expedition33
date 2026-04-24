@@ -5,7 +5,7 @@ export default async function getBooking(id: string, token: string): Promise<Boo
         {
             method: "GET",
             headers: {
-                authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
             },
         }
     );

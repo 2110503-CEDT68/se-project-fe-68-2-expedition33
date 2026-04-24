@@ -1,6 +1,7 @@
+import { CreateBookingResponse } from "@/../interfaces";
 import getUserProfile from "./getUserProfile";
 
-export default async function createBooking(companyId: string, token: string, bookingDate: string) {
+export default async function createBooking(companyId: string, token: string, bookingDate: string): Promise<CreateBookingResponse> {
     
     const userId = (await getUserProfile(token)).data.id;
     
@@ -9,7 +10,7 @@ export default async function createBooking(companyId: string, token: string, bo
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
                 bookingDate: bookingDate,

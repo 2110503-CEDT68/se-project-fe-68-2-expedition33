@@ -6,7 +6,7 @@ export default async function updateBooking(id: string, token: string, bookingDa
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
                 bookingDate: bookingDate,

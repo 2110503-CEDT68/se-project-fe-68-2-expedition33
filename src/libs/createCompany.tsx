@@ -1,4 +1,4 @@
-import { CompanyItem, CompanyCreatePayload } from "@/../interfaces";
+import { CreateCompanyResponse, CompanyCreatePayload } from "@/../interfaces";
 import imageCompression from "browser-image-compression";
 
 const compressionOptions = {
@@ -39,7 +39,7 @@ async function processPayloadEntry(formData: FormData, key: string, value: any) 
 export default async function createCompany(
   token: string,
   payload: CompanyCreatePayload
-): Promise<{ success: boolean; data: CompanyItem; managerEmail: string }> {
+): Promise<CreateCompanyResponse> {
   const formData = new FormData();
 
   for (const [key, value] of Object.entries(payload)) {
@@ -59,5 +59,5 @@ export default async function createCompany(
     throw new Error(body?.msg || body?.message || "Failed to create company");
   }
 
-  return response.json();
+  return await response.json();
 }

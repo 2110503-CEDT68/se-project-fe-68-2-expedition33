@@ -4,7 +4,7 @@ export default async function getUserProfile(token: string): Promise<GetMeRespon
     const response = await fetch(`${process.env.BACKEND_URL}/api/v1/auth/me`, {
         method: "GET",
         headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
     });
 
