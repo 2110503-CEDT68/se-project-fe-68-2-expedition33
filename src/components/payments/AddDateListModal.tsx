@@ -113,12 +113,12 @@ const AddDateListModal: React.FC<AddDateListModalProps> = ({
               xmlns="http://www.w3.org/2000/svg"
             >
               {/* Simple person illustration */}
-              <circle cx="50" cy="25" r="12" fill="#FF6B35" />
+              <circle cx="50" cy="25" r="12" fill="var(--primary)" />
               <path
                 d="M50 40 L35 60 L45 55 L45 75 L55 75 L55 55 L65 60 Z"
-                fill="#2C2C2C"
+                fill="var(--foreground)"
               />
-              <rect x="38" y="42" width="24" height="8" fill="#FF6B35" />
+              <rect x="38" y="42" width="24" height="8" fill="var(--primary)" />
             </svg>
           </div>
         </div>

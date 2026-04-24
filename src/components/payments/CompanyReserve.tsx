@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import getPayments from "@/libs/getPayments";
-import getUserProfile from "@/libs/getUserProfile";
 import { useSession } from "next-auth/react";
 
 function hasCompanyData(user: any): user is { companyData: { id: string, name: string } } {
@@ -23,8 +22,6 @@ interface CompanyPaymentRecord {
   };
   totalAmount: string;
   latestUpdate: string;
-  ratingDots: number;
-  dotColor: string;
   availableDates: DateOption[];
 }
 
@@ -54,15 +51,11 @@ const CompanyReseve: React.FC<CompanyReveProps> = () => {
         const mapped = payments.map((item) => ({
           id: item.id,
           companyName: item.company?.name || "Unknown Company",
-
           logo: item.company?.logo?.url
             ? { url: item.company.logo.url }
             : undefined,
-
           totalAmount: `${item.totalPrice}B`,
           latestUpdate: new Date(item.updatedAt).toLocaleString(),
-          ratingDots: 3,
-          dotColor: 'bg-orange-500',
           availableDates: (item.dateList || []).map((d: string) => {
             const dateObj = new Date(d);
             return {
@@ -77,7 +70,7 @@ const CompanyReseve: React.FC<CompanyReveProps> = () => {
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -88,67 +81,64 @@ const CompanyReseve: React.FC<CompanyReveProps> = () => {
     <div className="w-full">
       {/* Header */}
       <div className="flex items-center gap-2 mb-8">
-        <div className="text-orange-500 text-2xl">⏱</div>
-        <h2 className="text-2xl font-bold text-black">Payment History</h2>
+        <div className="text-primary text-2xl">⏱</div>
+        <h2 className="text-2xl font-bold text-foreground">Payment History</h2>
       </div>
 
-      {/* ✅ Loading */}
       {loading ? (
-        <div className="text-center text-gray-500 py-10">
+        <div className="text-center text-foreground/50 py-10">
           Loading...
         </div>
       ) : companies.length === 0 ? (
-        <div className="text-center text-gray-500 py-10">
+        <div className="text-center text-foreground/50 py-10">
           No Payments
         </div>
       ) : (
         <div className="space-y-4">
           {companies.map((company) => (
             <Link key={company.id} href={`/payments/${company.id}`}>
-              <div className="w-full flex items-center gap-4 p-4 rounded-lg transition-all border-2 bg-white border-gray-200 shadow-sm hover:border-orange-500 cursor-pointer hover:shadow-lg">
-                
+              <div className="w-full flex items-center gap-4 p-4 rounded-lg transition-all border-2 bg-background border-surface-border shadow-sm hover:border-primary cursor-pointer hover:shadow-lg">
+
                 {/* Company Logo */}
-                <div className="w-20 h-20 bg-gray-300 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
-                  
+                <div className="w-20 h-20 bg-surface rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
                   {company.logo?.url ? (
                     <img
                       src={company.logo.url}
                       alt={`${company.companyName} Logo`}
-                      className="w-full h-full object-cover" 
+                      className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span className="text-xs text-gray-500">No Logo</span>
+                    <span className="text-xs text-foreground/40">No Logo</span>
                   )}
-
                 </div>
 
                 {/* Company Details */}
                 <div className="flex-1 text-left min-w-0">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-bold text-black text-lg">
+                    <h3 className="font-bold text-foreground text-lg">
                       {company.companyName}
                     </h3>
                   </div>
-                  <p className="text-black text-sm mb-1">
+                  <p className="text-foreground text-sm mb-1">
                     Total Amount: <span className="font-semibold">{company.totalAmount}</span>
                   </p>
-                  <p className="text-gray-600 text-xs mb-3">
+                  <p className="text-foreground/50 text-xs mb-3">
                     Latest update: {company.latestUpdate}
                   </p>
 
                   <div className="flex gap-2 items-center">
-                    <span className="text-black text-xs font-semibold">Reserved:</span>
+                    <span className="text-foreground text-xs font-semibold">Reserved:</span>
                     {company.availableDates.map((date, index) => (
                       <div
                         key={index}
-                        className={`w-4 h-4 rounded-full ${company.dotColor}`}
+                        className="w-4 h-4 rounded-full bg-primary"
                         title={`${date.date} ${date.month}`}
                       />
                     ))}
                   </div>
                 </div>
 
-                <div className={`w-1 h-24 rounded-r-lg flex-shrink-0 ${company.dotColor}`} />
+                <div className="w-1 h-24 rounded-r-lg flex-shrink-0 bg-primary" />
               </div>
             </Link>
           ))}

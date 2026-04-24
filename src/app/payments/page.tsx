@@ -8,7 +8,6 @@ import AddDateListModal from "@/components/payments/AddDateListModal";
 export default function Paymentpage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Mock data for the modal
   const mockCompanyData = {
     companyName: 'Company A',
     availableDates: [
@@ -23,22 +22,18 @@ export default function Paymentpage() {
     setIsModalOpen(true);
   };
 
-  return(
-      <main className="flex flex-row pt-24 px-8 gap-8 ">
+  return (
+    <main className="flex flex-row pt-24 px-8 gap-8">
 
-        <div className="flex flex-row">
-            <div className="flex flex-col items-start justify-start w-fit p-10 m-5 rounded-lg shadow-md bg-gray-900">
-            <div className="text-white font-semibold mb-4 text-center"> Date List </div>
-            
-            <SelectDateBox onPurchaseClick={handlePurchaseClick} />
-            
+      <div className="flex flex-row">
+        <div className="flex flex-col items-start justify-start w-fit p-10 m-5 rounded-lg shadow-md bg-surface border border-surface-border">
+          <div className="text-foreground font-semibold mb-4 text-center">Date List</div>
+          <SelectDateBox onPurchaseClick={handlePurchaseClick} />
         </div>
+      </div>
 
-
-    </div>
       <CompanyReseve />
 
-      {/* Add Date List Modal - Using Mock Data */}
       <AddDateListModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -49,7 +44,7 @@ export default function Paymentpage() {
           setIsModalOpen(false);
         }}
       />
-      
+
     </main>
   );
 }
