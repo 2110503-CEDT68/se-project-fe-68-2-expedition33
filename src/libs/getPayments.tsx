@@ -1,4 +1,4 @@
-import {PaymentResponse} from "../../interfaces";
+import { PaymentResponse } from "@/../interfaces";
 
 export default async function getPayments(token: string) : Promise<PaymentResponse> {
     const res = await fetch(`${process.env.BACKEND_URL}/api/v1/payments`, {

@@ -9,15 +9,15 @@ interface PaymentEventProps {
   events: PaymentEvent[];
 }
 
-export default function PaymentEventComponent({ events }: PaymentEventProps) {
+export default function PaymentEventComponent({ events }: Readonly<PaymentEventProps>) {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'success':
-        return <span className="text-green-500 text-2xl">✓</span>;
+        return <span className="text-button-green text-2xl">✓</span>;
       case 'pending':
         return <span className="text-yellow-500 text-2xl">⏳</span>;
       case 'failed':
-        return <span className="text-red-500 text-2xl">✕</span>;
+        return <span className="text-button-red text-2xl">✕</span>;
       default:
         return null;
     }
@@ -32,30 +32,37 @@ export default function PaymentEventComponent({ events }: PaymentEventProps) {
       <div className="relative">
         {/* Timeline */}
         <div className="space-y-6">
-          {events.map((event, index) => (
-            <div key={index} className="flex gap-4">
+          {events.map((event, index) => {
+            
+            let statusClasses;
+
+            if (event.status === 'success')
+              statusClasses = 'bg-button-green/20 border-button-green';
+            else if (event.status === 'pending')
+              statusClasses = 'bg-yellow-100 border-yellow-500';
+            else
+              statusClasses = 'bg-button-red/20 border-button-red';
+
+            let lineClasses;
+            if (event.status === 'success')
+              lineClasses = 'bg-button-green';
+            else if (event.status === 'pending')
+              lineClasses = 'bg-yellow-500';
+            else
+              lineClasses = 'bg-button-red';
+
+            return (
+              <div key={`${event.timestamp}-${event.title}`} className="flex gap-4">
               {/* Timeline dot and line */}
               <div className="flex flex-col items-center">
                 <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center border-2 ${
-                    event.status === 'success'
-                      ? 'bg-green-100 border-green-500'
-                      : event.status === 'pending'
-                      ? 'bg-yellow-100 border-yellow-500'
-                      : 'bg-red-100 border-red-500'
-                  }`}
+                  className={`w-12 h-12 rounded-full flex items-center justify-center border-2 ${statusClasses}`}
                 >
                   {getStatusIcon(event.status)}
                 </div>
                 {index < events.length - 1 && (
                   <div
-                    className={`w-1 h-12 mt-2 ${
-                      event.status === 'success'
-                        ? 'bg-green-500'
-                        : event.status === 'pending'
-                        ? 'bg-yellow-500'
-                        : 'bg-red-500'
-                    }`}
+                    className={`w-1 h-12 mt-2 ${lineClasses}`}
                   />
                 )}
               </div>
@@ -67,7 +74,8 @@ export default function PaymentEventComponent({ events }: PaymentEventProps) {
                 <p className="text-gray-500 text-xs">{event.timestamp}</p>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { LinearProgress } from "@mui/material";
 import getCompanies from "@/libs/getCompanies";
-import { CompanyItem } from "../../../interfaces";
-import CompanyList from "@/components/CompanyList";
+import { CompanyItem } from "@/../interfaces";
+import CompanyList from "@/components/companies/CompanyList";
 
 async function CompaniesDataWrapper() {
   const companiesRes = await getCompanies();

@@ -1,6 +1,6 @@
 "use client"
-import { CompanyItem } from "../../interfaces";
-import BookButton from "./BookButton";
+import { CompanyItem } from "@/../interfaces";
+import BookButton from "../bookings/BookButton";
 import Link from "next/link";
 import Image from "next/image";
 import { ReactNode } from "react";

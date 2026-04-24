@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { redirect } from "next/navigation";
-import AdminBookings from "@/components/AdminBookings";
-import UserBookings from "@/components/UserBookings";
+import AdminBookings from "@/components/bookings/AdminBookings";
+import UserBookings from "@/components/bookings/UserBookings";
 import getBookings from "@/libs/getBookings";
 import { Suspense } from "react";
 import LinearProgress from "@mui/material/LinearProgress";

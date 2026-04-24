@@ -1,8 +1,8 @@
 "use client";
 import type { MouseEvent } from "react";
 import { useRef } from "react";
-import { BookingItem } from "../../../interfaces";
-import { useClickOutside } from "@/components/useClickOutside";
+import { BookingItem } from "@/../interfaces";
+import { useClickOutside } from "@/libs/utils/useClickOutside";
 
 export default function DeleteBookingPanel({ booking, onClose, onDelete }: Readonly<{ booking: BookingItem, onClose: () => void, onDelete: (e: MouseEvent<HTMLButtonElement>) => void }>) {
     const modalRef = useRef<HTMLDivElement>(null);

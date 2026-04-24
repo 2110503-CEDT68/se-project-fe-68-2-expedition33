@@ -1,4 +1,4 @@
-import { CompanyDetailApiResponse, CompanyItem } from "../../interfaces";
+import { CompanyDetailApiResponse, CompanyItem } from "@/../interfaces";
 
 export default async function getCompany(id: string): Promise<CompanyItem>{
     const response = await fetch(`${process.env.BACKEND_URL}/api/v1/companies/${id}`, {

@@ -1,17 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import CompanyDataComponent from '@/components/CompanyDataComponent';
-import DateListComponent from '@/components/DateListComponent';
-import PaymentEventComponent from '@/components/PaymentEventComponent';
-import ReceiptComponent from '@/components/ReceiptComponent';
-import TransactionErrorComponent from '@/components/TransactionErrorComponent';
-import PaymentActionComponent from '@/components/PaymentActionComponent';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+
+// Components
+import CompanyDataComponent from '@/components/companies/CompanyDataComponent';
+import DateListComponent from '@/components/payments/DateListComponent';
+import PaymentEventComponent from '@/components/payments/PaymentEventComponent';
+import ReceiptComponent from '@/components/payments/ReceiptComponent';
+import TransactionErrorComponent from '@/components/payments/TransactionErrorComponent';
+import PaymentActionComponent from '@/components/payments/PaymentActionComponent';
+
+// Libs
 import getPayment from '@/libs/getPayment';
 import getCompany from '@/libs/getCompany';
+import putPayment from '@/libs/updatePayment';       
+import deletePayment from '@/libs/deletePayment'; 
 
 interface CompanyDetails {
   id: string;          
@@ -26,109 +32,137 @@ interface CompanyDetails {
 
 export default function DetailsPage() {
   const params = useParams();
+  const router = useRouter();
   const pid = (params.pid || params.cid) as string;
   const { data: session, status } = useSession();
 
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
+  
   const [company, setCompany] = useState<CompanyDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = session?.user?.token;
-        
-        // ตรวจสอบเบื้องต้น
-        if (!token) {
-          console.warn("No token found in session");
-          return;
-        }
+  // สถานะสำหรับปุ่มตอนกำลังโหลด API (ป้องกันการกดเบิ้ล)
+  const [isProcessing, setIsProcessing] = useState(false);
 
-        console.log("Fetching payment details for PID:", token);
-        if (!pid) return;
+  // ดึง FetchData ออกมาเป็นฟังก์ชันแยก เพื่อให้เรียกซ้ำได้หลังจากอัปเดตข้อมูล
+  const fetchData = useCallback(async () => {
+    try {
+      const token = session?.user?.token;
+      if (!token || !pid) return;
 
-        setLoading(true);
-        setErrorMsg(null);
+      setLoading(true);
+      setErrorMsg(null);
 
-        // 1. ดึงข้อมูล Payment
-        const response = await getPayment(pid, token);
-        
-        // ดึง item ออกมา (รองรับทั้ง {data: ...} หรือ response ตรงๆ)
-        const item = response.data || response;
+      const response = await getPayment(pid, token);
+      const item = response.data || response;
 
-        if (!item || item.error) {
-           throw new Error("Payment data is invalid");
-        }
-
-        // 2. สกัดเอา Company ID (ดักทั้ง String และ Object)
-        const extractedCompanyId = typeof item.company === 'string' 
-          ? item.company 
-          : (item.company?.id || item.company?._id || "");
-
-        // 3. ดึงชื่อบริษัท (ถ้า item.company ไม่มี name มาให้)
-        let companyName = "Unknown Company";
-        
-        if (typeof item.company === 'object' && item.company?.name) {
-          companyName = item.company.name;
-        } else if (extractedCompanyId) {
-          try {
-            // เรียก getCompany เฉพาะเมื่อจำเป็น
-            const companyInfo = await getCompany(extractedCompanyId);
-            const cData = companyInfo.data || companyInfo;
-            companyName = cData.name || companyName;
-          } catch (cErr) {
-            console.error("Could not fetch company info:", cErr);
-            companyName = `Company ID: ${extractedCompanyId}`;
-          }
-        }
-
-        // 4. Mapping ข้อมูล
-        const mapped: CompanyDetails = {
-          id: item.id || item._id,
-          companyId: extractedCompanyId,
-          companyName: companyName,
-          totalAmount: `${item.totalPrice?.toLocaleString() || 0} Baht`,
-          latestUpdate: new Date(item.updatedAt).toLocaleString('en-GB'),
-          status: item.status,
-          availableDates: (item.dateList || []).map((d: string) => {
-            const dateObj = new Date(d);
-            return {
-              date: dateObj.getDate(),
-              month: dateObj.toLocaleString('en-US', { month: 'short' }),
-            };
-          }),
-          realEvents: (item.events || []).map((ev: any) => ({
-            title: ev.eventType,
-            description: ev.payload?.errorMessage || `Status changed to ${ev.payload?.newStatus}`,
-            timestamp: new Date(ev.createdAt).toLocaleString('en-GB', {
-              day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
-            }),
-            status: 'success',
-          })),
-        };
-
-        setCompany(mapped);
-
-      } catch (err: any) {
-        console.error("FETCH ERROR:", err);
-        setErrorMsg(err.message || "Failed to load payment details");
-      } finally {
-        setLoading(false);
+      if (!item || item.error) {
+         throw new Error("Payment data is invalid");
       }
-    };
 
-    if (status === "authenticated") {
-      fetchData();
+      const extractedCompanyId = typeof item.company === 'string' 
+        ? item.company 
+        : (item.company?.id || item.company?._id || "");
+
+      let companyName = "Unknown Company";
+      
+      if (typeof item.company === 'object' && item.company?.name) {
+        companyName = item.company.name;
+      } else if (extractedCompanyId) {
+        try {
+          const companyInfo = await getCompany(extractedCompanyId);
+          companyName = companyInfo.name || companyName;
+        } catch (cErr) {
+          console.error("Could not fetch company info:", cErr);
+          companyName = `Company ID: ${extractedCompanyId}`;
+        }
+      }
+
+      const mapped: CompanyDetails = {
+        id: item.id || item._id,
+        companyId: extractedCompanyId,
+        companyName: companyName,
+        totalAmount: `${item.totalPrice?.toLocaleString() || 0} Baht`,
+        latestUpdate: new Date(item.updatedAt).toLocaleString('en-GB'),
+        status: item.status,
+        availableDates: (item.dateList || []).map((d: string) => {
+          const dateObj = new Date(d);
+          return {
+            date: dateObj.getDate(),
+            month: dateObj.toLocaleString('en-US', { month: 'short' }),
+          };
+        }),
+        realEvents: (item.events || []).map((ev: any) => ({
+          title: ev.eventType,
+          description: ev.payload?.errorMessage || `Status changed to ${ev.payload?.newStatus}`,
+          timestamp: new Date(ev.createdAt).toLocaleString('en-GB', {
+            day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+          }),
+          status: ev.eventType.includes('FAILED') || ev.eventType.includes('CANCELLED') ? 'failed' : 'success',
+        })),
+      };
+
+      setCompany(mapped);
+
+    } catch (err: any) {
+      console.error("FETCH ERROR:", err);
+      setErrorMsg(err.message || "Failed to load payment details");
+    } finally {
+      setLoading(false);
     }
-  }, [status, pid, session]);
+  }, [pid, session]);
+
+  useEffect(() => {
+    if (status === "authenticated") fetchData();
+  }, [status, fetchData]);
+
+
+  // ==========================================
+  // API Action Handlers
+  // ==========================================
+
+  // ฟังก์ชันสำหรับ Confirm Payment (PUT -> 'captured')
+  const handleConfirmPayment = async () => {
+    if (!session?.user?.token || !company) return;
+    try {
+      setIsProcessing(true);
+      await putPayment(company.id, session.user.token, "captured");
+      setIsConfirmModalOpen(false); // ปิด Modal
+      await fetchData(); // โหลดข้อมูลใหม่เพื่อแสดงสถานะที่อัปเดต
+    } catch (err) {
+      console.error("Confirm Payment Error:", err);
+      alert("Failed to confirm payment. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // ฟังก์ชันสำหรับ Cancel Payment (DELETE)
+  const handleCancelPayment = async () => {
+    if (!session?.user?.token || !company) return;
+    try {
+      setIsProcessing(true);
+      await deletePayment(company.id, session.user.token);
+      setIsCancelConfirmOpen(false); // ปิด Modal
+      await fetchData(); // โหลดข้อมูลใหม่ (หรือใช้ router.push('/payments') เพื่อเด้งกลับหน้าเดิม)
+    } catch (err) {
+      console.error("Cancel Payment Error:", err);
+      alert("Failed to cancel payment. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // ==========================================
+  // Render
+  // ==========================================
 
   if (status === "loading" || loading) {
     return <div className="p-20 text-center font-bold text-orange-500">Loading details...</div>;
   }
 
-  // แสดงหน้าจอ Error ถ้าติด 403 หรือปัญหาอื่นๆ
   if (errorMsg) {
     return (
       <div className="p-20 text-center">
@@ -175,15 +209,13 @@ export default function DetailsPage() {
           )}
         </div>
 
-        <ReceiptComponent
-          onDownloadReceipt={() => {}}
-          onViewInvoice={() => {}}
-          onViewCompanyInfo={() => {}}
-        />
+        <ReceiptComponent />
 
+        {/* ส่งตัวแปร isDisabled ไปเช็คว่าถ้าไม่ใช่ authorized ให้กดไม่ได้ */}
         <PaymentActionComponent
           onConfirm={() => setIsConfirmModalOpen(true)}
           onCancel={() => setIsCancelConfirmOpen(true)}
+          isDisabled={company.status.toLowerCase() !== 'authorized'} 
         />
       </div>
 
@@ -194,8 +226,20 @@ export default function DetailsPage() {
             <h2 className="text-3xl font-bold text-center mb-6">Confirm Payment</h2>
             <p className="text-center text-gray-600 mb-10">Are you sure you want to proceed with this payment? This action is permanent.</p>
             <div className="flex gap-4">
-              <button onClick={() => setIsConfirmModalOpen(false)} className="flex-1 py-3 rounded-full border border-gray-300 font-semibold">Cancel</button>
-              <button onClick={() => setIsConfirmModalOpen(false)} className="flex-1 py-3 rounded-full bg-orange-500 text-white font-bold">Confirm</button>
+              <button 
+                onClick={() => setIsConfirmModalOpen(false)} 
+                disabled={isProcessing}
+                className="flex-1 py-3 rounded-full border border-gray-300 font-semibold disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleConfirmPayment} 
+                disabled={isProcessing}
+                className="flex-1 py-3 rounded-full bg-button-green text-white font-bold flex justify-center items-center gap-2 disabled:opacity-50"
+              >
+                {isProcessing ? "Processing..." : "Confirm"}
+              </button>
             </div>
           </div>
         </div>
@@ -208,8 +252,20 @@ export default function DetailsPage() {
             <h2 className="text-3xl font-bold text-center text-red-500 mb-6">Cancel Payment</h2>
             <p className="text-center text-gray-600 mb-10">Are you sure you want to cancel? This cannot be undone.</p>
             <div className="flex gap-4">
-              <button onClick={() => setIsCancelConfirmOpen(false)} className="flex-1 py-3 rounded-full border border-gray-300 font-semibold">Back</button>
-              <button onClick={() => setIsCancelConfirmOpen(false)} className="flex-1 py-3 rounded-full bg-red-500 text-white font-bold">Yes, Cancel</button>
+              <button 
+                onClick={() => setIsCancelConfirmOpen(false)} 
+                disabled={isProcessing}
+                className="flex-1 py-3 rounded-full border border-gray-300 font-semibold disabled:opacity-50"
+              >
+                Back
+              </button>
+              <button 
+                onClick={handleCancelPayment} 
+                disabled={isProcessing}
+                className="flex-1 py-3 rounded-full bg-red-500 text-white font-bold flex justify-center items-center gap-2 disabled:opacity-50"
+              >
+                {isProcessing ? "Canceling..." : "Yes, Cancel"}
+              </button>
             </div>
           </div>
         </div>

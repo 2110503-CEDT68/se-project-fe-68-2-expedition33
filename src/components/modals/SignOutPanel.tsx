@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { signOut } from "next-auth/react";
-import { useClickOutside } from "@/components/useClickOutside";
+import { useClickOutside } from "@/libs/utils/useClickOutside";
 
 export default function SignOutModal({ onClose }: Readonly<{ onClose: () => void }>) {
     const modalRef = useRef<HTMLDivElement>(null);

@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import getCompany from "@/libs/getCompany";
-import AdminCompanyDetail from "@/components/AdminCompanyDetail";
-import CompanyDetail from "@/components/CompanyDetail";
+import AdminCompanyDetail from "@/components/companies/AdminCompanyDetail";
+import CompanyDetail from "@/components/companies/CompanyDetail";
 import { Suspense } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
 

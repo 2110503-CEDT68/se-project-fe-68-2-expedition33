@@ -1,4 +1,4 @@
-import { CompanyResponse } from "../../interfaces";
+import { CompanyResponse } from "@/../interfaces";
 
 export default async function getCompanies(): Promise<CompanyResponse> {
     const response = await fetch(`${process.env.BACKEND_URL}/api/v1/companies`);

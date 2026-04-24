@@ -4,10 +4,10 @@ import { redirect } from "next/navigation";
 import getUserProfile from "@/libs/getUserProfile";
 import { Suspense } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
-import UserProfile from "@/components/UserProfile";
-import AdminProfile from "@/components/AdminProfile";
-import CompanyProfile from "@/components/CompanyProfile";
-import { UserItem } from "../../../../../interfaces";
+import UserProfile from "@/components/profile/UserProfile";
+import AdminProfile from "@/components/profile/AdminProfile";
+import CompanyProfile from "@/components/profile/CompanyProfile";
+import { UserItem } from "@/../interfaces";
 
 async function ProfileContent({ token }: Readonly<{ token: string }>) {
   const response = await getUserProfile(token);

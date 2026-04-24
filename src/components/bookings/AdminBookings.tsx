@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { BookingItem } from "../../interfaces";
+import { BookingItem } from "@/../interfaces";
 import UpdateBookingPanel from "@/components/modals/UpdateBookingPanel";
 import DeleteBookingPanel from "@/components/modals/DeleteBookingPanel";
 import cancelBooking from "@/libs/cancelBooking";
@@ -131,7 +131,7 @@ export default function AdminBookings({bookingList, adminToken}: Readonly<{booki
                                     <div className="flex flex-col">
                                             <span className="font-bold text-lg text-foreground">{booking.user?.name || "Unknown User"}</span>
                                             <span className="text-sm text-foreground/60 font-medium">Interviewing with: <strong className="text-primary">{booking.company?.name || "Unknown Company"}</strong></span>
-                                            <span className="text-xs text-foreground/50 mt-1">{ (new Date(booking.bookingDate)).toLocaleDateString() || "Unknown Date"}</span>
+                                            <span className="text-xs text-foreground/50 mt-1">{(new Date(booking.bookingDate)).toLocaleDateString() || "Unknown Date"}</span>
                                     </div>
                             </div>
 
@@ -142,7 +142,7 @@ export default function AdminBookings({bookingList, adminToken}: Readonly<{booki
                                 >
                                     Update
                                 </button>
-                                <button className="flex-1 md:flex-none px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold text-sm transition-colors cursor-pointer shadow-sm"
+                                <button className="flex-1 md:flex-none px-4 py-2 bg-button-red hover:bg-button-red-hover text-white rounded-lg font-bold text-sm transition-colors cursor-pointer shadow-sm"
                                     onClick={(e) => setDeletingBooking(booking)}
                                 >
                                     Delete

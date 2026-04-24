@@ -1,4 +1,4 @@
-import { CompanyItem, CompanyCreatePayload } from "../../interfaces";
+import { CompanyItem, CompanyCreatePayload } from "@/../interfaces";
 import imageCompression from "browser-image-compression";
 
 const compressionOptions = {

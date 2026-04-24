@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import AddBookingPanel from "@/components/modals/AddBookingPanel";
-import { CompanyItem } from "../../interfaces";
+import { CompanyItem } from "@/../interfaces";
 
 export default function BookButton({
     company,

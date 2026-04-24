@@ -1,7 +1,7 @@
 "use client"
 import cancelBooking from "@/libs/cancelBooking";
 import createBooking from "@/libs/createBooking";
-import { BookingItem, BookingResponse, CompanyItem } from "../../../interfaces";
+import { BookingItem, BookingResponse, CompanyItem } from "@/../interfaces";
 import { useState } from "react";
 import getBookings from "@/libs/getBookings";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -11,12 +11,12 @@ export default function BookingList({
   bookingsResponse, 
   adminToken,
   userToken
-}: {
+}: Readonly<{
   company: CompanyItem,
   bookingsResponse: BookingResponse, 
   adminToken: string,
   userToken: string
-}) {
+}>) {
   const [bookings, setBookings] = useState<BookingItem[]>(bookingsResponse?.data || []);
   const [bookingCount, setBookingCount] = useState<number>(bookingsResponse?.count || 0);
   const [pendingBooking, setPendingBooking] = useState<{ companyName: string, date: string; userRole: string } | null>(null);
@@ -132,7 +132,7 @@ export default function BookingList({
 
               <button 
                 onClick={(e) => handleDelete(e, booking.id)}
-                className="text-red-500 hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-md font-bold transition-colors border border-red-200 cursor-pointer"
+                className="text-button-red hover:text-button-red-hover hover:bg-button-red/10 px-4 py-2 rounded-md font-bold transition-colors border border-button-red/20 cursor-pointer"
               >
                 Delete
               </button>

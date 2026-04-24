@@ -1,9 +1,9 @@
 "use client"
 import { useState } from "react";
-import { CompanyItem } from "../../interfaces";
+import { CompanyItem } from "@/../interfaces";
 import CompanyDetail from "./CompanyDetail";
-import UpdateCompanyPanel from "./modals/UpdateCompanyPanel";
-import DeleteCompanyPanel from "./modals/DeleteCompanyPanel";
+import UpdateCompanyPanel from "../modals/UpdateCompanyPanel";
+import DeleteCompanyPanel from "../modals/DeleteCompanyPanel";
 import { signOut } from "next-auth/react";
 
 export default function AdminCompanyDetail({
@@ -72,7 +72,7 @@ export default function AdminCompanyDetail({
       )}
 
       {!adminToken && (
-        <p className="mt-4 text-sm text-red-500 font-semibold">Admin token is missing.</p>
+        <p className="mt-4 text-sm text-button-red font-semibold">Admin token is missing.</p>
       )}
     </>
   );
