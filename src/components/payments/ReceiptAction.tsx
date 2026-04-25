@@ -27,7 +27,8 @@ export default function ReceiptAction({
       <h2 className="text-base font-bold text-foreground mb-5">Receipt & Information</h2>
 
       <div className="flex gap-4 flex-wrap justify-center w-full">
-          {/* Download Receipt */}
+        
+        {/* Download Receipt */}
         <button
           onClick={() => generatePDF(payment, 'download', new Date())}
           className="bg-primary hover:bg-primary-hover text-white font-bold py-2.5 px-7 rounded-xl text-sm transition-colors flex items-center gap-2"
@@ -38,6 +39,7 @@ export default function ReceiptAction({
           Download Receipt
         </button>
 
+        {/* View Invoice — outline */}
         <button
           onClick={() => generatePDF(payment, 'view',new Date())}
           className="border-2 border-primary text-primary hover:bg-primary-light font-bold py-2.5 px-7 rounded-xl text-sm transition-colors flex items-center gap-2"
@@ -49,6 +51,7 @@ export default function ReceiptAction({
           View invoice
         </button>
 
+        {/* Company Info — outline */}
         {companyId ? (
           <Link
             href={`/companies/${companyId}`}
@@ -65,9 +68,14 @@ export default function ReceiptAction({
             onClick={onViewCompanyInfo}
             className="border-2 border-primary text-primary hover:bg-primary-light font-bold py-2.5 px-7 rounded-xl text-sm transition-colors flex items-center gap-2"
           >
+            <svg width="16" height="16" fill="none" stroke="var(--primary)" strokeWidth="1.6" viewBox="0 0 24 24">
+              <rect x="2" y="3" width="20" height="19" rx="2" />
+              <path d="M9 3v18M15 3v18M2 9h20M2 15h20" />
+            </svg>
             Company info
           </button>
         )}
+
       </div>
     </div>
   );
