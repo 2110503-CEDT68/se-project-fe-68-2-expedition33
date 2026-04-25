@@ -1,9 +1,6 @@
 import { CreateBookingResponse } from "@/../interfaces";
-import getUserProfile from "./getUserProfile";
 
 export default async function createBooking(companyId: string, token: string, bookingDate: string): Promise<CreateBookingResponse> {
-    
-    const userId = (await getUserProfile(token)).data.id;
     
     const response = await fetch(`${process.env.BACKEND_URL}/api/v1/companies/${companyId}/bookings`,
         {
@@ -14,7 +11,6 @@ export default async function createBooking(companyId: string, token: string, bo
             },
             body: JSON.stringify({
                 bookingDate: bookingDate,
-                user: userId
             }),
         }
     );
