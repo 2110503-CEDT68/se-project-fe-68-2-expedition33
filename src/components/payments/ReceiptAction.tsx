@@ -1,4 +1,4 @@
-export default function ReceiptComponent({
+export default function ReceiptAction({
   onDownloadReceipt,
   onViewInvoice,
   onViewCompanyInfo,

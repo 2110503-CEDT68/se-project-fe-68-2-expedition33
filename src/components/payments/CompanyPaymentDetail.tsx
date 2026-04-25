@@ -1,6 +1,7 @@
 import { PaymentItem } from "@/../interfaces";
+import Image from "next/image";
 
-export default function PaymentCard({ payment }: Readonly<{ payment: PaymentItem }>) {
+export default function CompanyPaymentDetail({ payment }: Readonly<{ payment: PaymentItem }>) {
   const statusStyles: Record<string, string> = {
     captured:   "bg-green-100 text-green-600",
     authorized: "bg-blue-100 text-blue-600",
@@ -19,7 +20,17 @@ export default function PaymentCard({ payment }: Readonly<{ payment: PaymentItem
     failed: 'Payment failed'
   };
 
+  const borderStyles: Record<string, string> = {
+    captured:   "border-green-600",
+    authorized: "border-blue-600",
+    pending:    "border-yellow-700",
+    initiated:  "border-gray-500",
+    cancelled:  "border-button-red",
+    failed:     "border-button-red",
+  };
+
   const statusClass = statusStyles[payment.status.toLowerCase()] ?? "bg-surface text-foreground";
+  const borderClass = borderStyles[payment.status.toLowerCase()] ?? "border-surface-border";
 
   const statusMsg =
     statusMessages[payment.status.toLowerCase()] ?? 'Status updated';
@@ -29,21 +40,30 @@ export default function PaymentCard({ payment }: Readonly<{ payment: PaymentItem
     : '';
 
   return (
-    <div className="bg-background rounded-2xl border border-surface-border px-6 py-5 mb-4">
+    <div className={`bg-background rounded-2xl border-2 ${borderClass} px-6 py-5 mb-4`}>
       <div className="flex items-stretch">
 
         {/* Company Logo + Info */}
         <div className="flex items-center gap-5 pr-8 flex-[2.2]">
-          <div className="w-19 h-19 bg-primary-light rounded-full flex items-center justify-center shrink-0">
-            <svg width="40" height="40" fill="none" stroke="var(--primary)" strokeWidth="1.5" viewBox="0 0 24 24">
-              <rect x="2" y="3" width="20" height="19" rx="2" />
-              <path d="M9 3v18M15 3v18M2 9h20M2 15h20" />
-            </svg>
+          <div className="w-19 h-19 bg-primary-light rounded-lg flex items-center justify-center shrink-0 overflow-hidden relative">
+            {payment.company.logo?.url ? (
+              <Image 
+                src={payment.company.logo.url} 
+                alt={`${payment.company.name} logo`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 80px"
+              />
+            ) : (
+              <svg width="40" height="40" fill="none" stroke="var(--primary)" strokeWidth="1.5" viewBox="0 0 24 24">
+                <rect x="2" y="3" width="20" height="19" rx="2" />
+                <path d="M9 3v18M15 3v18M2 9h20M2 15h20" />
+              </svg>
+            )}
           </div>
           <div>
             <p className="text-foreground/50 text-sm mb-1">Company</p>
             <h3 className="text-lg font-bold text-foreground mb-1">{payment.company.name || 'Unknown Company'}</h3>
-            <p className="text-foreground/40 text-sm">Company ID: {payment.company.id}</p>
           </div>
         </div>
 

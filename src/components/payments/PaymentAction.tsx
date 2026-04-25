@@ -1,4 +1,4 @@
-export default function PaymentActionComponent({
+export default function PaymentAction({
   onConfirm,
   onCancel,
   isDisabled,
