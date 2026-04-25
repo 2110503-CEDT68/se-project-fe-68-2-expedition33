@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function Home() {
+  console.log("Hello, World!!");
   return (
     <main className="relative min-h-screen bg-background flex flex-col justify-center pt-24 pb-12 overflow-hidden">      
     
