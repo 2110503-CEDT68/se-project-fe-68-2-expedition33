@@ -1,18 +1,30 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useClickOutside } from "@/hooks/useClickOutside";
 
-export default function UpdateBookingPanel({ companyName, oldDate, onClose, onUpdate: onSubmit }: Readonly<{ companyName: string, oldDate: string, onClose: () => void, onUpdate: (e: React.MouseEvent, date: string) => void }>) {
+import getCompany from "@/libs/getCompany";
+import { CompanyItem } from "@/../interfaces";
+
+export default function UpdateBookingPanel({ companyName, companyId, oldDate, onClose, onUpdate: onSubmit }: Readonly<{ companyName: string, companyId: string, oldDate: string, onClose: () => void, onUpdate: (e: React.MouseEvent, date: string) => void }>) {
   const modalRef = useRef<HTMLDivElement>(null);
   useClickOutside(modalRef, onClose);
 
   // State to keep track of which date the user clicked.
   const [selectedDate, setSelectedDate] = useState(oldDate.split("-")[2].split("T")[0]);
+  const [company, setCompany] = useState<CompanyItem | null>(null);
   
   // The available interview dates
   const dates = ["10", "11", "12", "13"];
+
+  useEffect(() => {
+    if (companyId) {
+      getCompany(companyId).then((res) => {
+        if (res?.data) setCompany(res.data);
+      }).catch(console.error);
+    }
+  }, [companyId]);
 
   return (
     // Dark Overlay Background
@@ -43,27 +55,46 @@ export default function UpdateBookingPanel({ companyName, oldDate, onClose, onUp
 
         {/* Date Selection Grid */}
         <div className="flex gap-4 md:gap-6 mb-8">
-          {dates.map((day) => (
-            <button
-              key={day}
-              onClick={() => setSelectedDate(day)}
-              className={`flex flex-col items-center justify-center w-20 h-24 md:w-24 md:h-28 rounded-2xl transition-all duration-300 cursor-pointer
-                ${selectedDate === day 
-                  ?
-                    'bg-primary text-white scale-105 ring-4 ring-primary/30 shadow-lg' 
-                  :
-                    'bg-primary/5 text-foreground/50 border border-primary/10 hover:bg-primary hover:text-white hover:scale-105 hover:shadow-md'
-                }`}
-            >
-              <span className="text-3xl md:text-4xl font-bold">{day}</span>
-              <span className="text-sm md:text-base font-bold tracking-widest uppercase mt-1">May</span>
-            </button>
-          ))}
+          {dates.map((day) => {
+            // Default to true if company hasn't loaded yet to avoid flickering, or default to false to be safe.
+            // But actually we know oldDate is available, so if day == oldDate it's always valid.
+            let isPaid = day === selectedDate; 
+            
+            if (company) {
+              isPaid = false;
+              company.payments?.forEach((p) => {
+                if (p.status === "captured" && p.dateList.some(d => d.substring(8, 10) === day)) {
+                  isPaid = true;
+                }
+              });
+            }
+
+            let dateButtonStyle = "";
+            if (!isPaid) {
+              dateButtonStyle = "bg-surface-border/50 text-foreground/30 cursor-not-allowed border border-surface-border";
+            } else if (selectedDate === day) {
+              dateButtonStyle = "bg-primary text-white scale-105 ring-4 ring-primary/30 shadow-lg cursor-pointer";
+            } else {
+              dateButtonStyle = "bg-primary/5 text-foreground/50 border border-primary/10 hover:bg-primary hover:text-white hover:scale-105 hover:shadow-md cursor-pointer";
+            }
+
+            return (
+              <button
+                key={day}
+                onClick={() => isPaid && setSelectedDate(day)}
+                disabled={!isPaid}
+                className={`flex flex-col items-center justify-center w-20 h-24 md:w-24 md:h-28 rounded-2xl transition-all duration-300 ${dateButtonStyle}`}
+              >
+                <span className="text-3xl md:text-4xl font-bold">{day}</span>
+                <span className="text-sm md:text-base font-bold tracking-widest uppercase mt-1">May</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Instructional Text */}
-        <p className="text-foreground font-bold text-xs md:text-sm tracking-widest mb-8 text-center">
-          Select your preferred interview date (10–13 May, 2022)
+        <p className="text-foreground font-bold text-xs md:text-sm tracking-widest mb-8 text-center px-4">
+          Select your preferred interview date (Only paid dates are available)
         </p>
 
         {/* Submit Button */}

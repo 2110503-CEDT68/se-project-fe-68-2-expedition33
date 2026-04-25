@@ -1,8 +1,12 @@
+import Link from "next/link";
+
 export default function ReceiptAction({
+  companyId,
   onDownloadReceipt,
   onViewInvoice,
   onViewCompanyInfo,
 }: Readonly<{  
+  companyId?: string,
   onDownloadReceipt?: () => void,
   onViewInvoice?: () => void,
   onViewCompanyInfo?: () => void
@@ -47,16 +51,29 @@ export default function ReceiptAction({
         </button>
 
         {/* Company Info — outline */}
-        <button
-          onClick={onViewCompanyInfo}
-          className="border-2 border-primary text-primary hover:bg-primary-light font-bold py-2.5 px-7 rounded-xl text-sm transition-colors flex items-center gap-2"
-        >
-          <svg width="16" height="16" fill="none" stroke="var(--primary)" strokeWidth="1.6" viewBox="0 0 24 24">
-            <rect x="2" y="3" width="20" height="19" rx="2" />
-            <path d="M9 3v18M15 3v18M2 9h20M2 15h20" />
-          </svg>
-          Company info
-        </button>
+        {companyId ? (
+          <Link
+            href={`/companies/${companyId}`}
+            className="border-2 border-primary text-primary hover:bg-primary-light font-bold py-2.5 px-7 rounded-xl text-sm transition-colors flex items-center gap-2"
+          >
+            <svg width="16" height="16" fill="none" stroke="var(--primary)" strokeWidth="1.6" viewBox="0 0 24 24">
+              <rect x="2" y="3" width="20" height="19" rx="2" />
+              <path d="M9 3v18M15 3v18M2 9h20M2 15h20" />
+            </svg>
+            Company info
+          </Link>
+        ) : (
+          <button
+            onClick={onViewCompanyInfo}
+            className="border-2 border-primary text-primary hover:bg-primary-light font-bold py-2.5 px-7 rounded-xl text-sm transition-colors flex items-center gap-2"
+          >
+            <svg width="16" height="16" fill="none" stroke="var(--primary)" strokeWidth="1.6" viewBox="0 0 24 24">
+              <rect x="2" y="3" width="20" height="19" rx="2" />
+              <path d="M9 3v18M15 3v18M2 9h20M2 15h20" />
+            </svg>
+            Company info
+          </button>
+        )}
 
       </div>
     </div>

@@ -158,6 +158,7 @@ export default function AdminBookings({bookingList, adminToken}: Readonly<{booki
                 (updatingBooking !== null) && (
                 <UpdateBookingPanel 
                     companyName={updatingBooking.company?.name || "Unknown Company"} 
+                    companyId={updatingBooking.company?.id || (updatingBooking.company as any)?._id}
                     oldDate={updatingBooking.bookingDate}  
                     onClose={() => setUpdatingBooking(null)} 
                     onUpdate={(e, date) => { handleUpdate(e, updatingBooking, adminToken, date); setUpdatingBooking(null); }}

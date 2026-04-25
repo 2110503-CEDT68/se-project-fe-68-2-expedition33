@@ -81,24 +81,39 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
         </h3>
 
         <div className="flex gap-4 md:gap-6 mb-8">
-          {dates.map((day: string) => (
-            <button
-              key={day}
-              onClick={() => setSelectedDate(day)}
-              className={`flex flex-col items-center justify-center w-20 h-24 md:w-24 md:h-28 rounded-2xl transition-all duration-300 cursor-pointer
-                ${selectedDate === day 
-                  ? 'bg-primary text-white scale-105 ring-4 ring-primary/30 shadow-lg' 
-                  : 'bg-primary/5 text-foreground/50 border border-primary/10 hover:bg-primary hover:text-white hover:scale-105 hover:shadow-md'
-                }`}
-            >
-              <span className="text-3xl md:text-4xl font-bold">{day}</span>
-              <span className="text-sm md:text-base font-bold tracking-widest uppercase mt-1">May</span>
-            </button>
-          ))}
+          {dates.map((day: string) => {
+            let isPaid = false;
+            company.payments?.forEach((p) => {
+              if (p.status === "captured" && p.dateList.some(d => d.substring(8, 10) === day)) {
+                isPaid = true;
+              }
+            });
+
+            let dateButtonStyle = "";
+            if (!isPaid) {
+              dateButtonStyle = "bg-surface-border/50 text-foreground/30 cursor-not-allowed border border-surface-border";
+            } else if (selectedDate === day) {
+              dateButtonStyle = "bg-primary text-white scale-105 ring-4 ring-primary/30 shadow-lg cursor-pointer";
+            } else {
+              dateButtonStyle = "bg-primary/5 text-foreground/50 border border-primary/10 hover:bg-primary hover:text-white hover:scale-105 hover:shadow-md cursor-pointer";
+            }
+
+            return (
+              <button
+                key={day}
+                onClick={() => isPaid && setSelectedDate(day)}
+                disabled={!isPaid}
+                className={`flex flex-col items-center justify-center w-20 h-24 md:w-24 md:h-28 rounded-2xl transition-all duration-300 ${dateButtonStyle}`}
+              >
+                <span className="text-3xl md:text-4xl font-bold">{day}</span>
+                <span className="text-sm md:text-base font-bold tracking-widest uppercase mt-1">May</span>
+              </button>
+            );
+          })}
         </div>
 
-        <p className="text-foreground font-bold text-xs md:text-sm tracking-widest mb-8 text-center">
-          Select your preferred interview date (May 10–13, 2022)
+        <p className="text-foreground font-bold text-xs md:text-sm tracking-widest mb-8 text-center px-4">
+          Select your preferred interview date<br/>(Only organizing dates are available)
         </p>
 
         {/* Dynamic Submit Button */}

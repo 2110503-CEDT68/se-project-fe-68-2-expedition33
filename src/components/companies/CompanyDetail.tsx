@@ -172,6 +172,45 @@ export default function CompanyDetail({
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-16 bg-primary rounded-full"></div>
       </div>
 
+      {/* ── 4.5. Paid Dates ── */}
+      <div className="flex flex-col md:flex-row items-start md:items-center gap-4 relative mb-8 bg-background border border-surface-border p-5 rounded-2xl shadow-sm">
+        <div className="absolute top-4 right-5 text-md font-bold text-primary tracking-widest uppercase opacity-60">
+          May 2022
+        </div>
+        <svg className={`${iconClassName} bg-primary/10 p-1.5 rounded-lg w-9 h-9`} {...iconProps}>
+          <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <div className="flex-1">
+          <p className="text-foreground/80 font-bold text-sm mb-2">
+            Organizing Interview Dates
+          </p>
+          <div className="flex gap-2.5 items-center">
+            {["2022-05-10", "2022-05-11", "2022-05-12", "2022-05-13"].map((dateKey) => {
+              // Extract all captured dates for this company
+              let isIncluded = false;
+              company.payments?.forEach((p) => {
+                if (p.status === "captured" && p.dateList.some(d => d.startsWith(dateKey))) {
+                  isIncluded = true;
+                }
+              });
+
+              const squareColor = isIncluded ? "bg-button-green" : "bg-primary opacity-20";
+              const day = dateKey.split("-")[2];
+              
+              return (
+                <div
+                  key={dateKey}
+                  className={`w-8 h-8 rounded flex items-center justify-center text-xs font-bold text-white transition-colors ${squareColor}`}
+                  title={`${dateKey}${isIncluded ? " (Confirmed)" : ""}`}
+                >
+                  {isIncluded ? day : ""}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
       <hr className="border-t-2 border-surface-border my-8" />
 
       {/* ── 5. Buttons (Booking & Footer Actions) ── */}

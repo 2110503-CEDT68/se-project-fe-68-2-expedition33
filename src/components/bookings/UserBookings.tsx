@@ -199,9 +199,10 @@ export default function UserBookings({ bookingList, userToken }: Readonly<{ book
                 </div>
             </div>
 
-            {updatingBooking !== null && (
+            {updatingBooking?.company?.id && (
                 <UpdateBookingPanel 
                     companyName={updatingBooking.company?.name || "Unknown Company"} 
+                    companyId={updatingBooking.company.id}
                     oldDate={updatingBooking.bookingDate}  
                     onClose={() => setUpdatingBooking(null)} 
                     onUpdate={(e: React.MouseEvent, date: string) => { handleUpdate(e, updatingBooking, userToken, date); setUpdatingBooking(null); }}
