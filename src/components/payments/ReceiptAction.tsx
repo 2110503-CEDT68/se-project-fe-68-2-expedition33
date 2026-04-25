@@ -1,19 +1,20 @@
+'use client';
+
 import Link from "next/link";
+import { generatePDF } from "@/libs/utils/pdfGenerator"; 
 
 export default function ReceiptAction({
-  companyId,
-  onDownloadReceipt,
-  onViewInvoice,
+  payment,
   onViewCompanyInfo,
-}: Readonly<{  
-  companyId?: string,
-  onDownloadReceipt?: () => void,
-  onViewInvoice?: () => void,
-  onViewCompanyInfo?: () => void
+}: Readonly<{
+  payment: any; 
+  onViewCompanyInfo?: () => void;
 }>) {
+
+  const companyId = payment?.company?.id || payment?.company?._id;
+
   return (
     <div className="bg-background rounded-2xl border border-surface-border px-6 py-5 mb-4 flex flex-col items-center">
-      {/* Icon */}
       <div className="w-12 h-10 bg-primary-light rounded-full flex items-center justify-center mb-1">
         <svg width="22" height="22" fill="none" stroke="var(--primary)" strokeWidth="1.6" viewBox="0 0 24 24">
           <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
@@ -26,10 +27,10 @@ export default function ReceiptAction({
       <h2 className="text-base font-bold text-foreground mb-5">Receipt & Information</h2>
 
       <div className="flex gap-4 flex-wrap justify-center w-full">
-
-        {/* Download Receipt — solid primary */}
+        
+        {/* Download Receipt */}
         <button
-          onClick={onDownloadReceipt}
+          onClick={() => generatePDF(payment, 'download', new Date())}
           className="bg-primary hover:bg-primary-hover text-white font-bold py-2.5 px-7 rounded-xl text-sm transition-colors flex items-center gap-2"
         >
           <svg width="16" height="16" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" viewBox="0 0 24 24">
@@ -40,7 +41,7 @@ export default function ReceiptAction({
 
         {/* View Invoice — outline */}
         <button
-          onClick={onViewInvoice}
+          onClick={() => generatePDF(payment, 'view',new Date())}
           className="border-2 border-primary text-primary hover:bg-primary-light font-bold py-2.5 px-7 rounded-xl text-sm transition-colors flex items-center gap-2"
         >
           <svg width="16" height="16" fill="none" stroke="var(--primary)" strokeWidth="1.6" viewBox="0 0 24 24">
