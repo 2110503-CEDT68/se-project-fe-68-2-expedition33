@@ -145,7 +145,9 @@ export default function DetailsPage({ params }: Readonly<{ params: Promise<{ pid
         )}
 
         {/* 6. Receipt & Information — full width */}
-        <ReceiptAction companyId={payment.company.id || (payment.company as any)._id} />
+        {payment.status === "captured" && (
+          <ReceiptAction payment={payment} />
+        )}
 
       </div>
 
