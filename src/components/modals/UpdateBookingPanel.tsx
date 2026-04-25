@@ -1,30 +1,29 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { BookingCompanySummary } from "@/../interfaces";
 
-import getCompany from "@/libs/getCompany";
-import { CompanyItem } from "@/../interfaces";
-
-export default function UpdateBookingPanel({ companyName, companyId, oldDate, onClose, onUpdate: onSubmit }: Readonly<{ companyName: string, companyId: string, oldDate: string, onClose: () => void, onUpdate: (e: React.MouseEvent, date: string) => void }>) {
+export default function UpdateBookingPanel({ 
+  company, 
+  oldDate, 
+  onClose, 
+  onUpdate: onSubmit 
+}: Readonly<{ 
+  company: BookingCompanySummary, 
+  oldDate: string, 
+  onClose: () => void, 
+  onUpdate: (e: React.MouseEvent, date: string) => void 
+}>) {
   const modalRef = useRef<HTMLDivElement>(null);
   useClickOutside(modalRef, onClose);
 
   // State to keep track of which date the user clicked.
   const [selectedDate, setSelectedDate] = useState(oldDate.split("-")[2].split("T")[0]);
-  const [company, setCompany] = useState<CompanyItem | null>(null);
   
   // The available interview dates
   const dates = ["10", "11", "12", "13"];
-
-  useEffect(() => {
-    if (companyId) {
-      getCompany(companyId).then((res) => {
-        if (res?.data) setCompany(res.data);
-      }).catch(console.error);
-    }
-  }, [companyId]);
 
   return (
     // Dark Overlay Background
@@ -46,28 +45,26 @@ export default function UpdateBookingPanel({ companyName, companyId, oldDate, on
         </button>
 
         {/* Headings */}
-        <h2 className="text-4xl md:text-5xl font-extrabold text-primary tracking-widest mb-2 mt-4">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-primary tracking-widest mb-2 mt-4 text-center">
           Edit Booking
         </h2>
-        <h3 className="text-xl md:text-2xl font-bold text-primary tracking-widest mb-10">
-          {companyName}
+        <h3 className="text-xl md:text-2xl font-bold text-primary tracking-widest mb-10 text-center">
+          {company.name}
         </h3>
 
         {/* Date Selection Grid */}
         <div className="flex gap-4 md:gap-6 mb-8">
           {dates.map((day) => {
-            // Default to true if company hasn't loaded yet to avoid flickering, or default to false to be safe.
-            // But actually we know oldDate is available, so if day == oldDate it's always valid.
             let isPaid = day === selectedDate; 
             
-            if (company) {
-              isPaid = false;
-              company.payments?.forEach((p) => {
-                if (p.status === "captured" && p.dateList.some(d => d.substring(8, 10) === day)) {
-                  isPaid = true;
-                }
-              });
-            }
+            // Recalculate isPaid based on payments
+            const hasPayment = company.payments?.some((p) => 
+              p.status === "captured" && p.dateList.some(d => d.substring(8, 10) === day)
+            );
+            
+            if (hasPayment) isPaid = true;
+            // Note: If day is NOT in payments, we still check if it's the currently selected (old) date.
+            // Usually oldDate should already be paid, but this ensures the current selection is always visible.
 
             let dateButtonStyle = "";
             if (!isPaid) {

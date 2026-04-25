@@ -130,6 +130,11 @@ export interface BookingUserSummary {
     email?: string;
 }
 
+export interface BookingPaymentSummary {
+    status: string;
+    dateList: string[];
+}
+
 export interface BookingCompanySummary {
     id?: string;
     name?: string;
@@ -142,6 +147,7 @@ export interface BookingCompanySummary {
     description?: string;
     logo?: CloudinaryAsset | null;
     photoList?: CloudinaryAsset[];
+    payments?: BookingPaymentSummary[];
 }
 
 export interface BookingItem {
