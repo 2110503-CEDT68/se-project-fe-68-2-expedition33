@@ -8,6 +8,8 @@ import userRegister from "@/libs/userRegister";
 import { signIn } from "next-auth/react";
 import { LinearProgress } from "@mui/material";
 
+import PrivacyPolicyPanel from "@/components/modals/PrivacyPolicyPanel";
+
 export default function RegisterPage() {
   const router = useRouter();
   
@@ -22,6 +24,7 @@ export default function RegisterPage() {
   const [error, setError] = useState<string>("");
   const [errorField, setErrorField] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [isPrivacyPanelOpen, setIsPrivacyPanelOpen] = useState<boolean>(false);
 
   // Refs for moving user focus automatically
   const nameRef = useRef<HTMLInputElement>(null);
@@ -39,15 +42,13 @@ export default function RegisterPage() {
     }
   };
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
-    
+  const validateForm = (): boolean => {
     // 1. Name Validation (Not too long)
     if (form.name.trim().length > 50) {
         setError("Name is too long (maximum 50 characters).");
         setErrorField("name");
         nameRef.current?.focus();
-        return;
+        return false;
     }
 
     // 2. Telephone Validation
@@ -56,7 +57,7 @@ export default function RegisterPage() {
         setError("Please add a valid telephone number");
         setErrorField("tel");
         telRef.current?.focus();
-        return;
+        return false;
     }
 
     // 3. Email Validation
@@ -65,7 +66,7 @@ export default function RegisterPage() {
         setError("Please add a valid email");
         setErrorField("email");
         emailRef.current?.focus();
-        return;
+        return false;
     }
 
     // 4. Password Length Validation
@@ -73,7 +74,7 @@ export default function RegisterPage() {
         setError("Password must be at least 6 characters.");
         setErrorField("password");
         passwordRef.current?.focus();
-        return;
+        return false;
     }
 
     // 5. Password Match Validation
@@ -81,9 +82,21 @@ export default function RegisterPage() {
       setError("Passwords do not match");
       setErrorField("confirmPassword");
       confirmPasswordRef.current?.focus();
-      return;
+      return false;
     }
 
+    return true;
+  };
+
+  const handleSubmitTrigger = (e: React.SubmitEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    if (validateForm()) {
+      setIsPrivacyPanelOpen(true);
+    }
+  };
+
+  const handleRegister = async (): Promise<void> => {
+    setIsPrivacyPanelOpen(false);
     setLoading(true);
     setError("");
     setErrorField("");
@@ -164,7 +177,7 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmitTrigger} className="space-y-4">
             {loading && (
               <div className="w-full flex flex-col items-center justify-center px-2 text-primary font-bold text-xl tracking-widest gap-4">
                 Registering...
@@ -345,6 +358,12 @@ export default function RegisterPage() {
 
         </div>
       </div>
+      
+      <PrivacyPolicyPanel 
+        isOpen={isPrivacyPanelOpen}
+        onClose={() => setIsPrivacyPanelOpen(false)}
+        onAgree={handleRegister}
+      />
     </div>
   );
 }
