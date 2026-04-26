@@ -65,8 +65,8 @@ export default function PaymentDashboard({ payments, token }: Readonly<{ payment
         </div>
 
         {/* Illustration */}
-        <div className="w-full max-w-[300px] mt-4 flex justify-center">
-          <img src="" alt="Waiting image for Phat and Prem" className="w-full h-auto object-contain" />
+        <div className="w-full max-w-[300px] mt-4 flex items-center justify-center h-48 border-2 border-dashed border-surface-border rounded-lg text-foreground/50 text-sm">
+          Waiting image for Phat and Prem
         </div>
       </div>
       {/* Wait image for Phat and Prem*/}
