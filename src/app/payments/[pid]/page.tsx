@@ -32,9 +32,10 @@ export default function DetailsPage({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  const token = session?.user?.token;
+
   const fetchData = useCallback(async () => {
     try {
-      const token = session?.user?.token;
       if (!token || !pid) return;
 
       setLoading(true);
@@ -49,7 +50,7 @@ export default function DetailsPage({
     } finally {
       setLoading(false);
     }
-  }, [pid, session]);
+  }, [pid, token]);
 
   useEffect(() => {
     if (status === "authenticated") fetchData();
