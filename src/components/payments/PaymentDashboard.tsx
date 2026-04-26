@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import PaidDateCard from "@/components/payments/PaidDateCard";
-import CompanyReserve from "@/components/payments/PaymentHistoryList";
+import PaymentHistoryList from "@/components/payments/PaymentHistoryList";
 import AddDateListModal from "@/components/modals/AddPaymentPanel";
 import type { PaymentItem } from "@/../interfaces";
 import { useRouter } from "next/navigation";
@@ -76,7 +76,7 @@ export default function PaymentDashboard({ payments, token }: Readonly<{ payment
 
       {/* Right Column */}
       <div className="flex-1 w-full max-w-lg">
-        <CompanyReserve payments={payments} />
+        <PaymentHistoryList payments={payments} />
       </div>
 
       <AddDateListModal

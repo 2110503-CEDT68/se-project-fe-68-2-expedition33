@@ -203,7 +203,7 @@ export default function RegisterPage() {
                 required
                 value={form.name}
                 onChange={handleChange}
-                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 bg-transparent transition-colors ${
+                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 bg-transparent transition-colors ${
                     errorField === "name" 
                     ? "border-red-500 focus:border-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]" 
                     : "border-primary/60 focus:border-primary"
@@ -230,7 +230,7 @@ export default function RegisterPage() {
                 required
                 value={form.tel}
                 onChange={handleChange}
-                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 bg-transparent transition-colors ${
+                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 bg-transparent transition-colors ${
                     errorField === "tel" 
                     ? "border-red-500 focus:border-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]" 
                     : "border-primary/60 focus:border-primary"
@@ -257,7 +257,7 @@ export default function RegisterPage() {
                 required
                 value={form.email}
                 onChange={handleChange}
-                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 bg-transparent transition-colors ${
+                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 bg-transparent transition-colors ${
                     errorField === "email" 
                     ? "border-red-500 focus:border-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]" 
                     : "border-primary/60 focus:border-primary"
@@ -284,7 +284,7 @@ export default function RegisterPage() {
                 required
                 value={form.password}
                 onChange={handleChange}
-                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 bg-transparent transition-colors ${
+                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 bg-transparent transition-colors ${
                     errorField === "password" 
                     ? "border-red-500 focus:border-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]" 
                     : "border-primary/60 focus:border-primary"
@@ -311,7 +311,7 @@ export default function RegisterPage() {
                 required
                 value={form.confirmPassword}
                 onChange={handleChange}
-                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 bg-transparent transition-colors ${
+                className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 bg-transparent transition-colors ${
                     errorField === "confirmPassword" 
                     ? "border-red-500 focus:border-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)]" 
                     : "border-primary/60 focus:border-primary"
