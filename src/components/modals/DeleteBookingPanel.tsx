@@ -1,13 +1,7 @@
 "use client";
 import type { MouseEvent } from "react";
-import { useRef } from "react";
 import { BookingItem } from "@/../interfaces";
-import { useClickOutside } from "@/hooks/useClickOutside";
-
 export default function DeleteBookingPanel({ booking, onClose, onDelete }: Readonly<{ booking: BookingItem, onClose: () => void, onDelete: (e: MouseEvent<HTMLButtonElement>) => void }>) {
-    const modalRef = useRef<HTMLDivElement>(null);
-    useClickOutside(modalRef, onClose);
-
     const bookingDate = new Date(booking.bookingDate);
     const formattedDate = Number.isNaN(bookingDate.getTime())
         ? "Unknown date"
@@ -16,7 +10,7 @@ export default function DeleteBookingPanel({ booking, onClose, onDelete }: Reado
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
         
-            <div ref={modalRef} className="bg-surface border border-surface-border rounded-[2.5rem] p-10 md:p-16 max-w-lg w-full relative flex flex-col items-center shadow-2xl text-center">
+            <div className="bg-surface border border-surface-border rounded-[2.5rem] p-10 md:p-16 max-w-lg w-full relative flex flex-col items-center shadow-2xl text-center">
                 
                 <button 
                 onClick={onClose} 

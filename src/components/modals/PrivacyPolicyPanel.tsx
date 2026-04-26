@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 interface PrivacyPolicyPanelProps {
   isOpen: boolean;
@@ -13,11 +14,13 @@ interface PrivacyPolicyPanelProps {
  * It ensures users give consent before proceeding with registration.
  */
 const PrivacyPolicyPanel: React.FC<PrivacyPolicyPanelProps> = ({ isOpen, onClose, onAgree }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+  useClickOutside(modalRef, onClose);
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="bg-surface border-2 border-primary/20 rounded-[2.5rem] shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-300">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+      <div ref={modalRef} className="bg-surface border-2 border-primary/20 rounded-[2.5rem] shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-300">
         
         {/* Header */}
         <div className="p-8 border-b border-primary/10 flex items-center justify-between bg-primary/5">
@@ -28,7 +31,7 @@ const PrivacyPolicyPanel: React.FC<PrivacyPolicyPanelProps> = ({ isOpen, onClose
               </svg>
             </div>
             <div>
-              <h2 className="text-2xl font-black text-primary tracking-[0.1em] uppercase leading-none mb-1">Privacy Policy</h2>
+              <h2 className="text-2xl font-black text-primary tracking-widest uppercase leading-none mb-1">Privacy Policy</h2>
               <p className="text-[10px] text-primary/60 font-bold tracking-widest uppercase">PDPA Compliance Notice • April 2026</p>
             </div>
           </div>
@@ -135,7 +138,7 @@ const PrivacyPolicyPanel: React.FC<PrivacyPolicyPanelProps> = ({ isOpen, onClose
           </button>
           <button 
             onClick={onAgree}
-            className="flex-[2] px-8 py-4 bg-primary text-white font-black tracking-[0.2em] uppercase text-xs rounded-full hover:bg-primary-hover shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-1 active:scale-95 cursor-pointer"
+            className="flex-2 px-8 py-4 bg-primary text-white font-black tracking-[0.2em] uppercase text-xs rounded-full hover:bg-primary-hover shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-1 active:scale-95 cursor-pointer"
           >
             Agree and Register
           </button>

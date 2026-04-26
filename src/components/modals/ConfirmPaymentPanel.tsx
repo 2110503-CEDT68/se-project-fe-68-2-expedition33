@@ -14,9 +14,6 @@ export default function ConfirmPaymentPanel({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm animate-in fade-in duration-200"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="confirm-payment-title"
     >
       <div
         className="relative w-full max-w-md rounded-2xl border border-surface-border bg-surface p-5 text-center shadow-2xl sm:max-w-lg sm:p-8 md:px-10 md:py-8"
