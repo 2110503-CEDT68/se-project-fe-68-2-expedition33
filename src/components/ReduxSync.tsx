@@ -10,18 +10,19 @@ import { fetchUserProfile, clearUser } from "@/redux/features/userSlice";
 export default function ReduxSync() {
   const { data: session, status } = useSession();
   const dispatch = useDispatch<AppDispatch>();
+  const token = session?.user?.token;
 
   useEffect(() => {
-    if (status === "authenticated" && session?.user?.token) {
+    if (status === "authenticated" && token) {
         // Fetch bookings and user profile immediately upon login/refresh
-        dispatch(fetchUserBookings(session.user.token));
-        dispatch(fetchUserProfile(session.user.token));
+        dispatch(fetchUserBookings(token));
+        dispatch(fetchUserProfile(token));
     } else if (status === "unauthenticated") {
         // Clear Redux if user logs out
         dispatch(clearBookings());
         dispatch(clearUser());
     }
-  }, [status, session, dispatch]);
+  }, [status, token, dispatch]);
 
   return null;
 }
