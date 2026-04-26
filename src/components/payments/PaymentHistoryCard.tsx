@@ -3,10 +3,11 @@ import Image from 'next/image';
 import type { PaymentItem } from '@/../interfaces';
 
 const STATUS_COLORS: Record<string, string> = {
-  captured: "bg-button-green",
-  cancelled: "bg-button-red",
-  failed: "bg-button-red",
-  authorized: "bg-blue-500",
+  initiated: "bg-status-initiated",
+  authorized: "bg-status-authorized",
+  captured: "bg-status-success",
+  cancelled: "bg-status-failed",
+  failed: "bg-status-failed",
 };
 
 const ALL_DATE_KEYS = [
@@ -56,12 +57,10 @@ export default function PaymentHistoryCard({ payment }: Readonly<{ payment: Paym
           <div className="flex gap-2 items-center">
             {ALL_DATE_KEYS.map((dateKey) => {
               const isIncluded = dateSet.has(dateKey);
-              
+
               let circleColor = "bg-primary opacity-20"; // Not referred (faint orange)
               if (isIncluded) {
-                if (payment.status === "captured") circleColor = "bg-button-green"; // Success
-                else if (payment.status === "cancelled" || payment.status === "failed") circleColor = "bg-button-red"; // Failed
-                else circleColor = "bg-primary"; // Pending / Initiated / Authorized (Orange)
+                circleColor = STATUS_COLORS[payment.status] || "bg-primary";
               }
 
               return (

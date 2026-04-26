@@ -30,6 +30,12 @@
 	--button-red-hover: #ad0303;
 	--button-blue-hover: #005c6c;
 	--button-green-hover: #00710d;
+	
+	/* Payment Status */
+	--status-initiated: #FDAE00;
+	--status-authorized: #F97316;
+	--status-success: #5ED200;
+	--status-failed: #FF0028;
 
 }
 
@@ -106,6 +112,12 @@ input::-webkit-credentials-auto-fill-button {
 	--color-button-red-hover: var(--button-red-hover);
 	--color-button-blue-hover: var(--button-blue-hover);
 	--color-button-green-hover: var(--button-green-hover);
+
+	/* Payment Status */
+	--color-status-initiated: var(--status-initiated);
+	--color-status-authorized: var(--status-authorized);
+	--color-status-success: var(--status-success);
+	--color-status-failed: var(--status-failed);
 }
 
 body {

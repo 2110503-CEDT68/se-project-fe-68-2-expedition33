@@ -25,6 +25,7 @@ async function ProfileData() {
   } else {
     return <UserProfile user={user} />;
   }
+
 }
 
 export default function ProfilePage() {
