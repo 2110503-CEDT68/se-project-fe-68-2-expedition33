@@ -31,10 +31,20 @@
 	--button-blue-hover: #005c6c;
 	--button-green-hover: #00710d;
 
+	/* Payment Status */
+	--status-initiated: #FDAE00;
+	--status-authorized: #00A3FF;
+	--status-success: #5ED200;
+	--status-failed: #FF0028;
+
 }
 
 @media (prefers-color-scheme: dark) {
-	:root, html, body, input {
+
+	:root,
+	html,
+	body,
+	input {
 		color-scheme: dark !important;
 		/* Dark Mode */
 		--background: #18181b;
@@ -106,6 +116,12 @@ input::-webkit-credentials-auto-fill-button {
 	--color-button-red-hover: var(--button-red-hover);
 	--color-button-blue-hover: var(--button-blue-hover);
 	--color-button-green-hover: var(--button-green-hover);
+
+	/* Payment Status */
+	--color-status-initiated: var(--status-initiated);
+	--color-status-authorized: var(--status-authorized);
+	--color-status-success: var(--status-success);
+	--color-status-failed: var(--status-failed);
 }
 
 body {

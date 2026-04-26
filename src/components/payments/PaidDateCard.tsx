@@ -11,13 +11,21 @@ const ALL_DATES = [
 
 function getDateStyle(status: DateStatus): string {
   if (status === "paid") return "bg-button-green text-white";
-  if (status === "pending") return "bg-primary text-white";
-  return "bg-foreground/20 text-foreground/60";
+  if (status === "pending") return "bg-[#00A3FF] text-white";
+  return "bg-[#C4C4C4] text-white";
 }
 
-function getDateLabel(status: DateStatus): string | null {
-  if (status === "paid") return "✓ Paid";
-  if (status === "pending") return "⏳ Pending";
+function getDateLabel(status: DateStatus) {
+  if (status === "paid") return (
+    <span className="flex items-center justify-center gap-1 text-[14px] ">
+      Paid
+    </span>
+  );
+  if (status === "pending") return (
+    <span className="flex items-center justify-center gap-1 text-[14px]">
+      Pending
+    </span>
+  );
   return null;
 }
 
@@ -41,10 +49,10 @@ export default function PaidDateCard({
               key={item.key}
               className={`py-8 px-6 rounded-2xl font-semibold text-center transition-all ${getDateStyle(status)}`}
             >
-              <div className="text-2xl font-bold">{item.date}</div>
-              <div className="text-sm">{item.month}</div>
+              <div className="text-3xl font-bold mb-1 tracking-widest">{item.date}</div>
+              <div className="text-sm font-bold text-foreground text-[16px] tracking-widest">{item.month}</div>
               {label && (
-                <div className="text-xs mt-2 opacity-80">{label}</div>
+                <div className="text-sm mt-2 opacity-80 tracking-widest">{label}</div>
               )}
             </div>
           );
@@ -52,7 +60,7 @@ export default function PaidDateCard({
       </div>
 
       {/* Description Text */}
-      <p className="text-center text-foreground/60 text-sm mb-6">
+      <p className="text-center text-foreground font-bold text-[12px] mb-4 tracking-wide">
         Purchase for additional organizing job fair interviews dates
       </p>
 
@@ -60,7 +68,7 @@ export default function PaidDateCard({
       <div className="text-center">
         <button
           onClick={onPurchaseClick}
-          className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-8 rounded-full transition-colors"
+          className="bg-primary hover:bg-primary-hover shadow-md text-white font-bold py-1.5 px-6 rounded-full transition-all hover:scale-105"
         >
           Purchase
         </button>

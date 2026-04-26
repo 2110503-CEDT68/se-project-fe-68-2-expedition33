@@ -3,10 +3,11 @@ import Image from 'next/image';
 import type { PaymentItem } from '@/../interfaces';
 
 const STATUS_COLORS: Record<string, string> = {
-  captured: "bg-button-green",
-  cancelled: "bg-button-red",
-  failed: "bg-button-red",
-  authorized: "bg-blue-500",
+  initiated: "bg-status-initiated",
+  authorized: "bg-status-authorized",
+  captured: "bg-status-success",
+  cancelled: "bg-status-failed",
+  failed: "bg-status-failed",
 };
 
 const ALL_DATE_KEYS = [
@@ -21,62 +22,63 @@ export default function PaymentHistoryCard({ payment }: Readonly<{ payment: Paym
   const dateSet = new Set(payment.dateList.map((d) => d.substring(0, 10)));
 
   return (
-    <Link href={`/payments/${payment.id}`}>
-      <div className="w-full flex items-center gap-4 p-4 rounded-lg transition-all border-2 bg-background border-surface-border shadow-sm hover:border-primary cursor-pointer hover:shadow-lg">
+    <Link href={`/payments/${payment.id}`} className="block relative">
+      <div className="w-full flex items-center gap-4 p-4 pr-6 rounded-xl border border-surface-border bg-background shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-md transition-all overflow-hidden relative cursor-pointer group">
 
         {/* Company Logo */}
-        <div className="w-20 h-20 bg-surface rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+        <div className="w-24 h-24 bg-surface rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
           {payment.company.logo?.url ? (
             <Image
               src={payment.company.logo.url}
               alt={`${payment.company.name} Logo`}
-              width={50}
-              height={50}
+              width={64}
+              height={64}
               className="w-full h-full object-cover"
             />
           ) : (
-            <span className="text-xs text-foreground/40">No Logo</span>
+            <div className="flex flex-col items-center justify-center text-center">
+              <span className="text-xs font-bold text-foreground/70">Logo</span>
+              <span className="text-[10px] font-bold text-foreground/70">{payment.company.name}</span>
+            </div>
           )}
         </div>
 
         {/* Company Details */}
-        <div className="flex-1 text-left min-w-0">
+        <div className="flex-1 text-left min-w-0 flex flex-col justify-center">
           <div className="flex items-center gap-3 mb-2">
-            <h3 className="font-bold text-foreground text-lg">
+            <h3 className="font-bold text-foreground text-lg group-hover:text-primary transition-colors">
               {payment.company.name}
             </h3>
+            
+            {/* Dots moved here beside the title */}
+            <div className="flex gap-1.5 items-center ml-2">
+              {ALL_DATE_KEYS.map((dateKey) => {
+                const isIncluded = dateSet.has(dateKey);
+                
+                const baseColor = STATUS_COLORS[payment.status] || "bg-primary";
+                const circleColor = isIncluded ? baseColor : `${baseColor} opacity-30`;
+
+                return (
+                  <div
+                    key={dateKey}
+                    className={`w-4 h-4 rounded-full ${circleColor}`}
+                    title={`${dateKey}${isIncluded ? " (Included)" : ""}`}
+                  />
+                );
+              })}
+            </div>
           </div>
-          <p className="text-foreground text-sm mb-1">
-            Total Amount: <span className="font-semibold">{payment.totalPrice}</span>
+          
+          <p className="text-foreground/80 text-sm mb-1.5">
+            Total Amount: <span className="font-bold">{payment.totalPrice}B</span>
           </p>
-          <p className="text-foreground/50 text-xs mb-3">
+          <p className="text-foreground/50 text-xs">
             Latest update: {new Date(payment.updatedAt).toLocaleString('en-GB')}
           </p>
-
-          <div className="flex gap-2 items-center">
-            {ALL_DATE_KEYS.map((dateKey) => {
-              const isIncluded = dateSet.has(dateKey);
-              
-              let circleColor = "bg-primary opacity-20"; // Not referred (faint orange)
-              if (isIncluded) {
-                if (payment.status === "captured") circleColor = "bg-button-green"; // Success
-                else if (payment.status === "cancelled" || payment.status === "failed") circleColor = "bg-button-red"; // Failed
-                else circleColor = "bg-primary"; // Pending / Initiated / Authorized (Orange)
-              }
-
-              return (
-                <div
-                  key={dateKey}
-                  className={`w-4 h-4 rounded-full ${circleColor}`}
-                  title={`${dateKey}${isIncluded ? " (Included)" : ""}`}
-                />
-              );
-            })}
-          </div>
         </div>
 
         {/* Status color indicator */}
-        <div className={`w-1.5 h-24 rounded-r-lg flex-shrink-0 ${statusColor}`} />
+        <div className={`w-3 h-full absolute right-0 top-0 bottom-0 ${statusColor}`} />
       </div>
     </Link>
   );

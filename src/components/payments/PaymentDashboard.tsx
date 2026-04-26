@@ -52,18 +52,32 @@ export default function PaymentDashboard({ payments, token }: Readonly<{ payment
   const dateStatusMap = buildDateStatusMap(payments);
 
   return (
-    <main className="flex flex-row pt-24 px-8 gap-8">
-      <div className="flex flex-row">
-        <div className="flex flex-col items-start justify-start w-fit p-10 m-5 rounded-lg shadow-md bg-surface border border-surface-border">
-          <div className="text-foreground font-semibold mb-4 text-center">Date List</div>
+    <main className="flex flex-col md:flex-row pt-24 px-8 gap-12 justify-center max-w-7xl mx-auto w-full">
+      {/* Left Column */}
+      <div className="flex flex-col items-center flex-1 w-full max-w-lg">
+        <h2 className="text-2xl font-bold text-foreground mb-6 self-center">Date List</h2>
+
+        <div className="flex flex-col items-center justify-start w-full p-8 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] bg-background border border-surface-border mb-12">
           <PaidDateCard
             dateStatusMap={dateStatusMap}
             onPurchaseClick={() => setIsModalOpen(true)}
           />
         </div>
-      </div>
 
-      <CompanyReserve payments={payments} />
+        {/* Illustration */}
+        <div className="w-full max-w-[300px] mt-4 flex items-center justify-center h-48 border-2 border-dashed border-surface-border rounded-lg text-foreground/50 text-sm">
+          Waiting image for Phat and Prem
+        </div>
+      </div>
+      {/* Wait image for Phat and Prem*/}
+
+      {/* Vertical Divider */}
+      <div className="w-px bg-surface-border hidden md:block mx-4"></div>
+
+      {/* Right Column */}
+      <div className="flex-1 w-full max-w-lg">
+        <CompanyReserve payments={payments} />
+      </div>
 
       <AddDateListModal
         isOpen={isModalOpen}
