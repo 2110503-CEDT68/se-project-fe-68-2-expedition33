@@ -1,23 +1,27 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback, use } from 'react';
-import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import { PaymentEvent, PaymentItem } from '@/../interfaces';
+import { useState, useEffect, useCallback, use } from "react";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { PaymentEvent, PaymentItem } from "@/../interfaces";
 
-import CompanyPaymentDetail from '@/components/payments/CompanyPaymentDetail';
-import PaymentDateList from '@/components/payments/PaymentDateList';
-import PaymentEventLog from '@/components/payments/PaymentEventLog';
-import ReceiptAction from '@/components/payments/ReceiptAction';
-import PaymentErrorNotice from '@/components/payments/PaymentErrorNotice';
-import PaymentAction from '@/components/payments/PaymentAction';
-import LinearProgress from '@mui/material/LinearProgress';
+import CompanyPaymentDetail from "@/components/payments/CompanyPaymentDetail";
+import PaymentDateList from "@/components/payments/PaymentDateList";
+import PaymentEventLog from "@/components/payments/PaymentEventLog";
+import ReceiptAction from "@/components/payments/ReceiptAction";
+import PaymentErrorNotice from "@/components/payments/PaymentErrorNotice";
+import PaymentAction from "@/components/payments/PaymentAction";
+import LinearProgress from "@mui/material/LinearProgress";
 
-import getPayment from '@/libs/getPayment';
-import putPayment from '@/libs/updatePayment';
-import deletePayment from '@/libs/deletePayment';
+import getPayment from "@/libs/getPayment";
+import putPayment from "@/libs/updatePayment";
+import deletePayment from "@/libs/deletePayment";
+import CancelPaymentPanel from "@/components/modals/CancelPaymentPanel";
+import ConfirmPaymentPanel from "@/components/modals/ConfirmPaymentPanel";
 
-export default function DetailsPage({ params }: Readonly<{ params: Promise<{ pid: string }> }>) {
+export default function DetailsPage({
+  params,
+}: Readonly<{ params: Promise<{ pid: string }> }>) {
   const { pid } = use(params);
   const { data: session, status } = useSession();
 
@@ -48,7 +52,7 @@ export default function DetailsPage({ params }: Readonly<{ params: Promise<{ pid
   }, [pid, session]);
 
   useEffect(() => {
-    if (status === 'authenticated') fetchData();
+    if (status === "authenticated") fetchData();
   }, [status, fetchData]);
 
   const handleConfirmPayment = async () => {
@@ -59,7 +63,7 @@ export default function DetailsPage({ params }: Readonly<{ params: Promise<{ pid
       setIsConfirmModalOpen(false);
       await fetchData();
     } catch {
-      alert('Failed to confirm payment. Please try again.');
+      alert("Failed to confirm payment. Please try again.");
     } finally {
       setIsProcessing(false);
     }
@@ -73,13 +77,13 @@ export default function DetailsPage({ params }: Readonly<{ params: Promise<{ pid
       setIsCancelConfirmOpen(false);
       await fetchData();
     } catch {
-      alert('Failed to cancel payment. Please try again.');
+      alert("Failed to cancel payment. Please try again.");
     } finally {
       setIsProcessing(false);
     }
   };
 
-  if (status === 'loading' || loading) {
+  if (status === "loading" || loading) {
     return (
       <div className="w-full min-h-screen flex flex-col items-center justify-center pt-32 px-6 text-primary font-bold text-xl tracking-widest gap-4">
         Loading Details...
@@ -94,34 +98,48 @@ export default function DetailsPage({ params }: Readonly<{ params: Promise<{ pid
       <div className="p-20 text-center">
         <h1 className="text-button-red text-2xl font-bold mb-4">Error</h1>
         <p className="mb-6 text-foreground/60">{errorMsg}</p>
-        <Link href="/payments" className="bg-primary text-white px-6 py-2 rounded-full">Back to Payments</Link>
+        <Link
+          href="/payments"
+          className="bg-primary text-white px-6 py-2 rounded-full"
+        >
+          Back to Payments
+        </Link>
       </div>
     );
   }
   if (!payment) {
-    return <div className="p-20 text-center text-button-red">Payment Not Found</div>;
+    return (
+      <div className="p-20 text-center text-button-red">Payment Not Found</div>
+    );
   }
 
   const isFailedPayment = (payment: PaymentItem) => {
     return payment.status === "cancelled" || payment.status === "failed";
-  }
+  };
 
   const isFailEvent = (event: PaymentEvent) => {
-    return event.eventType === "PAYMENT_FAILED" || event.eventType === "PAYMENT_CANCELLED";
-  }
-  
+    return (
+      event.eventType === "PAYMENT_FAILED" ||
+      event.eventType === "PAYMENT_CANCELLED"
+    );
+  };
+
   let errorMessage = null;
-  if(isFailedPayment(payment)) {
-    const fetchedError = payment.events.findLast((event) => isFailEvent(event))?.payload.errorMessage;
-    errorMessage = fetchedError || "Your payment failed for unknown reasons. Please contact support.";
+  if (isFailedPayment(payment)) {
+    const fetchedError = payment.events.findLast((event) => isFailEvent(event))
+      ?.payload.errorMessage;
+    errorMessage =
+      fetchedError ||
+      "Your payment failed for unknown reasons. Please contact support.";
   }
 
   return (
     <div className="min-h-screen bg-surface">
       <div className="max-w-7xl mx-auto px-12 pt-20 pb-100">
-
         {/* 1. Heading */}
-        <h1 className="text-2xl font-bold text-foreground mb-6">Payment Details</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-6">
+          Payment Details
+        </h1>
 
         {/* 2. Company info card */}
         <CompanyPaymentDetail payment={payment} />
@@ -129,13 +147,15 @@ export default function DetailsPage({ params }: Readonly<{ params: Promise<{ pid
         {/* 3. Date list */}
         <PaymentDateList dates={payment.dateList} />
 
-        <div className={`grid grid-cols-1 ${errorMessage ? 'lg:grid-cols-2' : ''} gap-4 mb-4 items-stretch`}>
+        <div
+          className={`grid grid-cols-1 ${errorMessage ? "lg:grid-cols-2" : ""} gap-4 mb-4 items-stretch`}
+        >
           <PaymentEventLog events={payment.events} />
-          { errorMessage && <PaymentErrorNotice message={errorMessage} /> }
+          {errorMessage && <PaymentErrorNotice message={errorMessage} />}
         </div>
 
         {/* 5. Payment Actions — only show if authorized */}
-        {payment.status.toLowerCase() === 'authorized' && (
+        {payment.status.toLowerCase() === "authorized" && (
           <div className="mb-4">
             <PaymentAction
               onConfirm={() => setIsConfirmModalOpen(true)}
@@ -145,84 +165,25 @@ export default function DetailsPage({ params }: Readonly<{ params: Promise<{ pid
         )}
 
         {/* 6. Receipt & Information — full width */}
-        {payment.status === "captured" && (
-          <ReceiptAction payment={payment} />
-        )}
-
+        {payment.status === "captured" && <ReceiptAction payment={payment} />}
       </div>
 
       {/* Confirm Modal */}
       {isConfirmModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-background rounded-2xl w-full max-w-lg p-12 shadow-2xl relative">
-            <button
-              onClick={() => setIsConfirmModalOpen(false)}
-              className="absolute top-5 right-6 text-foreground/30 hover:text-foreground/60 text-xl"
-            >
-              ✕
-            </button>
-            <div className="w-11 h-11 bg-primary rounded-full ml-auto mb-8" />
-            <h2 className="text-4xl font-extrabold text-center text-foreground mb-4">
-              Confirm Payment
-            </h2>
-            <p className="text-center text-foreground/60 mb-1">
-              Are you sure you want to proceed with confirming this payment?
-            </p>
-            <p className="text-center text-foreground/60 mb-10">
-              This action cannot be undone.
-            </p>
-            <div className="flex justify-center">
-              <button
-                onClick={handleConfirmPayment}
-                disabled={isProcessing}
-                className="bg-primary hover:bg-primary-hover disabled:opacity-50 text-white font-bold py-3.5 px-16 rounded-full text-base transition-colors"
-              >
-                {isProcessing ? 'Processing...' : 'Confirm'}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmPaymentPanel
+          onClose={() => setIsConfirmModalOpen(false)}
+          onConfirm={handleConfirmPayment}
+          isProcessing={isProcessing}
+        />
       )}
 
       {/* Cancel Modal */}
       {isCancelConfirmOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-background rounded-2xl w-full max-w-lg p-12 shadow-2xl relative">
-            <button
-              onClick={() => setIsCancelConfirmOpen(false)}
-              disabled={isProcessing}
-              className="absolute top-5 right-6 text-foreground/30 hover:text-foreground/60 text-xl disabled:opacity-50"
-            >
-              ✕
-            </button>
-            <div className="w-11 h-11 bg-primary rounded-full ml-auto mb-8" />
-            <h2 className="text-4xl font-extrabold text-center text-button-red mb-4">
-              Cancel Payment
-            </h2>
-            <p className="text-center text-foreground/60 mb-1">
-              Are you sure you want to cancel this payment?
-            </p>
-            <p className="text-center text-foreground/60 mb-10">
-              This action cannot be undone.
-            </p>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => setIsCancelConfirmOpen(false)}
-                disabled={isProcessing}
-                className="bg-surface hover:bg-surface-border disabled:opacity-50 text-foreground font-bold py-3.5 px-8 rounded-full text-base transition-colors"
-              >
-                Keep It
-              </button>
-              <button
-                onClick={handleCancelPayment}
-                disabled={isProcessing}
-                className="bg-button-red hover:bg-button-red-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 px-8 rounded-full text-base transition-colors"
-              >
-                {isProcessing ? 'Cancelling...' : 'Cancel Payment'}
-              </button>
-            </div>
-          </div>
-        </div>
+        <CancelPaymentPanel
+          onClose={() => setIsCancelConfirmOpen(false)}
+          onConfirm={handleCancelPayment}
+          isProcessing={isProcessing}
+        />
       )}
     </div>
   );
