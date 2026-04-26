@@ -87,7 +87,7 @@ export default function DetailsPage({
   if (status === "loading" || loading) {
     return (
       <div className="w-full min-h-screen flex flex-col items-center justify-center pt-32 px-6 text-primary font-bold text-xl tracking-widest gap-4">
-        Loading Details...
+        Loading Payment Details...
         <div className="w-full max-w-md mt-4">
           <LinearProgress color="warning" />
         </div>

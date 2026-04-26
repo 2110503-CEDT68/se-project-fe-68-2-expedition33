@@ -24,7 +24,7 @@ export default function PaymentHistoryList({ payments }: Readonly<{ payments: Pa
   };
 
   return (
-    <div className="w-full mb-15">
+    <div className="w-full mb-24">
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
         <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
