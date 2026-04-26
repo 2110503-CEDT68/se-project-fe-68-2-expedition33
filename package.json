@@ -24,14 +24,13 @@
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-redux": "^9.2.0",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "tailwindcss": "^4.2.1",
     "ts-node": "^10.9.2",
     "typescript": "^5",
     "jsdoc": "^4.0.4"
