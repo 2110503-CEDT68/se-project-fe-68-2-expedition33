@@ -17,12 +17,12 @@ function getDateStyle(status: DateStatus): string {
 
 function getDateLabel(status: DateStatus) {
   if (status === "paid") return (
-    <span className="flex items-center justify-center gap-1 ">
+    <span className="flex items-center justify-center gap-1 text-[14px] ">
       Paid
     </span>
   );
   if (status === "pending") return (
-    <span className="flex items-center justify-center gap-1">
+    <span className="flex items-center justify-center gap-1 text-[14px]">
       Pending
     </span>
   );
