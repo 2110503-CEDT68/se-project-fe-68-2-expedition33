@@ -41,10 +41,10 @@ export default function CompanyPaymentDetail({ payment }: Readonly<{ payment: Pa
 
   return (
     <div className={`bg-background rounded-2xl border-2 ${borderClass} px-6 py-5 mb-4`}>
-      <div className="flex items-stretch">
+      <div className="flex flex-col md:flex-row md:items-stretch gap-6 md:gap-0">
 
         {/* Company Logo + Info */}
-        <div className="flex items-center gap-5 pr-8 flex-[2.2]">
+        <div className="flex items-center gap-5 md:pr-8 md:flex-[2.2]">
           <div className="w-19 h-19 bg-primary-light rounded-lg flex items-center justify-center shrink-0 overflow-hidden relative">
             {payment.company.logo?.url ? (
               <Image 
@@ -67,11 +67,13 @@ export default function CompanyPaymentDetail({ payment }: Readonly<{ payment: Pa
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="w-px bg-surface-border self-stretch" />
+        {/* Divider (Desktop Only) */}
+        <div className="hidden md:block w-px bg-surface-border self-stretch" />
+        {/* Divider (Mobile Only) */}
+        <div className="md:hidden h-px bg-surface-border w-full opacity-50" />
 
         {/* Total Price */}
-        <div className="flex flex-col justify-center px-8 flex-1">
+        <div className="flex flex-col justify-center md:px-8 md:flex-1">
           <p className="text-foreground/50 text-sm mb-1.5">Total Price</p>
           <p className="text-2xl font-bold text-primary leading-tight mb-1">
             {payment.totalPrice.toLocaleString("en-GB") || '0'}
@@ -79,11 +81,13 @@ export default function CompanyPaymentDetail({ payment }: Readonly<{ payment: Pa
           <p className="text-foreground/40 text-sm">THB</p>
         </div>
 
-        {/* Divider */}
-        <div className="w-px bg-surface-border self-stretch" />
+        {/* Divider (Desktop Only) */}
+        <div className="hidden md:block w-px bg-surface-border self-stretch" />
+        {/* Divider (Mobile Only) */}
+        <div className="md:hidden h-px bg-surface-border w-full opacity-50" />
 
         {/* Status */}
-        <div className="flex flex-col justify-center px-8 flex-[1.8]">
+        <div className="flex flex-col justify-center md:px-8 md:flex-[1.8]">
           <p className="text-foreground/50 text-sm mb-1.5">Status</p>
           <div className="mb-1.5">
             <span
@@ -95,13 +99,15 @@ export default function CompanyPaymentDetail({ payment }: Readonly<{ payment: Pa
           <p className="text-foreground/40 text-sm">{statusMsg}</p>
         </div>
 
-        {/* Divider */}
-        <div className="w-px bg-surface-border self-stretch" />
+        {/* Divider (Desktop Only) */}
+        <div className="hidden md:block w-px bg-surface-border self-stretch" />
+        {/* Divider (Mobile Only) */}
+        <div className="md:hidden h-px bg-surface-border w-full opacity-50" />
 
         {/* Payment ID */}
-        <div className="flex flex-col justify-center pl-8 flex-[1.8]">
+        <div className="flex flex-col justify-center md:pl-8 md:flex-[1.8]">
           <p className="text-foreground/50 text-sm mb-1.5">Payment ID</p>
-          <p className="text-base font-bold text-foreground mb-1">{payment.id}</p>
+          <p className="text-base font-bold text-foreground mb-1 break-all">{payment.id}</p>
           <p className="text-foreground/40 text-sm">Created: {formattedDate}</p>
         </div>
 
