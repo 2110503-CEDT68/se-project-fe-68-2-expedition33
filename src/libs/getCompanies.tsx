@@ -1,7 +1,7 @@
 import { CompanyResponse } from "@/../interfaces";
 
 export default async function getCompanies(token?: string): Promise<CompanyResponse> {
-    const response = await fetch(`${process.env.BACKEND_URL}/api/v1/companies`, {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/v1/companies?limit=100`, {
         cache: "no-store",
         headers: token ? {
             "Authorization": `Bearer ${token}`,
