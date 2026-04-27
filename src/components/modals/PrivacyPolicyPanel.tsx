@@ -7,15 +7,16 @@ interface PrivacyPolicyPanelProps {
   isOpen: boolean;
   onClose: () => void;
   onAgree: () => void;
+  loading?: boolean;
 }
 
 /**
  * PrivacyPolicyPanel component displays the PDPA/Privacy Policy for users.
  * It ensures users give consent before proceeding with registration.
  */
-const PrivacyPolicyPanel: React.FC<PrivacyPolicyPanelProps> = ({ isOpen, onClose, onAgree }) => {
+const PrivacyPolicyPanel: React.FC<PrivacyPolicyPanelProps> = ({ isOpen, onClose, onAgree, loading = false }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  useClickOutside(modalRef, onClose);
+  useClickOutside(modalRef, () => !loading && onClose());
   if (!isOpen) return null;
 
   return (
@@ -37,7 +38,8 @@ const PrivacyPolicyPanel: React.FC<PrivacyPolicyPanelProps> = ({ isOpen, onClose
           </div>
           <button 
             onClick={onClose} 
-            className="p-2 hover:bg-primary/10 rounded-full transition-all text-primary hover:rotate-90 duration-300 cursor-pointer"
+            disabled={loading}
+            className="p-2 hover:bg-primary/10 rounded-full transition-all text-primary hover:rotate-90 duration-300 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
             title="Close"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -132,15 +134,17 @@ const PrivacyPolicyPanel: React.FC<PrivacyPolicyPanelProps> = ({ isOpen, onClose
         <div className="p-8 border-t border-primary/10 flex flex-col sm:flex-row gap-4 bg-surface">
           <button 
             onClick={onClose}
-            className="flex-1 px-8 py-4 border-2 border-primary/20 text-primary font-black tracking-[0.2em] uppercase text-xs rounded-full hover:bg-primary/5 transition-all active:scale-95 cursor-pointer"
+            disabled={loading}
+            className="flex-1 px-8 py-4 border-2 border-primary/20 text-primary font-black tracking-[0.2em] uppercase text-xs rounded-full hover:bg-primary/5 transition-all active:scale-95 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
           >
             Decline
           </button>
           <button 
             onClick={onAgree}
-            className="flex-2 px-8 py-4 bg-primary text-white font-black tracking-[0.2em] uppercase text-xs rounded-full hover:bg-primary-hover shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-1 active:scale-95 cursor-pointer"
+            disabled={loading}
+            className="flex-2 px-8 py-4 bg-primary text-white font-black tracking-[0.2em] uppercase text-xs rounded-full hover:bg-primary-hover shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-1 active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Agree and Register
+            {loading ? "Processing..." : "Agree and Register"}
           </button>
         </div>
       </div>

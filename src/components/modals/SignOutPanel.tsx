@@ -1,12 +1,18 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { signOut } from "next-auth/react";
 import { useClickOutside } from "@/hooks/useClickOutside";
 
 export default function SignOutModal({ onClose }: Readonly<{ onClose: () => void }>) {
+    const [loading, setLoading] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
-    useClickOutside(modalRef, onClose);
+    useClickOutside(modalRef, () => !loading && onClose());
+
+    const handleSignOut = async () => {
+        setLoading(true);
+        await signOut({ callbackUrl: "/" });
+    };
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
@@ -15,8 +21,9 @@ export default function SignOutModal({ onClose }: Readonly<{ onClose: () => void
                 {/* Close Button */}
                 <button
                     onClick={onClose}
+                    disabled={loading}
                     title="Close sign out panel"
-                    className="absolute top-4 right-5 text-primary text-2xl hover:text-primary-hover transition-colors"
+                    className="absolute top-4 right-5 text-primary text-2xl hover:text-primary-hover transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                     <svg className="w-6 h-6 md:w-7 md:h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M19 12H6"></path>
@@ -36,10 +43,11 @@ export default function SignOutModal({ onClose }: Readonly<{ onClose: () => void
 
                 {/* Sign-Out Button */}
                 <button
-                    onClick={() => signOut({ callbackUrl: "/" })}
-                    className="bg-primary hover:bg-primary-hover text-white font-bold px-12 py-3 rounded-xl transition-colors tracking-widest"
+                    onClick={handleSignOut}
+                    disabled={loading}
+                    className="bg-primary hover:bg-primary-hover disabled:bg-surface-border disabled:text-foreground/40 text-white font-bold px-12 py-3 rounded-xl transition-colors tracking-widest disabled:cursor-not-allowed"
                 >
-                    Sign-out
+                    {loading ? "Signing out..." : "Sign-out"}
                 </button>
 
             </div>

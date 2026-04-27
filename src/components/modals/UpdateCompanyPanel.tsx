@@ -38,7 +38,7 @@ export default function UpdateCompanyPanel({
   const modalRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
 
-  useClickOutside(modalRef, onClose);
+  useClickOutside(modalRef, () => !loading && onClose());
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -104,7 +104,6 @@ export default function RegisterPage() {
   };
 
   const handleRegister = async (): Promise<void> => {
-    setIsPrivacyPanelOpen(false);
     setLoading(true);
     setError("");
     setErrorField("");
@@ -118,16 +117,19 @@ export default function RegisterPage() {
         password: form.password,
         redirect: false,
       });
+
       if (loginRes?.error) {
         setError("Registration succeeded, but login failed: " + loginRes.error);
+        setIsPrivacyPanelOpen(false); // Close it if we need to redirect to login
         router.push("/api/auth/login");
       } else {
+        setIsPrivacyPanelOpen(false); // Success, close it before redirecting
         router.replace("/");
         router.refresh();
       }
       
     } catch (err: any) {
-      
+      setIsPrivacyPanelOpen(false); // Close it so user can see the error on the form
       const errorMessage = err?.message ?? "Registration failed";
       setError(errorMessage);
 
@@ -377,6 +379,7 @@ export default function RegisterPage() {
         isOpen={isPrivacyPanelOpen}
         onClose={() => setIsPrivacyPanelOpen(false)}
         onAgree={handleRegister}
+        loading={loading}
       />
     </main>
   );

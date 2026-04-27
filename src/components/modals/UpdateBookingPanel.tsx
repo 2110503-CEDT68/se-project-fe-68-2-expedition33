@@ -14,13 +14,26 @@ export default function UpdateBookingPanel({
   company: BookingCompanySummary, 
   oldDate: string, 
   onClose: () => void, 
-  onUpdate: (e: React.MouseEvent, date: string) => void 
+  onUpdate: (e: React.MouseEvent, date: string) => Promise<void> | void 
 }>) {
   const modalRef = useRef<HTMLDivElement>(null);
-  useClickOutside(modalRef, onClose);
+  const [loading, setLoading] = useState(false);
+  
+  useClickOutside(modalRef, () => !loading && onClose());
 
   // State to keep track of which date the user clicked.
   const [selectedDate, setSelectedDate] = useState(oldDate.split("-")[2].split("T")[0]);
+  
+  const handleUpdate = async (e: React.MouseEvent) => {
+    setLoading(true);
+    try {
+      await onSubmit(e, "2022-05-" + selectedDate);
+      // Parent will handle closing via updating state
+    } catch (error) {
+      console.error("Failed to update booking:", error);
+      setLoading(false);
+    }
+  };
   
   // The available interview dates
   const dates = ["10", "11", "12", "13"];
@@ -36,7 +49,8 @@ export default function UpdateBookingPanel({
         <button 
           onClick={onClose} 
           title="Close update panel"
-          className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer"
+          className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+          disabled={loading}
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 14L4 9l5-5" />
@@ -95,10 +109,11 @@ export default function UpdateBookingPanel({
         </p>
 
         {/* Submit Button */}
-        <button className="bg-primary hover:bg-primary-hover text-white px-16 py-3 rounded-full font-bold text-xl tracking-widest shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 mb-8 cursor-pointer"
-          onClick={(e) => onSubmit(e, "2022-05-" + selectedDate)}
+        <button className="bg-primary hover:bg-primary-hover disabled:bg-surface-border disabled:text-foreground/40 text-white px-16 py-3 rounded-full font-bold text-xl tracking-widest shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 mb-8 cursor-pointer disabled:cursor-not-allowed"
+          onClick={handleUpdate}
+          disabled={loading}
         >
-          Book
+          {loading ? "Saving..." : "Book"}
         </button>
 
         {/* Disclaimer Text */}

@@ -1,7 +1,8 @@
 "use client";
 import deleteCompany from "@/libs/deleteCompany";
 import { CompanyItem } from "@/../interfaces";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useClickOutside } from "@/hooks/useClickOutside";
 export default function DeleteCompanyPanel({
   company,
   token,
@@ -15,6 +16,8 @@ export default function DeleteCompanyPanel({
 }>) {
   const [loading, setLoading] = useState(false);
   const [deleteHovered, setDeleteHovered] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  useClickOutside(modalRef, () => !loading && onClose());
 
   const handleDelete = async () => {
     setLoading(true);
@@ -30,7 +33,7 @@ export default function DeleteCompanyPanel({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-surface border border-surface-border rounded-2xl w-full max-w-lg px-10 py-8 relative shadow-2xl text-center">
+      <div ref={modalRef} className="bg-surface border border-surface-border rounded-2xl w-full max-w-lg px-10 py-8 relative shadow-2xl text-center">
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-surface/80 z-50 rounded-2xl">
             <span className="text-primary font-bold text-lg animate-pulse">Deleting...</span>
@@ -40,7 +43,8 @@ export default function DeleteCompanyPanel({
       {/* Close Button */}
       <button
         onClick={onClose}
-        className="absolute top-5 right-6 text-foreground/50 hover:text-primary transition-colors text-xl"
+        disabled={loading}
+        className="absolute top-5 right-6 text-foreground/50 hover:text-primary transition-colors text-xl disabled:opacity-30 disabled:cursor-not-allowed"
       >
         ✕
       </button>

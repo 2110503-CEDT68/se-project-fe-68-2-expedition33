@@ -44,7 +44,7 @@ export default function AddDateListModal({
 }: Readonly<{
   isOpen: boolean;
   onClose: () => void;
-  onPurchase?: (selectedDates: number[]) => void;
+  onPurchase?: (selectedDates: number[]) => Promise<void> | void;
   dateStatusMap: Record<string, DateStatus>;
 }>) {
 
@@ -54,7 +54,7 @@ export default function AddDateListModal({
   const [selectedDates, setSelectedDates] = React.useState<number[]>([]);
   const [loading, setLoading] = React.useState(false);
 
-  useClickOutside(modalRef, onClose);
+  useClickOutside(modalRef, () => !loading && onClose());
 
   const handleToggleDate = (index: number) => {
     setSelectedDates((prev) =>
@@ -62,12 +62,16 @@ export default function AddDateListModal({
     );
   };
 
-  const handlePurchase = (e: React.MouseEvent) => {
+  const handlePurchase = async (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
     setLoading(true);
-    onPurchase?.(selectedDates);
-    // Removed onClose() to prevent sudden closing
+    try {
+      await onPurchase?.(selectedDates);
+    } catch (error) {
+      console.error("Failed to process purchase:", error);
+      setLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -80,7 +84,8 @@ export default function AddDateListModal({
         <button 
           onClick={onClose} 
           title="Close payment panel"
-          className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer"
+          className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+          disabled={loading}
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 14L4 9l5-5" />

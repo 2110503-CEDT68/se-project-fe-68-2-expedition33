@@ -161,7 +161,10 @@ export default function AdminBookings({bookingList, adminToken}: Readonly<{booki
                     company={updatingBooking.company}
                     oldDate={updatingBooking.bookingDate}  
                     onClose={() => setUpdatingBooking(null)} 
-                    onUpdate={(e, date) => { handleUpdate(e, updatingBooking, adminToken, date); setUpdatingBooking(null); }}
+                    onUpdate={async (e, date) => { 
+                        await handleUpdate(e, updatingBooking, adminToken, date); 
+                        setUpdatingBooking(null); 
+                    }}
                 />)
             }
 
@@ -170,7 +173,10 @@ export default function AdminBookings({bookingList, adminToken}: Readonly<{booki
                 <DeleteBookingPanel 
                     booking={deletingBooking} 
                     onClose={() => setDeletingBooking(null)} 
-                    onDelete={(e) => { handleDelete(e, deletingBooking, adminToken); setDeletingBooking(null); }}
+                    onDelete={async (e) => { 
+                        await handleDelete(e, deletingBooking, adminToken); 
+                        setDeletingBooking(null); 
+                    }}
                 />)
             }
 

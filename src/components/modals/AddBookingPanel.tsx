@@ -29,7 +29,7 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
   const isAdmin = session?.data?.user?.role === "admin";
   const isLimitReached = bookings.length >= BOOKING_LIMIT && !isAdmin;
 
-  useClickOutside(modalRef, onClose);
+  useClickOutside(modalRef, () => !isSubmitting && !isLoading && onClose());
 
   const handleBookingSubmit = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -65,7 +65,8 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
         <button 
           onClick={onClose} 
           title="Close booking panel"
-          className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer"
+          className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+          disabled={isSubmitting || isLoading}
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 14L4 9l5-5" />
