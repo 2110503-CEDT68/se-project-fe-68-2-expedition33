@@ -10,19 +10,19 @@ const ALL_DATES = [
 ];
 
 function getDateStyle(status: DateStatus): string {
-  if (status === "paid") return "bg-button-green text-white";
-  if (status === "pending") return "bg-[#00A3FF] text-white";
+  if (status === "paid") return "bg-[#5ED200] text-white";
+  if (status === "pending") return "bg-[#0EA5E9] text-white";
   return "bg-[#C4C4C4] text-white";
 }
 
 function getDateLabel(status: DateStatus) {
   if (status === "paid") return (
-    <span className="flex items-center justify-center gap-1 text-[14px] ">
+    <span className="flex items-center justify-center gap-1 text-[14px] mt-1 text-[#A6FACC]">
       Paid
     </span>
   );
   if (status === "pending") return (
-    <span className="flex items-center justify-center gap-1 text-[14px]">
+    <span className="flex items-center justify-center gap-1 text-[14px] mt-1 text-[#ADE8FF]">
       Pending
     </span>
   );
@@ -47,20 +47,18 @@ export default function PaidDateCard({
           return (
             <div
               key={item.key}
-              className={`py-8 px-6 rounded-2xl font-semibold text-center transition-all ${getDateStyle(status)}`}
+              className={`flex flex-col items-center justify-center min-h-[120px] px-2 rounded-2xl font-semibold text-center transition-all ${getDateStyle(status)}`}
             >
               <div className="text-3xl font-bold mb-1 tracking-widest">{item.date}</div>
-              <div className="text-sm font-bold text-foreground text-[16px] tracking-widest">{item.month}</div>
-              {label && (
-                <div className="text-sm mt-2 opacity-80 tracking-widest">{label}</div>
-              )}
+              <div className="text-[16px] font-bold text-white tracking-widest">{item.month}</div>
+              {label}
             </div>
           );
         })}
       </div>
 
       {/* Description Text */}
-      <p className="text-center text-foreground font-bold text-[12px] mb-4 tracking-wide">
+      <p className="text-center text-foreground font-sm text-[12px] mb-4 tracking-wide">
         Purchase for additional organizing job fair interviews dates
       </p>
 
