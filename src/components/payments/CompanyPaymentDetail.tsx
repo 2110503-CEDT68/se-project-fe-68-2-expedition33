@@ -42,7 +42,7 @@ export default function CompanyPaymentDetail({ payment }: Readonly<{ payment: Pa
 
         {/* Company Logo + Info */}
         <div className="flex items-center gap-5 md:pr-8 md:flex-[2.2]">
-          <div className="w-19 h-19 bg-primary-light rounded-lg flex items-center justify-center shrink-0 overflow-hidden relative">
+          <div className="w-19 h-19 bg-primary-light dark:bg-primary/20 rounded-lg flex items-center justify-center shrink-0 overflow-hidden relative">
             {payment.company.logo?.url ? (
               <Image 
                 src={payment.company.logo.url} 

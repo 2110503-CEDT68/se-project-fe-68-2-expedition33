@@ -132,7 +132,7 @@ export default function PaymentEventLog({ events }: Readonly<{ events: PaymentEv
     <div className="bg-background rounded-2xl border border-surface-border px-6 py-5 flex flex-col">
       {/* Header */}
       <div className="flex items-center gap-3 mb-5">
-        <div className="w-9 h-9 bg-primary-light rounded-lg flex items-center justify-center">
+        <div className="w-9 h-9 bg-primary-light dark:bg-primary/20 rounded-lg flex items-center justify-center">
           <svg width="20" height="20" fill="none" stroke="var(--primary)" strokeWidth="1.8" viewBox="0 0 24 24">
             <path d="M12 2l4.5 2.6v5.2L12 12.4 7.5 9.8V4.6L12 2z" strokeLinejoin="round" />
             <path d="M12 12.4v9.2M16.5 9.8l4 2.3M7.5 9.8l-4 2.3" opacity="0.4" />
