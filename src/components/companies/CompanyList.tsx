@@ -59,7 +59,7 @@ export default function CompanyList({ companies }: Readonly<{ companies: Company
       {filtered.length === 0 ? (
         <p className="text-center text-sm font-semibold tracking-widest uppercase text-foreground/45 py-16">No companies found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map((company) => (
             <CompanyCard
               key={company.id}
