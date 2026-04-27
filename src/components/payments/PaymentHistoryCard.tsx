@@ -2,22 +2,22 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { PaymentItem } from '@/../interfaces';
 
-// สีเข้ม (-500) สำหรับแถบข้าง และจุดวันที่ที่เลือก
+// สีเข้ม สำหรับแถบข้าง และจุดวันที่ที่เลือก
 const STATUS_COLORS: Record<string, string> = {
-  initiated: "bg-[#FDAE00]", // yellow-500
-  authorized: "bg-[#0EA5E9]", // sky-500
-  captured: "bg-[#5ED200]", // success green-500
-  cancelled: "bg-[#FF0028]", // cancelled red-500
-  failed: "bg-[#FF0028]", // failed red-500
+  initiated: "bg-status-initiated",
+  authorized: "bg-status-authorized",
+  captured: "bg-status-success",
+  cancelled: "bg-status-failed",
+  failed: "bg-status-failed",
 };
 
-// สีอ่อน (-100) สำหรับจุดวันที่ที่ไม่ได้ถูกเลือก
+// สีอ่อน สำหรับจุดวันที่ที่ไม่ได้ถูกเลือก
 const STATUS_COLORS_LIGHT: Record<string, string> = {
-  initiated: "bg-[#FFF074]", // yellow-100
-  authorized: "bg-[#ADE8FF]", // sky-100
-  captured: "bg-[#A6FACC]", // success green-100
-  cancelled: "bg-[#FFC7C9]", // cancelled red-100
-  failed: "bg-[#FFC7C9]", // failed red-100
+  initiated: "bg-status-initiated/30",
+  authorized: "bg-status-authorized/30",
+  captured: "bg-status-success/30",
+  cancelled: "bg-status-failed/30",
+  failed: "bg-status-failed/30",
 };
 
 const ALL_DATE_KEYS = [
@@ -37,7 +37,7 @@ export default function PaymentHistoryCard({ payment }: Readonly<{ payment: Paym
       <div className="w-full flex items-center gap-4 p-4 pr-6 rounded-xl border border-surface-border bg-background shadow-sm hover:shadow-md transition-all overflow-hidden relative cursor-pointer group">
 
         {/* Company Logo */}
-        <div className="w-24 h-24 bg-[#E5E7EB] rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
+        <div className="w-24 h-24 bg-surface rounded-xl flex items-center justify-center shrink-0 overflow-hidden">
           {payment.company.logo?.url ? (
             <Image
               src={payment.company.logo.url}

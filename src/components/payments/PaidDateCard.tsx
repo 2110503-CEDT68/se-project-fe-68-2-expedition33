@@ -10,19 +10,19 @@ const ALL_DATES = [
 ];
 
 function getDateStyle(status: DateStatus): string {
-  if (status === "paid") return "bg-[#5ED200] text-white";
-  if (status === "pending") return "bg-[#0EA5E9] text-white";
-  return "bg-[#C4C4C4] text-white";
+  if (status === "paid") return "bg-status-success text-white";
+  if (status === "pending") return "bg-status-authorized text-white";
+  return "bg-foreground/20 text-white";
 }
 
 function getDateLabel(status: DateStatus) {
   if (status === "paid") return (
-    <span className="flex items-center justify-center gap-1 text-[14px] mt-1 text-[#A6FACC]">
+    <span className="flex items-center justify-center gap-1 text-[14px] mt-1 text-white/80">
       Paid
     </span>
   );
   if (status === "pending") return (
-    <span className="flex items-center justify-center gap-1 text-[14px] mt-1 text-[#ADE8FF]">
+    <span className="flex items-center justify-center gap-1 text-[14px] mt-1 text-white/80">
       Pending
     </span>
   );
@@ -47,7 +47,7 @@ export default function PaidDateCard({
           return (
             <div
               key={item.key}
-              className={`flex flex-col items-center justify-center min-h-[120px] px-2 rounded-2xl font-semibold text-center transition-all ${getDateStyle(status)}`}
+              className={`flex flex-col items-center justify-center min-h-30 px-2 rounded-2xl font-semibold text-center transition-all ${getDateStyle(status)}`}
             >
               <div className="text-3xl font-bold mb-1 tracking-widest">{item.date}</div>
               <div className="text-[16px] font-bold text-white tracking-widest">{item.month}</div>

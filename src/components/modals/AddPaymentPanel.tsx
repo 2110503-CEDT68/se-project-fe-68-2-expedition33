@@ -15,10 +15,10 @@ const ALL_DATES = [
 
 function getButtonStyle(status: DateStatus, isSelected: boolean): string {
   if (status === "paid") {
-    return "bg-button-green/10 text-button-green border-2 border-button-green/30 cursor-not-allowed opacity-70";
+    return "bg-status-success/15 text-status-success border-2 border-status-success/30 cursor-not-allowed opacity-80";
   }
   if (status === "pending") {
-    return "bg-primary/10 text-primary border-2 border-primary/30 cursor-not-allowed opacity-70";
+    return "bg-status-authorized/15 text-status-authorized border-2 border-status-authorized/30 cursor-not-allowed opacity-80";
   }
   if (isSelected) {
     return "bg-primary text-white scale-105 ring-4 ring-primary/30 shadow-lg border border-transparent";
@@ -28,10 +28,10 @@ function getButtonStyle(status: DateStatus, isSelected: boolean): string {
 
 function getStatusBadge(status: DateStatus): React.ReactNode {
   if (status === "paid") {
-    return <span className="text-[10px] md:text-xs font-bold tracking-widest uppercase mt-1 text-button-green">Paid</span>;
+    return <span className="text-[10px] md:text-xs font-bold tracking-widest uppercase mt-1 text-status-success">Paid</span>;
   }
   if (status === "pending") {
-    return <span className="text-[10px] md:text-xs font-bold tracking-widest uppercase mt-1 text-primary">Pending</span>;
+    return <span className="text-[10px] md:text-xs font-bold tracking-widest uppercase mt-1 text-status-authorized">Pending</span>;
   }
   return <span className="text-[10px] md:text-xs font-bold tracking-widest uppercase mt-1">May</span>;
 }
