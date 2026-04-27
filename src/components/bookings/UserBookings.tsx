@@ -19,6 +19,11 @@ export default function UserBookings({ bookingList, userToken }: Readonly<{ book
     const [updatingBooking, setUpdatingBooking] = useState<BookingItem | null>(null);
     const [deletingBooking, setDeletingBooking] = useState<BookingItem | null>(null);
 
+    // Sort bookings ASC by createdAt (oldest first, newest on the right/last)
+    const displayBookings = [...bookings].sort((a, b) => 
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    ); 
+
     useEffect(() => {
         if (bookingList) {
             dispatch(setBookings(bookingList));
@@ -75,7 +80,7 @@ export default function UserBookings({ bookingList, userToken }: Readonly<{ book
                         </svg>
                         My Sessions
                     </div>
-                    <span className="text-3xl tracking-widest">{bookings.length}/3</span>
+                    <span className="text-3xl tracking-widest">{displayBookings.length}/3</span>
                 </div>
                 
                 {/* Horizontal Divider */}
@@ -84,7 +89,7 @@ export default function UserBookings({ bookingList, userToken }: Readonly<{ book
                 {/* Cards Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full justify-items-center">
 
-                    {bookings.map((booking: BookingItem) => (
+                    {displayBookings.map((booking: BookingItem) => (
                         <Link 
                             href={`/companies/${booking.company?.id || ''}`}
                             key={booking.id} 
@@ -171,7 +176,7 @@ export default function UserBookings({ bookingList, userToken }: Readonly<{ book
                         </Link>
                     ))}
 
-                    {bookings.length < 3 && Array.from({ length: 3 - bookings.length }).map((_, index) => (
+                    {displayBookings.length < 3 && Array.from({ length: 3 - displayBookings.length }).map((_, index) => (
                         <Link key={`empty-slot-${0 + index}`} href="/companies" className="group bg-surface border-2 border-surface-border hover:border-primary rounded-4xl flex flex-col shadow-sm hover:shadow-lg transition-all duration-300 w-full max-w-85 h-105 cursor-pointer overflow-hidden">
                             
                             <div className="flex-1 flex items-center justify-center group-hover:bg-primary/5 transition-colors duration-300">
