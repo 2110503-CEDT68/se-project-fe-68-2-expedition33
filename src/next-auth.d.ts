@@ -1,3 +1,4 @@
+import { CompanyItem } from '../interfaces'
 import NextAuth from 'next-auth'
 
 declare module "next-auth" {
@@ -7,6 +8,7 @@ declare module "next-auth" {
             name: string,
             email: string,
             role: string,
+            companyData?: CompanyItem | null,
             token: string
         }
     }

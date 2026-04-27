@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useClickOutside } from '@/hooks/useClickOutside';
-import { useAppSelector } from '@/redux/store';
+import { useSession } from 'next-auth/react';
 import type { DateStatus } from '@/components/payments/PaymentDashboard';
 
 const ALL_DATES = [
@@ -48,7 +48,8 @@ export default function AddDateListModal({
   dateStatusMap: Record<string, DateStatus>;
 }>) {
 
-  const company = useAppSelector((state) => state.user.userProfile?.companyData);
+  const { data: session } = useSession();
+  const company = session?.user?.companyData;
 
   const modalRef = React.useRef<HTMLDivElement>(null);
   const [selectedDates, setSelectedDates] = React.useState<number[]>([]);

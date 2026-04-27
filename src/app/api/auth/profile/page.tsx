@@ -2,12 +2,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import getUserProfile from "@/libs/getUserProfile";
 import LinearProgress from "@mui/material/LinearProgress";
 import UserProfile from "@/components/profile/UserProfile";
 import AdminProfile from "@/components/profile/AdminProfile";
 import CompanyProfile from "@/components/profile/CompanyProfile";
-
 async function ProfileData() {
   const session = await getServerSession(authOptions);
 
@@ -15,13 +13,12 @@ async function ProfileData() {
     redirect("/api/auth/login");
   }
 
-  const profileResponse = await getUserProfile(session.user.token);
-  const user = profileResponse.data;
+  const user = session.user as any;
 
   if (user.role === "admin") {
-    return <AdminProfile user={user} token={session.user.token} />;
+    return <AdminProfile user={user} token={user.token} />;
   } else if (user.role === "company") {
-    return <CompanyProfile user={user} token={session.user.token} />;
+    return <CompanyProfile user={user} token={user.token} />;
   } else {
     return <UserProfile user={user} />;
   }

@@ -6,7 +6,7 @@ import PaymentHistoryList from "@/components/payments/PaymentHistoryList";
 import AddDateListModal from "@/components/modals/AddPaymentPanel";
 import type { PaymentItem } from "@/../interfaces";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/redux/store";
+import { useSession } from "next-auth/react";
 import createPayment from "@/libs/createPayment";
 
 // All available event dates (ISO strings)
@@ -46,7 +46,8 @@ function buildDateStatusMap(payments: PaymentItem[]): Record<string, DateStatus>
 
 export default function PaymentDashboard({ payments, token }: Readonly<{ payments: PaymentItem[], token: string }>) {
   const router = useRouter();
-  const companyId = useAppSelector((state) => state.user.userProfile?.companyData?.id);
+  const { data: session } = useSession();
+  const companyId = session?.user?.companyData?.id;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const dateStatusMap = buildDateStatusMap(payments);

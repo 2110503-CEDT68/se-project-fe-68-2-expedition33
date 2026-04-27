@@ -19,7 +19,7 @@ import deletePayment from "@/libs/deletePayment";
 import CancelPaymentPanel from "@/components/modals/CancelPaymentPanel";
 import ConfirmPaymentPanel from "@/components/modals/ConfirmPaymentPanel";
 
-export default function DetailsPage({
+export default function PaymentDatailPage({
   params,
 }: Readonly<{ params: Promise<{ pid: string }> }>) {
   const { pid } = use(params);
