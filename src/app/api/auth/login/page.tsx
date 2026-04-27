@@ -110,9 +110,10 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 required
+                maxLength={50}
                 value={email}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
+                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
               />
             </div>
 
@@ -128,9 +129,10 @@ export default function LoginPage() {
                 id="password"
                 type="password"
                 required
+                maxLength={50}
                 value={password}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
+                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
               />
 
             </div>

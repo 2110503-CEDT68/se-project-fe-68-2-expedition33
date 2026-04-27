@@ -280,59 +280,75 @@ export default function CompanyCreateForm ({ token }: Readonly<{ token: string }
                 Company Details
             </p>
 
-            {fields.map((field) => (
-                <div key={field.name} className="flex flex-col gap-1">
-                <label className="text-foreground font-bold text-sm md:text-base tracking-widest">
-                    {field.label}
-                </label>
-                <input
-                    ref={refMap[field.name]}
-                    type={field.type}
-                    name={field.name}
-                    required
-                    value={form[field.name] ?? ""}
-                    onChange={handleChange}
-                    placeholder={field.placeholder}
-                    className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${
-                    errorField === field.name
-                        ? "border-button-red focus:ring-button-red/30 shadow-sm"
-                        : "border-surface-border focus:border-primary focus:ring-primary/30"
-                    }`}
-                />
-                {errorField === field.name && (
-                    <p className="text-button-red text-xs font-bold tracking-wider mt-1">{error}</p>
-                )}
-                </div>
-            ))}
+            {fields.map((field) => {
+                let maxLengthValue = 50;
+                
+                if (field.name === "postalcode") {
+                    maxLengthValue = 5;
+                } else if (field.name === "tel") {
+                    maxLengthValue = 10;
+                }
+                
+                return (
+                    <div key={field.name} className="flex flex-col gap-1">
+                    <label className="text-foreground font-bold text-sm md:text-base tracking-widest">
+                        {field.label}
+                    </label>
+                    <input
+                        ref={refMap[field.name]}
+                        type={field.type}
+                        name={field.name}
+                        required
+                        maxLength={maxLengthValue}
+                        value={form[field.name] ?? ""}
+                        onChange={handleChange}
+                        placeholder={field.placeholder}
+                        className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${
+                        errorField === field.name
+                            ? "border-button-red focus:ring-button-red/30 shadow-sm"
+                            : "border-surface-border focus:border-primary focus:ring-primary/30"
+                        }`}
+                    />
+                    {errorField === field.name && (
+                        <p className="text-button-red text-xs font-bold tracking-wider mt-1">{error}</p>
+                    )}
+                    </div>
+                );
+            })}
 
             <p className="text-primary font-bold text-center tracking-widest text-base md:text-lg mt-2">
                 Company Account
             </p>
 
-            {fieldsAccount.map((field) => (
-                <div key={field.name} className="flex flex-col gap-1">
-                <label className="text-foreground font-bold text-sm md:text-base tracking-widest">
-                    {field.label}
-                </label>
-                <input
-                    ref={refMap[field.name]}
-                    type={field.type}
-                    name={field.name}
-                    required
-                    value={form[field.name] ?? ""}
-                    onChange={handleChange}
-                    placeholder={field.placeholder}
-                    className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${
-                    errorField === field.name
-                        ? "border-button-red focus:ring-button-red/30 shadow-sm"
-                        : "border-surface-border focus:border-primary focus:ring-primary/30"
-                    }`}
-                />
-                {errorField === field.name && (
-                    <p className="text-button-red text-xs font-bold tracking-wider mt-1">{error}</p>
-                )}
-                </div>
-            ))}
+            {fieldsAccount.map((field) => {
+                const maxLengthValue = field.name === "managerTel" ? 10 : 50;
+                
+                return (
+                    <div key={field.name} className="flex flex-col gap-1">
+                    <label className="text-foreground font-bold text-sm md:text-base tracking-widest">
+                        {field.label}
+                    </label>
+                    <input
+                        ref={refMap[field.name]}
+                        type={field.type}
+                        name={field.name}
+                        required
+                        maxLength={maxLengthValue}
+                        value={form[field.name] ?? ""}
+                        onChange={handleChange}
+                        placeholder={field.placeholder}
+                        className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${
+                        errorField === field.name
+                            ? "border-button-red focus:ring-button-red/30 shadow-sm"
+                            : "border-surface-border focus:border-primary focus:ring-primary/30"
+                        }`}
+                    />
+                    {errorField === field.name && (
+                        <p className="text-button-red text-xs font-bold tracking-wider mt-1">{error}</p>
+                    )}
+                    </div>
+                );
+            })}
 
             {/* Upload Logo */}
             <div className="flex flex-col items-center gap-2 pt-1">

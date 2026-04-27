@@ -98,6 +98,7 @@ export default function AdminBookings({bookingList, adminToken}: Readonly<{booki
                         <input 
                         type="text" 
                         placeholder="Search by user, company, or date..." 
+                        maxLength={50}
                         onChange={(e) => setSearchQuery(e.target.value)} 
                         className="w-full pl-4 pr-10 py-3 rounded-lg border-2 border-surface-border bg-surface text-foreground focus:border-primary focus:outline-none transition-colors shadow-sm"
                         />

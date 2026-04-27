@@ -210,6 +210,7 @@ export default function RegisterPage() {
                 type="text"
                 name="name"
                 required
+                maxLength={50}
                 value={form.name}
                 onChange={handleChange}
                 className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 bg-transparent transition-colors ${
@@ -237,6 +238,7 @@ export default function RegisterPage() {
                 type="tel"
                 name="tel"
                 required
+                maxLength={10}
                 value={form.tel}
                 onChange={handleChange}
                 className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 bg-transparent transition-colors ${
@@ -264,6 +266,7 @@ export default function RegisterPage() {
                 type="email"
                 name="email"
                 required
+                maxLength={50}
                 value={form.email}
                 onChange={handleChange}
                 className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 bg-transparent transition-colors ${
@@ -291,6 +294,7 @@ export default function RegisterPage() {
                 type="password"
                 name="password"
                 required
+                maxLength={50}
                 value={form.password}
                 onChange={handleChange}
                 className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 bg-transparent transition-colors ${
@@ -318,6 +322,7 @@ export default function RegisterPage() {
                 type="password"
                 name="confirmPassword"
                 required
+                maxLength={50}
                 value={form.confirmPassword}
                 onChange={handleChange}
                 className={`w-full border-2 rounded-xl px-4 py-2 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 bg-transparent transition-colors ${

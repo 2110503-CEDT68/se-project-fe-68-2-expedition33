@@ -40,6 +40,7 @@ export default function CompanyList({ companies }: Readonly<{ companies: Company
             type="text"
             placeholder="Search companies"
             value={query}
+            maxLength={50}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full pl-11 pr-4 py-2.5 border border-primary rounded-full text-sm font-semibold tracking-widest text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           />
