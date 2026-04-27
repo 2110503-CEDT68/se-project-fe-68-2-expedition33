@@ -7,7 +7,6 @@ import NextAuthProvider from "@/providers/NextAuthProvider";
 import ReduxProvider from "@/redux/ReduxProvider";
 import TopMenu from "@/components/TopMenu";
 import ReduxSync from "@/components/ReduxSync";
-import ThemeDebugCommand from "@/components/ThemeDebugCommand";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 const geistSans = Geist({
@@ -35,8 +34,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
-        <ThemeDebugCommand />
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <NextAuthProvider session={session}>
           <ThemeProvider>
             <ReduxProvider>
