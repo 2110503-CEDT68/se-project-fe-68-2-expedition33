@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import Image from "next/image";
 import PaidDateCard from "@/components/payments/PaidDateCard";
 import PaymentHistoryList from "@/components/payments/PaymentHistoryList";
 import AddDateListModal from "@/components/modals/AddPaymentPanel";
@@ -58,19 +59,23 @@ export default function PaymentDashboard({ payments, token }: Readonly<{ payment
       <div className="flex flex-col items-center flex-1 w-full max-w-lg">
         <h2 className="text-2xl font-bold text-foreground mb-6 self-center">Date List</h2>
 
-        <div className="flex flex-col items-center justify-start w-full p-8 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] bg-background border border-surface-border mb-12">
+        <div className="flex flex-col items-center justify-start w-full p-8 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] bg-background border border-surface-border mb-6">
           <PaidDateCard
             dateStatusMap={dateStatusMap}
             onPurchaseClick={() => setIsModalOpen(true)}
           />
         </div>
 
-        {/* Illustration */}
-        <div className="w-full max-w-75 mt-4 flex items-center justify-center h-48 border-2 border-dashed border-surface-border rounded-lg text-foreground/50 text-sm">
-          Waiting image for Phat and Prem
+        <div className="w-full max-w-md mt-4 flex items-center justify-center">
+          <Image 
+            src="/illustration-calendar.svg"
+            alt="Calendar organizing illustration"
+            width={350}
+            height={300}
+            className="object-contain"
+          />
         </div>
       </div>
-      {/* Wait image for Phat and Prem*/}
 
       {/* Vertical Divider */}
       <div className="w-px bg-surface-border hidden md:block mx-4"></div>
