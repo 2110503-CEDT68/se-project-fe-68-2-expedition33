@@ -51,6 +51,7 @@ export default function CompanyCreateForm ({ token }: Readonly<{ token: string }
     const photoListInputRef = useRef<HTMLInputElement>(null);
     const [logoPreview, setLogoPreview] = useState<string | null>(null);
     const [photoError, setPhotoError] = useState("");
+    const [copied, setCopied] = useState(false);
 
     const nameRef = useRef<HTMLInputElement>(null);
     const descriptionRef = useRef<HTMLInputElement>(null);
@@ -63,6 +64,12 @@ export default function CompanyCreateForm ({ token }: Readonly<{ token: string }
     const managerTelRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const confirmPasswordRef = useRef<HTMLInputElement>(null);
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(createdManagerEmail);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
 
     const refMap: Record<CompanyTextFieldName, React.RefObject<HTMLInputElement | null>> = {
         name: nameRef,
@@ -452,13 +459,19 @@ export default function CompanyCreateForm ({ token }: Readonly<{ token: string }
                         </p>
 
                         {/* Email Box */}
-                        <div className="bg-background border border-surface-border rounded-xl p-4 w-full mb-8">
-                        <p className="text-sm md:text-base break-all">
-                            <span className="text-primary font-bold">Email : </span>
-                            <span className="text-foreground font-medium">
-                                {createdManagerEmail}
-                            </span>
-                        </p>
+                        <div className="bg-background border border-surface-border rounded-xl p-4 w-full mb-8 flex items-center justify-between gap-4">
+                            <p className="text-sm md:text-base break-all text-left">
+                                <span className="text-primary font-bold">Email : </span>
+                                <span className="text-foreground font-medium">
+                                    {createdManagerEmail}
+                                </span>
+                            </p>
+                            <button
+                                onClick={handleCopy}
+                                className="shrink-0 bg-primary/10 hover:bg-primary/20 text-primary px-4 py-2 rounded-lg text-xs font-bold transition-all active:scale-95 whitespace-nowrap"
+                            >
+                                {copied ? "Copied!" : "Copy"}
+                            </button>
                         </div>
 
                         {/* Button */}
