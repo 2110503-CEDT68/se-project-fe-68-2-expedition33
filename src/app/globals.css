@@ -40,27 +40,38 @@
 }
 
 @media (prefers-color-scheme: dark) {
-
-	:root,
-	html,
-	body,
-	input {
-		color-scheme: dark !important;
-		/* Dark Mode */
+	:root:not([data-theme="light"]) {
 		--background: #18181b;
 		--foreground: #e4e4e7;
-
-		/* Adjusted brand colors */
 		--primary: #fb923c;
 		--surface: #27272a;
 		--surface-border: #3f3f46;
-
-		/* Icon Color */
 		--icon-themed: var(--foreground);
-
-		/* Base color for dark mode shadows */
 		--shadow-base: 255, 255, 255;
+		color-scheme: dark;
 	}
+}
+
+:root[data-theme="dark"] {
+	--background: #18181b;
+	--foreground: #e4e4e7;
+	--primary: #fb923c;
+	--surface: #27272a;
+	--surface-border: #3f3f46;
+	--icon-themed: var(--foreground);
+	--shadow-base: 255, 255, 255;
+	color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+	--background: #fafafa;
+	--foreground: #27272a;
+	--primary: #f97316;
+	--surface: #f4f4f5;
+	--surface-border: #e4e4e7;
+	--icon-themed: var(--primary);
+	--shadow-base: 0, 0, 0;
+	color-scheme: light;
 }
 
 /* Force browser native icons (like password eye) to use our themed color */
@@ -70,6 +81,22 @@ input::-webkit-credentials-auto-fill-button {
 	color: var(--icon-themed);
 	background-color: transparent;
 	filter: none !important;
+}
+
+/* Custom Autofill Styles to prevent browser defaults from breaking theme contrast */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+	-webkit-text-fill-color: var(--foreground) !important;
+	-webkit-box-shadow: 0 0 0px 1000px var(--surface) inset !important;
+	transition: background-color 5000s ease-in-out 0s;
+	caret-color: var(--foreground);
 }
 
 @theme inline {
