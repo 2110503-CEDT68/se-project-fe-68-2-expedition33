@@ -10,8 +10,12 @@ export default async function PaymentsLayout({
 {
   const session = await getServerSession(authOptions);
 
-  if (session?.user.role !== "company") {
+  if (!session) {
     redirect("/api/auth/login");
+  }
+
+  if (session.user.role !== "company") {
+    redirect("/");
   }
 
   return <>{children}</>;

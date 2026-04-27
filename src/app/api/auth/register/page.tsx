@@ -1,17 +1,25 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import userRegister from "@/libs/userRegister";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { LinearProgress } from "@mui/material";
 
 import PrivacyPolicyPanel from "@/components/modals/PrivacyPolicyPanel";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { status } = useSession();
+
+  // Redirect logged-in users away from register page
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/");
+    }
+  }, [status, router]);
   
   const [form, setForm] = useState({
     name: "",
@@ -144,6 +152,7 @@ export default function RegisterPage() {
             alt="People working in office"
             fill
             priority
+            sizes="(max-width: 1024px) 55vw"
             className="object-cover z-[-2]"
         />
         

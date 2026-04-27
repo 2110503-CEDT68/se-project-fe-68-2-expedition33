@@ -1,14 +1,22 @@
 "use client";
 
-import { signIn, SignInResponse } from "next-auth/react";
+import { useSession, signIn, SignInResponse } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { LinearProgress } from "@mui/material";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { status } = useSession();
+  
+  // Redirect logged-in users away from login page
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/");
+    }
+  }, [status, router]);
   
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -46,6 +54,7 @@ export default function LoginPage() {
             alt="People working in office"
             fill
             priority
+            sizes="(max-width: 1024px) 55vw"
             className="object-cover z-[-2]"
         />
         
@@ -103,7 +112,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
+                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
               />
             </div>
 
@@ -121,7 +130,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
+                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
               />
 
             </div>
