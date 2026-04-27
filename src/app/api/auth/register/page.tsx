@@ -142,7 +142,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex bg-background">
+    <main className="min-h-screen flex bg-background">
       
       {/* ── Left panel: Hero image with gradient overlay ── */}
       <div className="hidden lg:flex lg:w-[55%] relative flex-col justify-start px-16 xl:px-18 z-0 overflow-hidden">
@@ -378,6 +378,6 @@ export default function RegisterPage() {
         onClose={() => setIsPrivacyPanelOpen(false)}
         onAgree={handleRegister}
       />
-    </div>
+    </main>
   );
 }

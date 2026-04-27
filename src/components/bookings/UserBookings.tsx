@@ -65,7 +65,7 @@ export default function UserBookings({ bookingList, userToken }: Readonly<{ book
     };
 
     return (
-        <main className="min-h-screen bg-background flex flex-col pt-32 pb-12 px-6">      
+        <div className="min-h-screen bg-background flex flex-col pt-32 pb-12 px-6">      
         
             <div className="flex-1 w-full max-w-6xl mx-auto flex flex-col z-10">
                 
@@ -221,6 +221,6 @@ export default function UserBookings({ bookingList, userToken }: Readonly<{ book
                 />
             )}
 
-        </main>
+        </div>
     );
 }

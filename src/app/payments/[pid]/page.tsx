@@ -86,17 +86,17 @@ export default function DetailsPage({
 
   if (status === "loading" || loading) {
     return (
-      <div className="w-full min-h-screen flex flex-col items-center justify-center pt-32 px-6 text-primary font-bold text-xl tracking-widest gap-4">
+      <main className="w-full min-h-screen flex flex-col items-center justify-center pt-32 px-6 text-primary font-bold text-xl tracking-widest gap-4">
         Loading Payment Details...
         <div className="w-full max-w-md mt-4">
           <LinearProgress color="warning" />
         </div>
-      </div>
+      </main>
     );
   }
   if (errorMsg) {
     return (
-      <div className="p-20 text-center">
+      <main className="p-20 text-center">
         <h1 className="text-button-red text-2xl font-bold mb-4">Error</h1>
         <p className="mb-6 text-foreground/60">{errorMsg}</p>
         <Link
@@ -105,12 +105,12 @@ export default function DetailsPage({
         >
           Back to Payments
         </Link>
-      </div>
+      </main>
     );
   }
   if (!payment) {
     return (
-      <div className="p-20 text-center text-button-red">Payment Not Found</div>
+      <main className="p-20 text-center text-button-red">Payment Not Found</main>
     );
   }
 
@@ -135,7 +135,7 @@ export default function DetailsPage({
   }
 
   return (
-    <div className="min-h-screen bg-surface">
+    <main className="min-h-screen bg-surface">
       <div className="max-w-7xl mx-auto px-12 pt-20 pb-100">
         {/* 1. Heading */}
         <h1 className="text-2xl font-bold text-foreground mb-6">
@@ -186,6 +186,6 @@ export default function DetailsPage({
           isProcessing={isProcessing}
         />
       )}
-    </div>
+    </main>
   );
 }

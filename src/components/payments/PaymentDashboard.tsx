@@ -52,7 +52,7 @@ export default function PaymentDashboard({ payments, token }: Readonly<{ payment
   const dateStatusMap = buildDateStatusMap(payments);
 
   return (
-    <main className="flex flex-col md:flex-row pt-24 px-8 gap-12 justify-center max-w-7xl mx-auto w-full">
+    <div className="flex flex-col md:flex-row pt-24 px-8 gap-12 justify-center max-w-7xl mx-auto w-full">
       {/* Left Column */}
       <div className="flex flex-col items-center flex-1 w-full max-w-lg">
         <h2 className="text-2xl font-bold text-foreground mb-6 self-center">Date List</h2>
@@ -65,7 +65,7 @@ export default function PaymentDashboard({ payments, token }: Readonly<{ payment
         </div>
 
         {/* Illustration */}
-        <div className="w-full max-w-[300px] mt-4 flex items-center justify-center h-48 border-2 border-dashed border-surface-border rounded-lg text-foreground/50 text-sm">
+        <div className="w-full max-w-75 mt-4 flex items-center justify-center h-48 border-2 border-dashed border-surface-border rounded-lg text-foreground/50 text-sm">
           Waiting image for Phat and Prem
         </div>
       </div>
@@ -104,6 +104,6 @@ export default function PaymentDashboard({ payments, token }: Readonly<{ payment
           }
         }}
       />
-    </main>
+    </div>
   );
 }

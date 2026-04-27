@@ -15,7 +15,11 @@ async function PaymentsDataWrapper() {
 
   const token = session.user.token;
   const fetchedPayments = (await getPayments(token)).data || [];
-  return <PaymentDashboard payments={fetchedPayments} token={token} />;
+  return (
+    <main>
+      <PaymentDashboard payments={fetchedPayments} token={token} />
+    </main>
+  );
 }
 
 export default function PaymentPage() {

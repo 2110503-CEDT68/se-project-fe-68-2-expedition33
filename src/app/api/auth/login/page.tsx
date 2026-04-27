@@ -44,7 +44,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex bg-background">
+    <main className="min-h-screen flex bg-background">
       
       {/* ── Left panel: Hero image with gradient overlay ── */}
       <div className="hidden lg:flex lg:w-[55%] relative flex-col justify-start px-16 xl:px-18 z-0 overflow-hidden">
@@ -113,7 +113,7 @@ export default function LoginPage() {
                 maxLength={50}
                 value={email}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
+                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
               />
             </div>
 
@@ -132,7 +132,7 @@ export default function LoginPage() {
                 maxLength={50}
                 value={password}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:[color-scheme:dark] focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
+                className="w-full border-2 border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground dark:scheme-dark focus:outline-none focus:ring-0 focus:border-primary bg-transparent transition-colors"
               />
 
             </div>
@@ -173,7 +173,7 @@ export default function LoginPage() {
 
         </div>
       </div>    
-    </div>
+    </main>
 
   );
 }

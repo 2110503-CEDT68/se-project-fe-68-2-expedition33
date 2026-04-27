@@ -19,9 +19,17 @@ async function BookingsDataWrapper() {
   const bookings = (await getBookings(token)).data;
 
   if (role === "user") {
-    return <UserBookings bookingList={bookings} userToken={token} />;
+    return (
+      <main>
+        <UserBookings bookingList={bookings} userToken={token} />
+      </main>
+    );
   }
-  return <AdminBookings bookingList={bookings} adminToken={token} />;
+  return (
+    <main>
+      <AdminBookings bookingList={bookings} adminToken={token} />
+    </main>
+  );
 }
 
 export default function BookingsPage() {
