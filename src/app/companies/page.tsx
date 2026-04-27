@@ -4,8 +4,12 @@ import getCompanies from "@/libs/getCompanies";
 import { CompanyItem } from "@/../interfaces";
 import CompanyList from "@/components/companies/CompanyList";
 
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
+
 async function CompaniesDataWrapper() {
-  const companiesRes = await getCompanies();
+  const session = await getServerSession(authOptions);
+  const companiesRes = await getCompanies(session?.user?.token);
   const companies: CompanyItem[] = companiesRes.data ?? [];
 
   return <CompanyList companies={companies} />;

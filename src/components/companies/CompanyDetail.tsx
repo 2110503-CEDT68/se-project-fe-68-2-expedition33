@@ -58,6 +58,18 @@ export default function CompanyDetail({
         </h2>
       </div>
 
+      {/* ── 1.5. Admin only: Manager Email ── */}
+      {isAdmin && company.managerAccount && typeof company.managerAccount === "object" && (
+        <div className="flex items-center gap-2.5 text-primary/70 mb-6 pl-1.5 -mt-4">
+           <svg className="w-4 h-4" {...iconProps}>
+              <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span className="text-sm font-bold tracking-widest uppercase">
+              Manager: <span className="text-foreground/60 lowercase font-medium">{company.managerAccount.email}</span>
+            </span>
+        </div>
+      )}
+
       <hr className="border-t-2 border-surface-border mb-8" />
 
       {/* ── 2. Top Info (Logo + Contact Details) ── */}

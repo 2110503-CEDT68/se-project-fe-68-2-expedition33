@@ -73,7 +73,7 @@ export interface CompanyItem {
     tel: string;
     website: string;
     description: string;
-    managerAccount?: string;
+    managerAccount?: string | { email: string };
     createdAt?: string;
     logo?: CloudinaryAsset | null;
     photoList?: CloudinaryAsset[];
