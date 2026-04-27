@@ -3,30 +3,27 @@ import Image from "next/image";
 
 export default function CompanyPaymentDetail({ payment }: Readonly<{ payment: PaymentItem }>) {
   const statusStyles: Record<string, string> = {
-    captured:   "bg-green-100 text-green-600",
-    authorized: "bg-blue-100 text-blue-600",
-    pending:    "bg-yellow-100 text-yellow-700",
-    initiated:  "bg-gray-100 text-gray-500",
-    cancelled:  "bg-red-100 text-button-red",
-    failed:     "bg-red-100 text-button-red",
+    captured:   "bg-status-success/15 text-status-success",
+    authorized: "bg-status-authorized/15 text-status-authorized",
+    initiated:  "bg-status-initiated/15 text-status-initiated",
+    cancelled:  "bg-status-failed/15 text-status-failed",
+    failed:     "bg-status-failed/15 text-status-failed",
   };
 
   const statusMessages: Record<string, string> = {
-    captured: 'Payment confirmed',
-    authorized: 'Payment authorized',
-    pending: 'Waiting for payment',
-    initiated: 'Payment initiated',
-    cancelled: 'Payment cancelled',
-    failed: 'Payment failed'
+    captured:   'Success! Your payment has been received and confirmed.',
+    authorized: 'Approved! Now waiting for your action.',
+    initiated:  'Hang tight! Payment started. Waiting for an approval.',
+    cancelled:  'Request stopped! This payment has been cancelled.',
+    failed:     'Oops! Something went wrong. The payment could not be completed.'
   };
 
   const borderStyles: Record<string, string> = {
-    captured:   "border-green-600",
-    authorized: "border-blue-600",
-    pending:    "border-yellow-700",
-    initiated:  "border-gray-500",
-    cancelled:  "border-button-red",
-    failed:     "border-button-red",
+    captured:   "border-status-success/50",
+    authorized: "border-status-authorized/50",
+    initiated:  "border-status-initiated/50",
+    cancelled:  "border-status-failed/50",
+    failed:     "border-status-failed/50",
   };
 
   const statusClass = statusStyles[payment.status.toLowerCase()] ?? "bg-surface text-foreground";
