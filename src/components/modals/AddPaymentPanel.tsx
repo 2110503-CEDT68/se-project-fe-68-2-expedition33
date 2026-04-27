@@ -52,6 +52,7 @@ export default function AddDateListModal({
 
   const modalRef = React.useRef<HTMLDivElement>(null);
   const [selectedDates, setSelectedDates] = React.useState<number[]>([]);
+  const [loading, setLoading] = React.useState(false);
 
   useClickOutside(modalRef, onClose);
 
@@ -64,8 +65,9 @@ export default function AddDateListModal({
   const handlePurchase = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
+    setLoading(true);
     onPurchase?.(selectedDates);
-    onClose();
+    // Removed onClose() to prevent sudden closing
   };
 
   if (!isOpen) return null;
@@ -135,15 +137,15 @@ export default function AddDateListModal({
         {/* Purchase Button */}
         <button
           onClick={handlePurchase}
-          disabled={selectedDates.length === 0}
+          disabled={selectedDates.length === 0 || loading}
           className={`px-16 py-3 rounded-full font-bold text-xl tracking-widest transition-all duration-300 mb-2
-            ${selectedDates.length === 0 
+            ${(selectedDates.length === 0 || loading)
                 ? 'bg-surface-border text-foreground/40 cursor-not-allowed'
                 : 'bg-primary hover:bg-primary-hover text-white shadow-lg hover:shadow-xl hover:-translate-y-1 cursor-pointer'
             }
           `}
         >
-          Purchase
+          {loading ? "Pending..." : "Purchase"}
         </button>
 
         {/* Illustration */}
