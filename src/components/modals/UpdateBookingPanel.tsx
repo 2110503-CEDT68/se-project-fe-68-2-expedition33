@@ -1,11 +1,39 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useClickOutside } from "@/hooks/useClickOutside";
+import { BookingCompanySummary } from "@/../interfaces";
 
-export default function UpdateBookingPanel({ companyName, oldDate, onClose, onUpdate: onSubmit }: Readonly<{ companyName: string, oldDate: string, onClose: () => void, onUpdate: (e: React.MouseEvent, date: string) => void }>) {
+export default function UpdateBookingPanel({ 
+  company, 
+  oldDate, 
+  onClose, 
+  onUpdate: onSubmit 
+}: Readonly<{ 
+  company: BookingCompanySummary, 
+  oldDate: string, 
+  onClose: () => void, 
+  onUpdate: (e: React.MouseEvent, date: string) => Promise<void> | void 
+}>) {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false);
+  
+  useClickOutside(modalRef, () => !loading && onClose());
+
   // State to keep track of which date the user clicked.
   const [selectedDate, setSelectedDate] = useState(oldDate.split("-")[2].split("T")[0]);
+  
+  const handleUpdate = async (e: React.MouseEvent) => {
+    setLoading(true);
+    try {
+      await onSubmit(e, "2022-05-" + selectedDate);
+      // Parent will handle closing via updating state
+    } catch (error) {
+      console.error("Failed to update booking:", error);
+      setLoading(false);
+    }
+  };
   
   // The available interview dates
   const dates = ["10", "11", "12", "13"];
@@ -15,13 +43,14 @@ export default function UpdateBookingPanel({ companyName, oldDate, onClose, onUp
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
       
       {/* Main Modal Box */}
-      <div className="bg-surface border border-surface-border rounded-[2.5rem] p-8 md:p-12 max-w-2xl w-full relative flex flex-col items-center shadow-2xl">
+      <div ref={modalRef} className="bg-surface border border-surface-border rounded-[2.5rem] p-8 md:p-12 max-w-2xl w-full relative flex flex-col items-center shadow-2xl">
         
         {/* Top Right "Back/Undo" Icon */}
         <button 
           onClick={onClose} 
           title="Close update panel"
-          className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer"
+          className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+          disabled={loading}
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 14L4 9l5-5" />
@@ -30,43 +59,61 @@ export default function UpdateBookingPanel({ companyName, oldDate, onClose, onUp
         </button>
 
         {/* Headings */}
-        <h2 className="text-4xl md:text-5xl font-extrabold text-primary tracking-widest mb-2 mt-4">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-primary tracking-widest mb-2 mt-4 text-center">
           Edit Booking
         </h2>
-        <h3 className="text-xl md:text-2xl font-bold text-primary tracking-widest mb-10">
-          {companyName}
+        <h3 className="text-xl md:text-2xl font-bold text-primary tracking-widest mb-10 text-center">
+          {company.name}
         </h3>
 
         {/* Date Selection Grid */}
         <div className="flex gap-4 md:gap-6 mb-8">
-          {dates.map((day) => (
-            <button
-              key={day}
-              onClick={() => setSelectedDate(day)}
-              className={`flex flex-col items-center justify-center w-20 h-24 md:w-24 md:h-28 rounded-2xl transition-all duration-300 cursor-pointer
-                ${selectedDate === day 
-                  ?
-                    'bg-primary text-white scale-105 ring-4 ring-primary/30 shadow-lg' 
-                  :
-                    'bg-primary/5 text-foreground/50 border border-primary/10 hover:bg-primary hover:text-white hover:scale-105 hover:shadow-md'
-                }`}
-            >
-              <span className="text-3xl md:text-4xl font-bold">{day}</span>
-              <span className="text-sm md:text-base font-bold tracking-widest uppercase mt-1">May</span>
-            </button>
-          ))}
+          {dates.map((day) => {
+            let isPaid = day === selectedDate; 
+            
+            // Recalculate isPaid based on payments
+            const hasPayment = company.payments?.some((p) => 
+              p.status === "captured" && p.dateList.some(d => d.substring(8, 10) === day)
+            );
+            
+            if (hasPayment) isPaid = true;
+            // Note: If day is NOT in payments, we still check if it's the currently selected (old) date.
+            // Usually oldDate should already be paid, but this ensures the current selection is always visible.
+
+            let dateButtonStyle = "";
+            if (!isPaid) {
+              dateButtonStyle = "bg-surface-border/50 text-foreground/30 cursor-not-allowed border border-surface-border";
+            } else if (selectedDate === day) {
+              dateButtonStyle = "bg-primary text-white scale-105 ring-4 ring-primary/30 shadow-lg cursor-pointer";
+            } else {
+              dateButtonStyle = "bg-primary/5 text-foreground/50 border border-primary/10 hover:bg-primary hover:text-white hover:scale-105 hover:shadow-md cursor-pointer";
+            }
+
+            return (
+              <button
+                key={day}
+                onClick={() => isPaid && setSelectedDate(day)}
+                disabled={!isPaid}
+                className={`flex flex-col items-center justify-center w-20 h-24 md:w-24 md:h-28 rounded-2xl transition-all duration-300 ${dateButtonStyle}`}
+              >
+                <span className="text-3xl md:text-4xl font-bold">{day}</span>
+                <span className="text-sm md:text-base font-bold tracking-widest uppercase mt-1">May</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Instructional Text */}
-        <p className="text-foreground font-bold text-xs md:text-sm tracking-widest mb-8 text-center">
-          Select your preferred interview date (May 10–13, 2022)
+        <p className="text-foreground font-bold text-xs md:text-sm tracking-widest mb-8 text-center px-4">
+          Select your preferred interview date (Only paid dates are available)
         </p>
 
         {/* Submit Button */}
-        <button className="bg-primary hover:bg-primary-hover text-white px-16 py-3 rounded-full font-bold text-xl tracking-widest shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 mb-8 cursor-pointer"
-          onClick={(e) => onSubmit(e, "2022-05-" + selectedDate)}
+        <button className="bg-primary hover:bg-primary-hover disabled:bg-surface-border disabled:text-foreground/40 text-white px-16 py-3 rounded-full font-bold text-xl tracking-widest shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 mb-8 cursor-pointer disabled:cursor-not-allowed"
+          onClick={handleUpdate}
+          disabled={loading}
         >
-          Book
+          {loading ? "Saving..." : "Book"}
         </button>
 
         {/* Disclaimer Text */}

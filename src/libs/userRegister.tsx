@@ -1,4 +1,4 @@
-import { AuthResponse, RegisterPayload } from "../../interfaces";
+import { AuthResponse, RegisterPayload } from "@/../interfaces";
 
 export default async function userRegister(user: RegisterPayload): Promise<AuthResponse> {
 

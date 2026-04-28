@@ -1,24 +1,18 @@
-import { PaymentItem, ApiResponse } from "../../interfaces";
+import { CreatePaymentResponse } from "@/../interfaces";
 
-export default async function updatePayment(
-    id: string,
-    token: string,
-    dateList: string[]
-): Promise<PaymentItem> {
+export default async function updatePayment(id: string, token: string, status: string) : Promise<CreatePaymentResponse> {
+  const response = await fetch(`${process.env.BACKEND_URL}/api/v1/payments/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ status }),
+  });
 
-    const res = await fetch(`${process.env.BACKEND_URL}/api/v1/payments/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ dateList }),
-    });
+  if (!response.ok) {
+    throw new Error("Failed to update payment");
+  }
 
-    if (!res.ok) {
-        throw new Error("Failed to update payment");
-    }
-
-    const data: ApiResponse<PaymentItem> = await res.json();
-    return data.data;
+  return await response.json();
 }

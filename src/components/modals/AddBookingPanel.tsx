@@ -1,47 +1,60 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import createBooking from "@/libs/createBooking";
-import { CompanyItem } from "../../../interfaces";
+import { CompanyItem } from "@/../interfaces";
 import { useAppSelector } from "@/redux/store";
 import { useSession } from "next-auth/react";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 export default function AddBookingPanel({ company, token, onClose }: Readonly<{
-    company: CompanyItem,
-    token: string,
-    onClose: () => void, 
-    isAdmin: boolean
+  company: CompanyItem,
+  token: string,
+  onClose: () => void,
+  isAdmin: boolean
 }>) {
 
   const router = useRouter();
   const session = useSession();
+  const modalRef = useRef<HTMLDivElement>(null);
   const bookings = useAppSelector(state => state.bookings.bookingItems);
   const isLoading = useAppSelector(state => state.bookings.loading);
 
-  const [selectedDate, setSelectedDate] = useState<string>("10");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const BOOKING_LIMIT = 3;
   const dates: string[] = ["10", "11", "12", "13"];
+
+  // Compute which dates are available (have a captured payment)
+  const availableDates = dates.filter(day =>
+    company.payments?.some(p =>
+      p.status === "captured" && p.dateList.some(d => d.substring(8, 10) === day)
+    )
+  );
+
+  const [selectedDate, setSelectedDate] = useState<string>(availableDates[0] || "");
   const isAdmin = session?.data?.user?.role === "admin";
   const isLimitReached = bookings.length >= BOOKING_LIMIT && !isAdmin;
+  const hasNoDates = availableDates.length === 0;
+
+  useClickOutside(modalRef, () => !isSubmitting && !isLoading && onClose());
 
   const handleBookingSubmit = async (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
 
-    if (isLimitReached) return;
+    if (isLimitReached || hasNoDates || !selectedDate) return;
 
     setIsSubmitting(true);
-    
+
     try {
-        await createBooking(company.id, token, "2022-05-" + selectedDate);
-        onClose();
-        router.push("/bookings");
+      await createBooking(company.id, token, "2022-05-" + selectedDate);
+      onClose();
+      router.push("/bookings");
     } catch (error) {
-        console.error("Failed to submit booking", error);
-        setIsSubmitting(false);
+      console.error("Failed to submit booking", error);
+      setIsSubmitting(false);
     }
 
   };
@@ -55,13 +68,14 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      
-      <div className="bg-surface border border-surface-border rounded-[2.5rem] p-8 md:p-12 max-w-2xl w-full relative flex flex-col items-center shadow-2xl">
-        
-        <button 
-          onClick={onClose} 
+
+      <div ref={modalRef} className="bg-surface border border-surface-border rounded-[2.5rem] p-8 md:p-12 max-w-2xl w-full relative flex flex-col items-center shadow-2xl">
+
+        <button
+          onClick={onClose}
           title="Close booking panel"
-          className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer"
+          className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+          disabled={isSubmitting || isLoading}
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 14L4 9l5-5" />
@@ -77,34 +91,49 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
         </h3>
 
         <div className="flex gap-4 md:gap-6 mb-8">
-          {dates.map((day: string) => (
-            <button
-              key={day}
-              onClick={() => setSelectedDate(day)}
-              className={`flex flex-col items-center justify-center w-20 h-24 md:w-24 md:h-28 rounded-2xl transition-all duration-300 cursor-pointer
-                ${selectedDate === day 
-                  ? 'bg-primary text-white scale-105 ring-4 ring-primary/30 shadow-lg' 
-                  : 'bg-primary/5 text-foreground/50 border border-primary/10 hover:bg-primary hover:text-white hover:scale-105 hover:shadow-md'
-                }`}
-            >
-              <span className="text-3xl md:text-4xl font-bold">{day}</span>
-              <span className="text-sm md:text-base font-bold tracking-widest uppercase mt-1">May</span>
-            </button>
-          ))}
+          {dates.map((day: string) => {
+            let isPaid = false;
+            company.payments?.forEach((p) => {
+              if (p.status === "captured" && p.dateList.some(d => d.substring(8, 10) === day)) {
+                isPaid = true;
+              }
+            });
+
+            let dateButtonStyle = "";
+            if (!isPaid) {
+              dateButtonStyle = "bg-surface-border/50 text-foreground/30 cursor-not-allowed border border-surface-border";
+            } else if (selectedDate === day) {
+              dateButtonStyle = "bg-primary text-white scale-105 ring-4 ring-primary/30 shadow-lg cursor-pointer";
+            } else {
+              dateButtonStyle = "bg-primary/5 text-foreground/50 border border-primary/10 hover:bg-primary hover:text-white hover:scale-105 hover:shadow-md cursor-pointer";
+            }
+
+            return (
+              <button
+                key={day}
+                onClick={() => isPaid && setSelectedDate(day)}
+                disabled={!isPaid}
+                className={`flex flex-col items-center justify-center w-20 h-24 md:w-24 md:h-28 rounded-2xl transition-all duration-300 ${dateButtonStyle}`}
+              >
+                <span className="text-3xl md:text-4xl font-bold">{day}</span>
+                <span className="text-sm md:text-base font-bold tracking-widest uppercase mt-1">May</span>
+              </button>
+            );
+          })}
         </div>
 
-        <p className="text-foreground font-bold text-xs md:text-sm tracking-widest mb-8 text-center">
-          Select your preferred interview date (May 10–13, 2022)
+        <p className="text-foreground font-bold text-xs md:text-sm tracking-widest mb-8 text-center px-4">
+          Select your preferred interview date<br />(Only organizing dates are available)
         </p>
 
         {/* Dynamic Submit Button */}
-        <button 
+        <button
           onClick={handleBookingSubmit}
-          disabled={isLimitReached || isSubmitting || isLoading}
+          disabled={isLimitReached || hasNoDates || !selectedDate || isSubmitting || isLoading}
           className={`px-16 py-3 rounded-full font-bold text-xl tracking-widest transition-all duration-300 mb-2
-            ${isLimitReached || isSubmitting || isLoading 
-                ? 'bg-surface-border text-foreground/40 cursor-not-allowed'
-                : 'bg-primary hover:bg-primary-hover text-white shadow-lg hover:shadow-xl hover:-translate-y-1 cursor-pointer'
+            ${isLimitReached || hasNoDates || !selectedDate || isSubmitting || isLoading
+              ? 'bg-surface-border text-foreground/40 cursor-not-allowed'
+              : 'bg-primary hover:bg-primary-hover text-white shadow-lg hover:shadow-xl hover:-translate-y-1 cursor-pointer'
             }
           `}
         >
@@ -113,23 +142,27 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
 
         {/* Dynamic Feedback Text */}
         <div className="h-8 mb-4 flex items-center justify-center text-center">
-            {isLimitReached ? (
-                <p className="text-red-500 font-bold text-sm tracking-widest">
-                    You have reached the maximum limit of 3 bookings.
-                </p>
-            ) : (
-                <p className="text-foreground/80 text-xs font-bold tracking-widest">
-                    Your booking can be edited or deleted at a later time.
-                </p>
-            )}
+          {hasNoDates ? (
+            <p className="text-red-500 font-bold text-sm tracking-widest">
+              No interview dates available for this company.
+            </p>
+          ) : isLimitReached ? (
+            <p className="text-red-500 font-bold text-sm tracking-widest">
+              You have reached the maximum limit of 3 bookings.
+            </p>
+          ) : (
+            <p className="text-foreground/80 text-xs font-bold tracking-widest">
+              Your booking can be edited or deleted at a later time.
+            </p>
+          )}
         </div>
 
         <div className="relative w-24 h-32 md:w-32 md:h-40 -mb-8 md:-mb-12 pointer-events-none">
-          <Image 
-            src="/images/resume.svg" 
-            alt="Woman with clipboard" 
-            fill 
-            className="object-contain" 
+          <Image
+            src="/images/resume.svg"
+            alt="Woman with clipboard"
+            fill
+            className="object-contain"
           />
         </div>
 

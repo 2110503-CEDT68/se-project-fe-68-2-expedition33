@@ -1,34 +1,31 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { redirect } from "next/navigation";
-import getUserProfile from "@/libs/getUserProfile";
 import { Suspense } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
-import UserProfile from "@/components/UserProfile";
-import AdminProfile from "@/components/AdminProfile";
-import CompanyProfile from "@/components/CompanyProfile";
-import { UserItem } from "../../../../../interfaces";
-
-async function ProfileContent({ token }: Readonly<{ token: string }>) {
-  const response = await getUserProfile(token);
-  const user:UserItem = response.data;
-
-  if (user.role === "admin") {
-    return <AdminProfile user={user} token={token} />;
-  }
-  else if (user.role === "company"){
-    return <CompanyProfile user={user} token={token} />
-  }
-  return <UserProfile user={user} />;
-}
-
-export default async function ProfilePage() {
+import UserProfile from "@/components/profile/UserProfile";
+import AdminProfile from "@/components/profile/AdminProfile";
+import CompanyProfile from "@/components/profile/CompanyProfile";
+async function ProfileData() {
   const session = await getServerSession(authOptions);
 
   if (!session) {
     redirect("/api/auth/login");
   }
 
+  const user = session.user as any;
+
+  if (user.role === "admin") {
+    return <AdminProfile user={user} token={user.token} />;
+  } else if (user.role === "company") {
+    return <CompanyProfile user={user} token={user.token} />;
+  } else {
+    return <UserProfile user={user} />;
+  }
+
+}
+
+export default function ProfilePage() {
   return (
     <main className="min-h-screen bg-background flex flex-col items-center pt-32 md:pt-40 px-6 pb-16">
       <Suspense
@@ -41,7 +38,7 @@ export default async function ProfilePage() {
           </div>
         }
       >
-        <ProfileContent token={session.user.token} />
+        <ProfileData />
       </Suspense>
     </main>
   );

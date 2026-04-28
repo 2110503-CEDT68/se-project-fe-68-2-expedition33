@@ -1,24 +1,23 @@
-import { PaymentItem, ApiResponse } from "../../interfaces";
+import { CreatePaymentResponse } from "@/../interfaces";
 
 export default async function createPayment(
     companyId: string,
     token: string,
     dateList: string[]
-): Promise<PaymentItem> {
+): Promise<CreatePaymentResponse> {
 
-    const res = await fetch(`${process.env.BACKEND_URL}/api/v1/companies/${companyId}/payments`, {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/v1/companies/${companyId}/payments`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ dateList }),
     });
 
-    if (!res.ok) {
+    if (!response.ok) {
         throw new Error("Failed to create payment");
     }
 
-    const data: ApiResponse<PaymentItem> = await res.json();
-    return data.data;
+    return await response.json();
 }

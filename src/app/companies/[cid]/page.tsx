@@ -1,18 +1,18 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import getCompany from "@/libs/getCompany";
-import AdminCompanyDetail from "@/components/AdminCompanyDetail";
-import CompanyDetail from "@/components/CompanyDetail";
+import AdminCompanyDetail from "@/components/companies/AdminCompanyDetail";
+import CompanyDetail from "@/components/companies/CompanyDetail";
 import { Suspense } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
 
 async function CompanyDetailContent({ params }: Readonly<{ params: Promise<{ cid: string }> }>) {
     const { cid } = await params;
     const session = await getServerSession(authOptions);
-    const company = await getCompany(cid);
+    const token = session?.user?.token;
+    const company = (await getCompany(cid, token)).data;
 
     const role = session?.user?.role;
-    const token = session?.user?.token;
     const userId = session?.user?.id;
 
     let detailComponent;

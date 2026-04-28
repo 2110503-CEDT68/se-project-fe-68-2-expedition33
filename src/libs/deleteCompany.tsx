@@ -1,9 +1,10 @@
-export default async function deleteCompany(id: string, token: string) {
+import { SimpleResponse } from "@/../interfaces";
+
+export default async function deleteCompany(id: string, token: string): Promise<SimpleResponse<[]>> {
   const response = await fetch(`${process.env.BACKEND_URL}/api/v1/companies/${id}`, {
     method: "DELETE",
     headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json"
+      Authorization: `Bearer ${token}`,
     }
   });
 

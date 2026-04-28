@@ -1,4 +1,4 @@
-import { AuthResponse } from "../../interfaces";
+import { AuthResponse } from "@/../interfaces";
 
 export default async function userLogIn(userEmail: string, userPassword: string): Promise<AuthResponse> {
 

@@ -1,4 +1,4 @@
-import { CompanyUpdatePayload, UpdateCompanyResponse } from "../../interfaces";
+import { CompanyUpdatePayload, UpdateCompanyResponse } from "@/../interfaces";
 import imageCompression from "browser-image-compression";
 
 const compressionOptions = {

@@ -32,7 +32,7 @@ const persistConfig = {
 }
 
 const rootReducer = combineReducers({
-    bookings: bookingSlice
+    bookings: bookingSlice,
 });
 
 const reduxPersistedReducer = persistReducer(persistConfig, rootReducer);
@@ -46,6 +46,6 @@ export const store = configureStore({
     }),
 });
 
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

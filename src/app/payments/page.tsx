@@ -1,54 +1,40 @@
-'use client';
+import { Suspense } from "react";
+import LinearProgress from "@mui/material/LinearProgress";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
+import { redirect } from "next/navigation";
+import getPayments from "@/libs/getPayments";
+import PaymentDashboard from "@/components/payments/PaymentDashboard";
 
-import { useState } from "react";
-import SelectDateBox from "@/components/SelectDateBox";
-import CompanyReseve from "@/components/companyReseve";
-import AddDateListModal from "@/components/AddDateListModal";
+async function PaymentsDataWrapper() {
+  const session = await getServerSession(authOptions);
 
-export default function Paymentpage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  if (!session) {
+    redirect("/api/auth/login");
+  }
 
-  // Mock data for the modal
-  const mockCompanyData = {
-    companyName: 'Company A',
-    availableDates: [
-      { date: 10, month: 'May' },
-      { date: 11, month: 'May' },
-      { date: 12, month: 'May' },
-      { date: 13, month: 'May' },
-    ],
-  };
-
-  const handlePurchaseClick = () => {
-    setIsModalOpen(true);
-  };
-
-  return(
-      <main className="flex flex-row pt-8 px-8 gap-8 ">
-
-        <div className="flex flex-row">
-            <div className="flex flex-col items-start justify-start w-fit p-10 m-5 rounded-lg shadow-md bg-gray-900">
-            <div className="text-white font-semibold mb-4 text-center"> Date List </div>
-            <SelectDateBox onPurchaseClick={handlePurchaseClick} />
-            
-        </div>
-
-
-    </div>
-      <CompanyReseve />
-
-      {/* Add Date List Modal - Using Mock Data */}
-      <AddDateListModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        companyName={mockCompanyData.companyName}
-        availableDates={mockCompanyData.availableDates}
-        onPurchase={(selectedDates) => {
-          console.log('Purchased dates:', selectedDates);
-          setIsModalOpen(false);
-        }}
-      />
-      
+  const token = session.user.token;
+  const fetchedPayments = (await getPayments(token)).data || [];
+  return (
+    <main>
+      <PaymentDashboard payments={fetchedPayments} token={token} />
     </main>
+  );
+}
+
+export default function PaymentPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full min-h-screen flex flex-col items-center justify-center pt-32 px-6 text-primary font-bold text-xl tracking-widest gap-4">
+          Loading Payments...
+          <div className="w-full max-w-md mt-4">
+            <LinearProgress color="warning" />
+          </div>
+        </div>
+      }
+    >
+      <PaymentsDataWrapper />
+    </Suspense>
   );
 }

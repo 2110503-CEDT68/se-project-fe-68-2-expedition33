@@ -1,11 +1,11 @@
-import { BookingItem } from "../../interfaces";
+import { BookingItem } from "@/../interfaces";
 
 export default async function getBooking(id: string, token: string): Promise<BookingItem>{
     const response = await fetch(`${process.env.BACKEND_URL}/api/v1/bookings/${id}`,
         {
             method: "GET",
             headers: {
-                authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
             },
         }
     );

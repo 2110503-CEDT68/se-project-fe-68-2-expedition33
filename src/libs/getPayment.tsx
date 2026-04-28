@@ -1,12 +1,17 @@
-import { PaymentItem, ApiResponse } from "../../interfaces";
+import { PaymentDetailResponse } from "@/../interfaces";
 
-export default async function getPaymentById(id: string): Promise<PaymentItem> {
-    const res = await fetch(`${process.env.BACKEND_URL}/api/v1/payments/${id}`);
+export default async function getPayment(id:string, token:string): Promise<PaymentDetailResponse> {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/v1/payments/${id}`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        cache: "no-store",
+    });
 
-    if (!res.ok) {
-        throw new Error("Failed to fetch payment");
+    if (!response.ok) {
+        throw new Error("Failed to fetch payments");
     }
 
-    const data: ApiResponse<PaymentItem> = await res.json();
-    return data.data;
+    return await response.json();
 }

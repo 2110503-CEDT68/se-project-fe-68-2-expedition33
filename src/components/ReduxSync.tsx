@@ -9,16 +9,17 @@ import { fetchUserBookings, clearBookings } from "@/redux/features/bookingSlice"
 export default function ReduxSync() {
   const { data: session, status } = useSession();
   const dispatch = useDispatch<AppDispatch>();
+  const token = session?.user?.token;
 
   useEffect(() => {
-    if (status === "authenticated" && session?.user?.token) {
+    if (status === "authenticated" && token) {
         // Fetch bookings immediately upon login/refresh
-        dispatch(fetchUserBookings(session.user.token));
+        dispatch(fetchUserBookings(token));
     } else if (status === "unauthenticated") {
         // Clear Redux if user logs out
         dispatch(clearBookings());
     }
-  }, [status, session, dispatch]);
+  }, [status, token, dispatch]);
 
   return null;
 }

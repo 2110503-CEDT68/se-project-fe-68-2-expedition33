@@ -27,7 +27,9 @@ export const authOptions: AuthOptions = {
                         id: profile.data.id,
                         name: profile.data.name,
                         email: profile.data.email,
+                        tel: profile.data.tel,
                         role: profile.data.role,
+                        companyData: (profile.data as any).companyData,
                         token: authRes.token
                     };
                     return user

@@ -2,7 +2,8 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import updateCompany from "../../libs/updateCompany";
-import { CompanyItem, CompanyUpdatePayload } from "../../../interfaces";
+import { CompanyItem, CompanyUpdatePayload } from "@/../interfaces";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 export default function UpdateCompanyPanel({
   company,
@@ -25,7 +26,6 @@ export default function UpdateCompanyPanel({
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [photoFiles, setPhotoFiles] = useState<File[]>([]);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const [photoError, setPhotoError] = useState("");
   const [error, setError] = useState("");
   const [errorField, setErrorField] = useState<string | null>(null);
   
@@ -35,7 +35,10 @@ export default function UpdateCompanyPanel({
   const telRef = useRef<HTMLInputElement>(null);
   const websiteRef = useRef<HTMLInputElement>(null);
   const postalcodeRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
+
+  useClickOutside(modalRef, () => !loading && onClose());
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -167,7 +170,7 @@ export default function UpdateCompanyPanel({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm pt-5" onScroll={(e) => {e.stopPropagation()}}>
-      <div className="bg-surface border border-surface-border rounded-3xl w-full max-w-xl p-8 md:p-10 relative shadow-2xl text-foreground max-h-[90vh] overflow-y-auto">
+      <div ref={modalRef} className="bg-surface border border-surface-border rounded-3xl w-full max-w-xl p-8 md:p-10 relative shadow-2xl text-foreground max-h-[90vh] overflow-y-auto">
 
       {/* Close Button */}
       <button
@@ -185,28 +188,42 @@ export default function UpdateCompanyPanel({
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         
         {/* Text Fields */}
-        {inputFields.map((field) => (
-          <div key={field.key} className="flex flex-col gap-1">
-            <label className="text-foreground font-bold text-sm md:text-base tracking-widest ">
-              {field.label}
-            </label>
-            <input
-              ref={field.ref}
-              type={field.type}
-              value={field.value}
-              onChange={e => field.setter(e.target.value)}
-              placeholder={field.placeholder}
-              title={field.label}
-              aria-label={field.label}
-              required
-              className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none transition-all ${
-                errorField === field.key
-                  ? "border-button-red focus:ring-2 focus:ring-button-red/30 shadow-sm"
-                  : "border-surface-border focus:ring-2 focus:ring-primary/30"
-              }`}
-            />
-          </div>
-        ))}
+        {inputFields.map((field) => {
+          let maxLengthValue = 50;
+          
+          if (field.key === "postalcode") {
+            maxLengthValue = 5;
+          } else if (field.key === "tel") {
+            maxLengthValue = 10;
+          }
+          
+          return (
+            <div key={field.key} className="flex flex-col gap-1">
+              <label className="text-foreground font-bold text-sm md:text-base tracking-widest ">
+                {field.label}
+              </label>
+              <input
+                ref={field.ref}
+                type={field.type}
+                value={field.value}
+                onChange={e => field.setter(e.target.value)}
+                placeholder={field.placeholder}
+                title={field.label}
+                aria-label={field.label}
+                required
+                maxLength={maxLengthValue}
+                className={`w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none transition-all ${
+                  errorField === field.key
+                    ? "border-button-red focus:ring-2 focus:ring-button-red/30 shadow-sm"
+                    : "border-surface-border focus:ring-2 focus:ring-primary/30"
+                }`}
+              />
+              {errorField === field.key && (
+                <p className="text-button-red text-xs font-bold tracking-wider mt-1">{error}</p>
+              )}
+            </div>
+          );
+        })}
 
         <hr className="border-surface-border my-2" />
 
@@ -278,7 +295,7 @@ export default function UpdateCompanyPanel({
 
         {/* Action Buttons */}
         <div className="flex flex-col gap-3 mt-15">
-          {error && <p className="text-button-red text-sm text-center font-semibold mb-2 p-3 bg-button-red/10 rounded-lg">{error}</p>}
+          {error && !errorField && <p className="text-button-red text-sm text-center font-semibold mb-2 p-3 bg-button-red/10 rounded-lg">{error}</p>}
           
           <button
             type="submit"
