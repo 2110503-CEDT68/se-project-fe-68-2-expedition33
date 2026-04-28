@@ -9,10 +9,10 @@ import { useSession } from "next-auth/react";
 import { useClickOutside } from "@/hooks/useClickOutside";
 
 export default function AddBookingPanel({ company, token, onClose }: Readonly<{
-    company: CompanyItem,
-    token: string,
-    onClose: () => void, 
-    isAdmin: boolean
+  company: CompanyItem,
+  token: string,
+  onClose: () => void,
+  isAdmin: boolean
 }>) {
 
   const router = useRouter();
@@ -21,13 +21,22 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
   const bookings = useAppSelector(state => state.bookings.bookingItems);
   const isLoading = useAppSelector(state => state.bookings.loading);
 
-  const [selectedDate, setSelectedDate] = useState<string>("10");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const BOOKING_LIMIT = 3;
   const dates: string[] = ["10", "11", "12", "13"];
+
+  // Compute which dates are available (have a captured payment)
+  const availableDates = dates.filter(day =>
+    company.payments?.some(p =>
+      p.status === "captured" && p.dateList.some(d => d.substring(8, 10) === day)
+    )
+  );
+
+  const [selectedDate, setSelectedDate] = useState<string>(availableDates[0] || "");
   const isAdmin = session?.data?.user?.role === "admin";
   const isLimitReached = bookings.length >= BOOKING_LIMIT && !isAdmin;
+  const hasNoDates = availableDates.length === 0;
 
   useClickOutside(modalRef, () => !isSubmitting && !isLoading && onClose());
 
@@ -35,17 +44,17 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
     e.stopPropagation();
     e.preventDefault();
 
-    if (isLimitReached) return;
+    if (isLimitReached || hasNoDates || !selectedDate) return;
 
     setIsSubmitting(true);
-    
+
     try {
-        await createBooking(company.id, token, "2022-05-" + selectedDate);
-        onClose();
-        router.push("/bookings");
+      await createBooking(company.id, token, "2022-05-" + selectedDate);
+      onClose();
+      router.push("/bookings");
     } catch (error) {
-        console.error("Failed to submit booking", error);
-        setIsSubmitting(false);
+      console.error("Failed to submit booking", error);
+      setIsSubmitting(false);
     }
 
   };
@@ -59,11 +68,11 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      
+
       <div ref={modalRef} className="bg-surface border border-surface-border rounded-[2.5rem] p-8 md:p-12 max-w-2xl w-full relative flex flex-col items-center shadow-2xl">
-        
-        <button 
-          onClick={onClose} 
+
+        <button
+          onClick={onClose}
           title="Close booking panel"
           className="absolute top-8 right-8 text-primary hover:opacity-70 transition-opacity cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
           disabled={isSubmitting || isLoading}
@@ -114,17 +123,17 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
         </div>
 
         <p className="text-foreground font-bold text-xs md:text-sm tracking-widest mb-8 text-center px-4">
-          Select your preferred interview date<br/>(Only organizing dates are available)
+          Select your preferred interview date<br />(Only organizing dates are available)
         </p>
 
         {/* Dynamic Submit Button */}
-        <button 
+        <button
           onClick={handleBookingSubmit}
-          disabled={isLimitReached || isSubmitting || isLoading}
+          disabled={isLimitReached || hasNoDates || !selectedDate || isSubmitting || isLoading}
           className={`px-16 py-3 rounded-full font-bold text-xl tracking-widest transition-all duration-300 mb-2
-            ${isLimitReached || isSubmitting || isLoading 
-                ? 'bg-surface-border text-foreground/40 cursor-not-allowed'
-                : 'bg-primary hover:bg-primary-hover text-white shadow-lg hover:shadow-xl hover:-translate-y-1 cursor-pointer'
+            ${isLimitReached || hasNoDates || !selectedDate || isSubmitting || isLoading
+              ? 'bg-surface-border text-foreground/40 cursor-not-allowed'
+              : 'bg-primary hover:bg-primary-hover text-white shadow-lg hover:shadow-xl hover:-translate-y-1 cursor-pointer'
             }
           `}
         >
@@ -133,23 +142,27 @@ export default function AddBookingPanel({ company, token, onClose }: Readonly<{
 
         {/* Dynamic Feedback Text */}
         <div className="h-8 mb-4 flex items-center justify-center text-center">
-            {isLimitReached ? (
-                <p className="text-red-500 font-bold text-sm tracking-widest">
-                    You have reached the maximum limit of 3 bookings.
-                </p>
-            ) : (
-                <p className="text-foreground/80 text-xs font-bold tracking-widest">
-                    Your booking can be edited or deleted at a later time.
-                </p>
-            )}
+          {hasNoDates ? (
+            <p className="text-red-500 font-bold text-sm tracking-widest">
+              No interview dates available for this company.
+            </p>
+          ) : isLimitReached ? (
+            <p className="text-red-500 font-bold text-sm tracking-widest">
+              You have reached the maximum limit of 3 bookings.
+            </p>
+          ) : (
+            <p className="text-foreground/80 text-xs font-bold tracking-widest">
+              Your booking can be edited or deleted at a later time.
+            </p>
+          )}
         </div>
 
         <div className="relative w-24 h-32 md:w-32 md:h-40 -mb-8 md:-mb-12 pointer-events-none">
-          <Image 
-            src="/images/resume.svg" 
-            alt="Woman with clipboard" 
-            fill 
-            className="object-contain" 
+          <Image
+            src="/images/resume.svg"
+            alt="Woman with clipboard"
+            fill
+            className="object-contain"
           />
         </div>
 
