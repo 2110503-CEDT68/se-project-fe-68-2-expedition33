@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+build
+npm-debug.log
+.git
+.gitignore
+README.md
+tests
+test-results
+playwright-report
+Dockerfile
+.dockerignore
+.env.local
+.env
